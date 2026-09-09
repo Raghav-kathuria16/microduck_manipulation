@@ -1,0 +1,18 @@
+{
+  "repository": "pollen-robotics/microduck_rl",
+  "url": "https://github.com/pollen-robotics/microduck_rl",
+  "pinned_commit": null,
+  "pinned_tag": null,
+  "last_verified": null,
+  "notes": "Pin to a specific commit or tag once the workspace is set up. This file tracks which version of microduck_rl this project was built/tested against. Update deliberately when microduck_rl changes (e.g., beak DOF added per FSD M0).",
+  "referenced_assets": {
+    "robot_mjcf": {
+      "path_in_repo": "TO_BE_FILLED — relative path to the robot MJCF within microduck_rl",
+      "description": "The robot model definition (XML/MJCF). Referenced by the apartment scene, not copied."
+    },
+    "walking_policy_checkpoint": {
+      "path_in_repo": "TO_BE_FILLED — relative path to the trained locomotion checkpoint",
+      "description": "The trained walking policy used as the locomotion layer in the teleop control hierarchy (Teleop Spec §3.2). Referenced by the teleop app at runtime."
+    }
+  }
+}

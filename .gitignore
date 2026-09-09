@@ -1,0 +1,62 @@
+# ============================================================
+# microduck_manipulation — .gitignore
+# ============================================================
+# Principle: git tracks code, configs, docs, and lightweight
+# manifests. Bulky data and model weights live on HF Hub.
+# ============================================================
+
+# ----- Data (bulky, regenerable, or mirrored on HF Hub) -----
+data/raw/
+data/processed/
+data/synthetic/
+# Manifests ARE tracked — they're small index files
+# data/manifests/   <-- NOT ignored
+
+# ----- Model checkpoints & weights -----
+policies/bc/*/checkpoints/
+policies/bc/*/weights/
+policies/exported/*.onnx
+policies/exported/*.pt
+policies/exported/*.safetensors
+*.ckpt
+*.pth
+*.pt
+*.safetensors
+
+# ----- Python / venv -----
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.so
+venv/
+.venv/
+env/
+.env
+
+# ----- OS artifacts -----
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ----- IDE -----
+.idea/
+.vscode/
+*.code-workspace
+
+# ----- Jupyter -----
+.ipynb_checkpoints/
+
+# ----- MuJoCo temp/cache -----
+*.mjlog
+*.mjtrace
+
+# ----- Misc -----
+*.log
+tmp/
