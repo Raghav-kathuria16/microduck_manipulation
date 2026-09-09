@@ -1,23 +1,66 @@
-# Apartment v1 — Scene Assets
+# Microduck Apartment Scene v1
 
-This directory will contain the MuJoCo scene definition for the v1
-apartment layout described in the Teleop/Data spec Part 2:
+This directory contains the MuJoCo XML and assets for the `apartment_v1` scene, designed for the Microduck pick-and-place task.
 
-- Single room (~3.5m × 3.0m) + alcove (~1.5m × 1.5m), duck-scale
-- Floor, walls, rug, laundry basket, 1–2 furniture pieces
-- Sock spawn zone markers (invisible)
-- Camera rig mount points
+## Layout
 
-## Expected files (to be created during Phase 1 implementation)
+The scene represents a single-room-plus-alcove apartment segment at duck-scale (~3.5m x 3m total).
 
-- `apartment_v1.xml` — main MuJoCo MJCF scene file
-- `assets/` — textures, meshes for furniture/basket/rug
-- `includes/` — modular MJCF includes (sock body, basket body, etc.)
+```text
+ ┌───────────────────────────────┬──────────────┐
+ │                                │              │
+ │        MAIN ROOM               │   ALCOVE     │
+ │   ┌────┐                       │   ┌────────┐ │
+ │   │RUG │      [duck spawn]     │   │ BASKET │ │
+ │   └────┘         ●             │   │ (target)│ │
+ │                                │   └────────┘ │
+ │     ○ sock spawn zone (A)      │              │
+ │           ○ sock spawn zone (B)│              │
+ │                                │              │
+ └───────────────────────────────┴──────────────┘
+```
 
-## Design constraints
+## Inventory
 
-- References the robot MJCF from `microduck_rl` (via `external/` pin),
-  does NOT contain a copy of the robot model.
-- All parametrizable aspects (spawn zones, lighting, etc.) are controlled
-  via `configs/scene_apartment_v1.yaml`, not hard-coded in the XML.
-- Scene should load and render on MuJoCo CPU mode (MacBook M2).
+| Element | Name in XML | Type | Notes |
+|---------|-------------|------|-------|
+| **Bodies** | `duck_base` | Robot Proxy | *See note below about the proxy model* |
+| | `sock` | Target Object | ~50g rigid capsule approximation |
+| | `laundry_basket` | Target Receptacle | Made of 5 box geoms |
+| **Cameras** | `top_down` | Orthographic | God's-eye view for spatial awareness |
+| | `chase` | Perspective | Follows the duck |
+| | `beak_cam` | Perspective | Mounted to `duck_head` |
+| **Actuators** | `act_vel_x`, `act_vel_y`, `act_yaw` | Velocity | Base movement |
+| | `act_neck_yaw`, `act_neck_pitch` | Position | Neck joints |
+| | `act_head_pitch`, `act_beak` | Position | Head and beak joints |
+
+## How to Run
+
+### Interactive Viewer
+To view the scene and play with it interactively, use the viewer script from the repository root:
+
+```bash
+# Basic load
+.venv/bin/python scripts/view_scene.py
+
+# Load with random duck pose, sock spawn, and lighting
+.venv/bin/python scripts/view_scene.py --randomize
+```
+**Controls:**
+- **Tab**: Cycle cameras (Free, `top_down`, `chase`, `beak_cam`)
+- **R**: Re-randomize the scene on the fly
+- **G**: Toggle the beak open/closed
+- **Double-click + Ctrl-drag**: Apply forces to objects
+
+### Automated Smoke Test
+To verify the scene geometry, physics stability, and randomization pipeline programmatically (headless):
+
+```bash
+.venv/bin/python scripts/test_scene.py
+```
+
+## Note on the Duck Proxy
+
+The FSD and RL environments will use the true Microduck MJCF (`pollen-robotics/microduck_rl`). For this initial Phase 1 scene build, a **simplified proxy duck** (ellipsoid torso, capsule feet, simplified neck/beak joints) is used. 
+
+This proxy is sufficient to build the apartment geometry, test cameras, validate the randomization pipeline, and ensure the sock and basket physics work. The proxy will be swapped out for the real MJCF during Phase 2 (Teleop Implementation).

@@ -42,3 +42,12 @@ avoids polluting either repo with the other's concerns.
 - **Data lives on HF Hub, code lives in git**: git tracks code/configs/docs
   and lightweight manifests only; all bulky data and model weights are
   published to Hugging Face Hub repos, versioned there.
+
+### 2026-09-09 — Phase 1: Scene Built and Loadable
+
+**What:** Implemented the randomization module, upgraded the interactive viewer, and added an automated smoke test for `apartment_v1`.
+
+**Why:** To formally complete Phase 1. The scene is no longer just XML; it has a Python API for randomizing spawn poses, target placements, and lighting (critical for diverse data collection). The smoke test ensures CI/CD readiness.
+
+**Key decisions captured:**
+- **Duck Proxy:** Decided to defer integrating the real `microduck_rl` MJCF until Phase 2 (Teleop). The simplified proxy duck used here is sufficient to validate the apartment geometry, cameras, physics, and randomization pipeline.

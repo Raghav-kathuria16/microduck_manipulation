@@ -1,0 +1,148 @@
+<mujoco model="microduck_apartment_v1">
+  <compiler angle="radian" coordinate="local" inertiafromgeom="true" meshdir="assets" autolimits="true"/>
+  
+  <option timestep="0.002" integrator="implicitfast" gravity="0 0 -9.81">
+    <flag contact="enable" energy="enable"/>
+  </option>
+
+  <visual>
+    <headlight ambient="0.45 0.42 0.38" diffuse="0.85 0.80 0.75" specular="0.2 0.2 0.2"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global offwidth="640" offheight="480"/>
+  </visual>
+
+  <asset>
+    <!-- Textures and Materials -->
+    <texture type="skybox" builtin="gradient" rgb1="0.6 0.8 1.0" rgb2="0.9 0.95 1.0" width="512" height="512"/>
+    <texture name="tex_floor" type="2d" builtin="checker" rgb1="0.85 0.82 0.75" rgb2="0.75 0.72 0.65" width="512" height="512" mark="cross" markrgb="0.6 0.6 0.6"/>
+    <texture name="tex_rug" type="2d" builtin="flat" rgb1="0.30 0.45 0.55" width="256" height="256"/>
+    
+    <material name="mat_floor" texture="tex_floor" texrepeat="6 6" reflectance="0.1" roughness="0.8"/>
+    <material name="mat_rug" texture="tex_rug" reflectance="0.05" roughness="0.9"/>
+    <material name="mat_wall" rgba="0.92 0.90 0.85 1.0" reflectance="0.05"/>
+    <material name="mat_basket" rgba="0.75 0.55 0.35 1.0" reflectance="0.1"/>
+    <material name="mat_sock" rgba="0.95 0.25 0.25 1.0" reflectance="0.1"/>
+    <material name="mat_duck" rgba="0.98 0.80 0.10 1.0" reflectance="0.2"/>
+    <material name="mat_beak" rgba="0.95 0.45 0.05 1.0" reflectance="0.2"/>
+    <material name="mat_furniture" rgba="0.45 0.35 0.25 1.0"/>
+  </asset>
+
+  <worldbody>
+    <!-- Lighting -->
+    <light name="light_main" pos="1.75 1.5 2.8" dir="0 0 -1" diffuse="0.85 0.80 0.75" specular="0.3 0.3 0.3" castshadow="true"/>
+    <light name="light_alcove" pos="4.2 1.5 2.5" dir="0 0 -1" diffuse="0.65 0.60 0.55" specular="0.2 0.2 0.2"/>
+
+    <!-- ==================== CAMERAS ==================== -->
+    <!-- 1. Top-down orthographic/bird's-eye camera -->
+    <camera name="top_down" pos="2.5 1.5 4.5" zaxis="0 0 1" fovy="55"/>
+
+    <!-- Room Floor (0 to 3.5 in X, 0 to 3.0 in Y) + Alcove (3.5 to 5.0 in X, 0.75 to 2.25 in Y) -->
+    <geom name="floor" type="plane" pos="2.5 1.5 0" size="3.5 2.5 0.1" material="mat_floor" friction="1.0 0.005 0.0001"/>
+
+    <!-- Rug in Main Room -->
+    <geom name="rug" type="box" pos="1.0 0.9 0.002" size="0.6 0.5 0.002" material="mat_rug" friction="1.2 0.005 0.0001"/>
+
+    <!-- ==================== WALLS ==================== -->
+    <!-- South Wall (Main Room) -->
+    <geom name="wall_south" type="box" pos="1.75 0 0.4" size="1.75 0.05 0.4" material="mat_wall"/>
+    <!-- North Wall (Main Room) -->
+    <geom name="wall_north" type="box" pos="1.75 3.0 0.4" size="1.75 0.05 0.4" material="mat_wall"/>
+    <!-- West Wall (Main Room) -->
+    <geom name="wall_west" type="box" pos="0 1.5 0.4" size="0.05 1.5 0.4" material="mat_wall"/>
+    <!-- East Dividing Wall Bottom -->
+    <geom name="wall_div_bot" type="box" pos="3.5 0.375 0.4" size="0.05 0.375 0.4" material="mat_wall"/>
+    <!-- East Dividing Wall Top -->
+    <geom name="wall_div_top" type="box" pos="3.5 2.625 0.4" size="0.05 0.375 0.4" material="mat_wall"/>
+    
+    <!-- Alcove Walls (Doorway is between Y=0.75 and Y=2.25 at X=3.5) -->
+    <geom name="alcove_south" type="box" pos="4.25 0.75 0.4" size="0.75 0.05 0.4" material="mat_wall"/>
+    <geom name="alcove_north" type="box" pos="4.25 2.25 0.4" size="0.75 0.05 0.4" material="mat_wall"/>
+    <geom name="alcove_east" type="box" pos="5.0 1.5 0.4" size="0.05 0.75 0.4" material="mat_wall"/>
+
+    <!-- ==================== FURNITURE / CLUTTER ==================== -->
+    <!-- Small side table in corner -->
+    <geom name="table_top" type="box" pos="0.3 2.7 0.25" size="0.25 0.25 0.02" material="mat_furniture"/>
+    <geom name="table_leg1" type="cylinder" pos="0.1 2.5 0.12" size="0.02 0.12" material="mat_furniture"/>
+    <geom name="table_leg2" type="cylinder" pos="0.5 2.5 0.12" size="0.02 0.12" material="mat_furniture"/>
+    <geom name="table_leg3" type="cylinder" pos="0.1 2.9 0.12" size="0.02 0.12" material="mat_furniture"/>
+    <geom name="table_leg4" type="cylinder" pos="0.5 2.9 0.12" size="0.02 0.12" material="mat_furniture"/>
+
+    <!-- ==================== LAUNDRY BASKET (TARGET) ==================== -->
+    <body name="laundry_basket" pos="4.5 1.5 0">
+      <!-- Outer walls of the basket container -->
+      <geom name="basket_bottom" type="box" pos="0 0 0.015" size="0.22 0.22 0.015" material="mat_basket"/>
+      <geom name="basket_w_n" type="box" pos="0 0.22 0.12" size="0.22 0.015 0.12" material="mat_basket"/>
+      <geom name="basket_w_s" type="box" pos="0 -0.22 0.12" size="0.22 0.015 0.12" material="mat_basket"/>
+      <geom name="basket_w_e" type="box" pos="0.22 0 0.12" size="0.015 0.22 0.12" material="mat_basket"/>
+      <geom name="basket_w_w" type="box" pos="-0.22 0 0.12" size="0.015 0.22 0.12" material="mat_basket"/>
+      <!-- Target detector site -->
+      <site name="basket_target_zone" pos="0 0 0.08" size="0.2 0.2 0.08" type="box" rgba="0 1 0 0.25"/>
+    </body>
+
+    <!-- ==================== SOCK (TARGET OBJECT) ==================== -->
+    <!-- Rigid capsule approximation ~50g -->
+    <body name="sock" pos="1.5 1.2 0.04">
+      <freejoint name="sock_joint"/>
+      <inertial pos="0 0 0" mass="0.05" diaginertia="0.0001 0.0001 0.0001"/>
+      <geom name="sock_geom" type="capsule" fromto="-0.04 -0.015 0 0.04 0.015 0" size="0.025" material="mat_sock" friction="1.2 0.01 0.001" solref="0.01 1" solimp="0.9 0.95 0.001"/>
+      <site name="sock_center" pos="0 0 0" size="0.01" rgba="1 1 1 0.5"/>
+    </body>
+
+    <!-- ==================== MICRODUCK ROBOT MODEL / PROXY ==================== -->
+    <body name="duck_base" pos="1.75 1.5 0.2">
+      <joint name="root_x" type="slide" axis="1 0 0" damping="10"/>
+      <joint name="root_y" type="slide" axis="0 1 0" damping="10"/>
+      <joint name="root_yaw" type="hinge" axis="0 0 1" damping="5"/>
+      <inertial pos="0 0 0" mass="2.5" diaginertia="0.02 0.02 0.02"/>
+      
+      <!-- Torso -->
+      <geom name="duck_torso" type="ellipsoid" size="0.14 0.10 0.09" material="mat_duck"/>
+      
+      <!-- 2. Chase Camera (Follows behind/above duck torso) -->
+      <camera name="chase" pos="-0.75 0 0.5" xyaxes="0 -1 0 0.5 0 1" fovy="60"/>
+
+      <!-- Legs / Stance Base -->
+      <geom name="left_foot" type="capsule" fromto="0.04 0.08 -0.16 0.08 0.08 -0.16" size="0.025" material="mat_beak"/>
+      <geom name="right_foot" type="capsule" fromto="0.04 -0.08 -0.16 0.08 -0.08 -0.16" size="0.025" material="mat_beak"/>
+
+      <!-- Neck Yaw & Pitch -->
+      <body name="duck_neck" pos="0.08 0 0.06">
+        <joint name="neck_yaw" type="hinge" axis="0 0 1" range="-1.2 1.2" damping="0.5"/>
+        <joint name="neck_pitch" type="hinge" axis="0 1 0" range="-0.8 0.8" damping="0.5"/>
+        <geom name="neck_geom" type="capsule" fromto="0 0 0 0.05 0 0.1" size="0.035" material="mat_duck"/>
+
+        <!-- Head -->
+        <body name="duck_head" pos="0.05 0 0.1">
+          <joint name="head_pitch" type="hinge" axis="0 1 0" range="-0.6 0.6" damping="0.5"/>
+          <geom name="head_geom" type="sphere" size="0.06" material="mat_duck"/>
+
+          <!-- 3. Beak First-Person Camera (onboard vision) -->
+          <camera name="beak_cam" pos="0.05 0 0.01" xyaxes="0 -1 0 0 0 1" fovy="85"/>
+
+          <!-- Beak Base (Upper Beak) -->
+          <geom name="beak_upper" type="box" pos="0.06 0 0.008" size="0.035 0.03 0.01" material="mat_beak"/>
+
+          <!-- Articulated Lower Beak (Gripper) -->
+          <body name="duck_lower_beak" pos="0.03 0 -0.015">
+            <joint name="beak_joint" type="hinge" axis="0 1 0" range="-0.05 0.6" damping="0.2"/>
+            <geom name="beak_lower" type="box" pos="0.035 0 -0.005" size="0.035 0.028 0.008" material="mat_beak" friction="2.0 0.05 0.005"/>
+            <site name="beak_tip" pos="0.07 0 0" size="0.008" rgba="0 0 1 0.8"/>
+          </body>
+        </body>
+      </body>
+    </body>
+
+  </worldbody>
+
+  <!-- Actuators for high-level proxy control -->
+  <actuator>
+    <velocity name="act_vel_x" joint="root_x" kv="100"/>
+    <velocity name="act_vel_y" joint="root_y" kv="100"/>
+    <velocity name="act_yaw" joint="root_yaw" kv="50"/>
+    <position name="act_neck_yaw" joint="neck_yaw" kp="20" kv="2"/>
+    <position name="act_neck_pitch" joint="neck_pitch" kp="20" kv="2"/>
+    <position name="act_head_pitch" joint="head_pitch" kp="20" kv="2"/>
+    <position name="act_beak" joint="beak_joint" kp="15" kv="1"/>
+  </actuator>
+
+</mujoco>

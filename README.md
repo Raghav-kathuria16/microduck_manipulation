@@ -57,7 +57,7 @@ microduck_manipulation/
 ## Phased Roadmap
 
 1. ✅ Workspace & docs scaffolded
-2. ⬜ Apartment scene built and loadable
+2. ✅ Apartment scene built and loadable
 3. ⬜ Teleop hierarchy functional
 4. ⬜ 20–50 clean teleop demonstrations
 5. ⬜ Synthetic augmentation applied
