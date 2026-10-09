@@ -1,0 +1,12 @@
+# ==============================================================================
+# MicroDuck Manipulation & Dynamic Load-Carrying Suite
+# ==============================================================================
+# Core dependencies for running simulation, ONNX policy inference, and rendering
+# ==============================================================================
+
+mujoco>=3.3.0
+onnxruntime>=1.18.0
+numpy>=1.26.0,<2.1.0
+pillow>=10.0.0
+imageio>=2.30.0
+imageio-ffmpeg>=0.5.0
