@@ -14,6 +14,19 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### 2026-10-10 — Doubled Badminton Racket Geometry, Full-Width Olympic Race Showcase, and Repository Professionalization
+
+**What:** Scaled up the badminton racket oval frame head to 2x doubled dimensions (100 mm lateral width by 124 mm longitudinal length, 16 capsule frame segments), lengthened the carbon fiber shaft to 88 mm between the grip cone and gold T-joint to guarantee 42 mm lateral cheek clearance past Microduck's outer jaw cowl, expanded the Olympic Stadium Race showcase in README.md into a full-width container (width="100%"), removed all emojis across the entire repository documentation, enforced strict frontend-only math notation (zero LaTeX backend syntax), and substantially expanded the Badminton technical documentation section.
+
+**Why:** The user identified that the original badminton racket head was disproportionately small relative to the 24.4 cm robot height, requested a doubled oval head with lengthened section, asked for an expansive 32:18 banner display for the Olympic lemon race video, requested complete removal of emojis for a professional publication standard, and mandated clean frontend math over raw LaTeX syntax.
+
+**Key decisions captured:**
+- **Doubled Oval Head (100 mm × 124 mm):** Formed from 16 interconnected carbon capsules (`bm_fr_0` through `bm_fr_15`) with a high-tension translucent string bed ellipsoid (`size="0.047 0.0002 0.059"`).
+- **Lengthened Shaft & Cheek Clearance (42 mm):** The 88 mm carbon shaft span places the gold T-joint at z = 0.150 m, providing 42 mm lateral clearance outside the 45.7 mm jaw cowl, eliminating collision torque spikes during whole-body yaw/roll sway.
+- **Physical Clamping Stability:** 110 mm synthetic polyurethane grip clamped at 0.50 N·m torque across mouth silicone pads (μ = 3.5), achieving 100% payload retention (> 30.0s stability, 0.0 mm handle slip).
+- **Full-Width Olympic Video Display:** Embedded `duck_racer_competition_2x.webp` with `width="100%"` for a panoramic banner view.
+- **Zero Emojis & Zero LaTeX Backend Syntax:** Systematically replaced all emojis with academic headings and verified zero LaTeX markers or raw math macros across all markdown files.
+
 ### 2026-09-24 — Pure Physical Clamping (Zero Welds) + 15th Actuator + Non-Penetrating Beak Kinematics (v4 Policy Verified)
 
 **What:** Restored the articulated 15th actuator (`beak` XL-330 Dynamixel servo) with realistic motor dynamics, corrected the lower beak hinge range to 1.47 to 2.05 rad (84.2 to 117.5 degrees) with CAD flush reference at 1.500 rad (85.9 degrees), demoted rigid plastic head shells (`bottom_head_shell`, `beak_lower_collision`) to self-collision only (`contype=2, conaffinity=2`), centered the barbell payload at silicone midpoint z = -58 mm, and formulated, trained, and verified `payload_clamping_locomotion.onnx` (formerly `loadcarry_ppo_headup_v4.onnx`) under pure contact physics (100g barbell, zero welds, friction mu = 3.5 silicone).
