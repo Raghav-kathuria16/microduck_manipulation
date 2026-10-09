@@ -238,33 +238,35 @@ def create_scaled_scene_xml(racket_type="table_tennis", include_ball=True):
       <geom name="racket_cor_br" type="capsule" fromto="0.039 0 0.082 0.012 0 0.070" size="0.0035" material="pb_edge_guard"/>
     </body>"""
     else:
-        # Scaled Badminton Racket: 110mm handle (spans Y = -55mm to +55mm)
+        # Scaled Badminton Racket: 110mm handle (spans Y = -55mm to +55mm), lengthened 88mm shaft, and 2x doubled oval head
         body_str = """    <body name="racket" pos="0.048 0.0 0.220" quat="0.7071068 0.7071068 0 0">
       <freejoint name="racket_free"/>
-      <!-- Mass: 40g counterbalanced so COM is at mouth center (z=0) -->
-      <inertial pos="0 0 0" mass="0.040" diaginertia="0.00014 0.00014 0.000008"/>
+      <!-- Mass: 45g counterbalanced so COM is at mouth center (z=0) -->
+      <inertial pos="0 0 0" mass="0.045" diaginertia="0.00028 0.00028 0.000015"/>
       <geom name="racket_butt" type="cylinder" pos="0 0 -0.058" size="0.0055 0.0015" material="bm_butt_green" friction="2.0 0.1 0.1"/>
       <geom name="racket_handle" type="cylinder" pos="0 0 0" size="0.004 0.055" material="bm_grip_black" friction="3.5 0.2 0.2" contype="0" conaffinity="0"/>
-      <geom name="racket_cone" type="cylinder" pos="0 0 0.058" size="0.003 0.003" material="bm_cone_grey"/>
-      <geom name="racket_shaft" type="cylinder" pos="0 0 0.078" size="0.002 0.0175" material="bm_shaft_carbon" friction="2.5 0.1 0.1"/>
-      <geom name="racket_t_joint" type="cylinder" pos="0 0 0.098" size="0.0028 0.002" material="bm_t_joint_gold"/>
-      <geom name="bm_fr_0" type="capsule" fromto="0.0250 0 0.130 0.0231 0 0.142" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_1" type="capsule" fromto="0.0231 0 0.142 0.0177 0 0.152" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_2" type="capsule" fromto="0.0177 0 0.152 0.0096 0 0.159" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_3" type="capsule" fromto="0.0096 0 0.159 0.0000 0 0.161" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_4" type="capsule" fromto="0.0000 0 0.161 -0.0096 0 0.159" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_5" type="capsule" fromto="-0.0096 0 0.159 -0.0177 0 0.152" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_6" type="capsule" fromto="-0.0177 0 0.152 -0.0231 0 0.142" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_7" type="capsule" fromto="-0.0231 0 0.142 -0.0250 0 0.130" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_8" type="capsule" fromto="-0.0250 0 0.130 -0.0231 0 0.118" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_9" type="capsule" fromto="-0.0231 0 0.118 -0.0177 0 0.108" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_10" type="capsule" fromto="-0.0177 0 0.108 -0.0096 0 0.101" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_11" type="capsule" fromto="-0.0096 0 0.101 0.0000 0 0.099" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_12" type="capsule" fromto="0.0000 0 0.099 0.0096 0 0.101" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_13" type="capsule" fromto="0.0096 0 0.101 0.0177 0 0.108" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_14" type="capsule" fromto="0.0177 0 0.108 0.0231 0 0.118" size="0.0015" material="bm_frame_blue"/>
-      <geom name="bm_fr_15" type="capsule" fromto="0.0231 0 0.118 0.0250 0 0.130" size="0.0015" material="bm_frame_blue"/>
-      <geom name="racket_strings" type="ellipsoid" pos="0 0 0.130" size="0.0235 0.0002 0.0295" material="bm_strings" contype="0" conaffinity="0"/>
+      <geom name="racket_cone" type="cylinder" pos="0 0 0.058" size="0.0035 0.003" material="bm_cone_grey"/>
+      <!-- Lengthened carbon shaft (88mm total span: z from 0.060 to 0.148) -->
+      <geom name="racket_shaft" type="cylinder" pos="0 0 0.104" size="0.0022 0.044" material="bm_shaft_carbon" friction="2.5 0.1 0.1"/>
+      <geom name="racket_t_joint" type="cylinder" pos="0 0 0.150" size="0.0032 0.003" material="bm_t_joint_gold"/>
+      <!-- 2x Doubled Oval Head (100mm width, 124mm length: z from 0.153 to 0.277) -->
+      <geom name="bm_fr_0" type="capsule" fromto="0.0500 0 0.2150 0.0462 0 0.2387" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_1" type="capsule" fromto="0.0462 0 0.2387 0.0354 0 0.2588" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_2" type="capsule" fromto="0.0354 0 0.2588 0.0191 0 0.2723" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_3" type="capsule" fromto="0.0191 0 0.2723 0.0000 0 0.2770" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_4" type="capsule" fromto="0.0000 0 0.2770 -0.0191 0 0.2723" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_5" type="capsule" fromto="-0.0191 0 0.2723 -0.0354 0 0.2588" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_6" type="capsule" fromto="-0.0354 0 0.2588 -0.0462 0 0.2387" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_7" type="capsule" fromto="-0.0462 0 0.2387 -0.0500 0 0.2150" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_8" type="capsule" fromto="-0.0500 0 0.2150 -0.0462 0 0.1913" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_9" type="capsule" fromto="-0.0462 0 0.1913 -0.0354 0 0.1712" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_10" type="capsule" fromto="-0.0354 0 0.1712 -0.0191 0 0.1577" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_11" type="capsule" fromto="-0.0191 0 0.1577 -0.0000 0 0.1530" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_12" type="capsule" fromto="-0.0000 0 0.1530 0.0191 0 0.1577" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_13" type="capsule" fromto="0.0191 0 0.1577 0.0354 0 0.1712" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_14" type="capsule" fromto="0.0354 0 0.1712 0.0462 0 0.1913" size="0.0018" material="bm_frame_blue"/>
+      <geom name="bm_fr_15" type="capsule" fromto="0.0462 0 0.1913 0.0500 0 0.2150" size="0.0018" material="bm_frame_blue"/>
+      <geom name="racket_strings" type="ellipsoid" pos="0 0 0.2150" size="0.047 0.0002 0.059" material="bm_strings" contype="0" conaffinity="0"/>
     </body>"""
 
     xml = base.replace(old_cyl, body_str)

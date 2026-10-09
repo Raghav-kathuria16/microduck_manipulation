@@ -38,7 +38,7 @@ Five autonomous Microducks sprinting down parallel lanes on an authentic Mondo t
 
 Every barbell evaluation tests pure Coulomb friction clamping: the central shaft sits in the mouth cavity and is clamped solely by beak actuator torque against high-friction contact pads with zero simulation welds.
 
-##### 🏋️ 100g Barbell Carry (48 mm End Plates)
+##### 100g Barbell Carry (48 mm End Plates)
 - **Mass**: 100g (13.6% of robot bodyweight)
 - **Geometry**: 50g central shaft + two 25g end plates (48 mm diameter, 15 mm thickness — 2x from previous edit)
 - **Clamping Torque**: 0.10 N·m
@@ -52,7 +52,7 @@ Every barbell evaluation tests pure Coulomb friction clamping: the central shaft
 
 ---
 
-##### 🏋️ 200g Barbell Carry (27% Robot Bodyweight)
+##### 200g Barbell Carry (27% Robot Bodyweight)
 - **Mass**: 200g (27.1% of robot bodyweight)
 - **Clamping Torque**: 0.10 N·m
 - **Forward Velocity**: 0.25 m/s
@@ -65,7 +65,7 @@ Every barbell evaluation tests pure Coulomb friction clamping: the central shaft
 
 ---
 
-##### 🏋️ 300g Barbell Carry (41% Robot Bodyweight)
+##### 300g Barbell Carry (41% Robot Bodyweight)
 - **Mass**: 300g (40.7% of robot bodyweight)
 - **Clamping Torque**: 0.10 N·m
 - **Policy**: `payload_clamping_locomotion.onnx`
@@ -79,7 +79,7 @@ Every barbell evaluation tests pure Coulomb friction clamping: the central shaft
 
 ---
 
-#### ⏱️ Exhaustive Empirical Failure Benchmark (30.0s Locomotion Horizon)
+#### Exhaustive Empirical Failure Benchmark (30.0s Locomotion Horizon)
 
 Under continuous bipedal walking, footstep impact shockwaves cause Coulomb friction micro-slip accumulation. The table below presents exact empirically measured failure times across payloads and torques:
 
