@@ -160,17 +160,18 @@ def render_barbell(mass_g, torque_nm, vel_x, output_name):
 def render_racket(racket_type, output_name):
     """Renders racket carry for table tennis, badminton, or pickleball."""
     print(f"\nRendering {racket_type} Carry...")
+    is_tt = (racket_type == "table_tennis")
     xml_str = create_scaled_scene_xml(racket_type=racket_type, include_ball=False)
     model = mujoco.MjModel.from_xml_string(xml_str)
     model.opt.timestep = 0.002
     data = mujoco.MjData(model)
 
-    policy_path = _TT_CARRY_POLICY if racket_type == "table_tennis" and os.path.exists(_TT_CARRY_POLICY) else _DEFAULT_POLICY
+    policy_path = _TT_CARRY_POLICY if is_tt and os.path.exists(_TT_CARRY_POLICY) else _DEFAULT_POLICY
     import onnxruntime as ort
     sess = ort.InferenceSession(policy_path, providers=["CPUExecutionProvider"])
     input_dim = sess.get_inputs()[0].shape[1]
 
-    if input_dim == 64:
+    if input_dim == 64 and is_tt:
         policy = TableTennisRacketCarryPolicyInference(model, data, onnx_path=policy_path)
     else:
         policy = PolicyInference(
@@ -200,17 +201,18 @@ def render_racket(racket_type, output_name):
     jaw_bid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "jaw_soft")
     trunk_bid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "trunk_base")
 
-    target_clamp_angle = 1.630 if racket_type == "table_tennis" else (1.645 if racket_type == "pickleball" else 1.620)
+    target_clamp_angle = 1.637 if is_tt else (1.654 if racket_type == "badminton" else 1.666)
+    clamp_torque = 0.50
     data.qpos[beak_qpos] = target_clamp_angle
-    data.qfrc_applied[beak_dof] = -0.18
+    data.qfrc_applied[beak_dof] = -clamp_torque
     if model.nu > 14:
         data.ctrl[14] = 1.0
 
     mujoco.mj_forward(model, data)
     p_jaw = data.xpos[jaw_bid]
     R_jaw = data.xmat[jaw_bid].reshape(3, 3)
-    HOVER_LOCAL = np.array([-0.0119, 0.0, -0.0465])
-    CYL_QUAT = np.array([0.0, 0.7071068, 0.7071068, 0.0])
+    HOVER_LOCAL = np.array([-0.0120, 0.0, -0.0680])
+    CYL_QUAT = np.array([0.0, 0.7071068, 0.7071068, 0.0]) if is_tt else np.array([0.7071068, 0.7071068, 0.0, 0.0])
 
     r_adr = model.jnt_qposadr[racket_jid]
     data.qpos[r_adr:r_adr+3] = p_jaw + R_jaw @ HOVER_LOCAL
@@ -221,58 +223,56 @@ def render_racket(racket_type, output_name):
     data.qpos[r_adr+3:r_adr+7] = q_r
 
     for _ in range(60):
-        data.qfrc_applied[beak_dof] = -0.18
+        data.qfrc_applied[beak_dof] = -clamp_torque
         mujoco.mj_step(model, data)
 
     renderer = mujoco.Renderer(model, width=1280, height=720)
-    cam = mujoco.MjvCamera()
-    cam.type = mujoco.mjtCamera.mjCAMERA_FREE
-    cam.distance = 0.85
-    cam.elevation = -12.0
-    cam.azimuth = 135.0
+    vopt = mujoco.MjvOption()
+    vopt.geomgroup[3] = 0
 
-    total_steps = int(7.0 / model.opt.timestep)  # 7.0s walk (100% longer)
+    cam = mujoco.MjvCamera()
+    cam.type = mujoco.mjtCamera.mjCAMERA_TRACKING
+    cam.trackbodyid = 1
+    cam.distance = 0.72
+    cam.elevation = -14.0
+    cam.azimuth = 138.0
+
+    total_steps = int(6.87 / model.opt.timestep)  # 6.87s walk (100% longer)
     fps = 30
     steps_per_frame = int(round(1.0 / (fps * model.opt.timestep)))
     decimation = 10
 
     frames = []
-    smooth_x = data.xpos[trunk_bid][0] + 0.08
-    smooth_z = data.xpos[trunk_bid][2] + 0.02
     steadicam_pos = 0.0
 
     for step in range(total_steps):
         beak_err = target_clamp_angle - data.qpos[beak_qpos]
-        data.qfrc_applied[beak_dof] = float(np.clip(-0.18 + 12.0 * beak_err - 0.5 * data.qvel[beak_dof], -1.2, 0.2))
+        data.qfrc_applied[beak_dof] = float(np.clip(-clamp_torque + 12.0 * beak_err - 0.5 * data.qvel[beak_dof], -1.5, 0.2))
 
         if step % decimation == 0:
             action = policy.infer()
 
-            R_trunk = data.xmat[trunk_bid].reshape(3, 3)
-            h_fwd = np.array([R_trunk[0, 0], R_trunk[1, 0], 0.0])
-            h_fwd /= (np.linalg.norm(h_fwd) + 1e-6)
-            R_r = data.xmat[racket_bid].reshape(3, 3)
-            b_norm = R_r @ np.array([0.0, 1.0, 0.0])
-            racket_pitch = math.asin(np.clip(float(np.dot(b_norm, h_fwd)), -0.999, 0.999))
+            if is_tt:
+                R_trunk = data.xmat[trunk_bid].reshape(3, 3)
+                h_fwd = np.array([R_trunk[0, 0], R_trunk[1, 0], 0.0])
+                h_fwd /= (np.linalg.norm(h_fwd) + 1e-6)
+                R_r = data.xmat[racket_bid].reshape(3, 3)
+                b_norm = R_r @ np.array([0.0, 1.0, 0.0])
+                racket_pitch = math.asin(np.clip(float(np.dot(b_norm, h_fwd)), -0.999, 0.999))
 
-            rate_cmd = np.clip(1.20 * racket_pitch, -0.30, 0.30)
-            steadicam_pos = np.clip(steadicam_pos + rate_cmd * 0.02, -0.20, 0.20)
-            action[5] += steadicam_pos
-            action[6] -= steadicam_pos
+                rate_cmd = np.clip(1.20 * racket_pitch, -0.30, 0.30)
+                steadicam_pos = np.clip(steadicam_pos + rate_cmd * 0.02, -0.20, 0.20)
+                action[5] += steadicam_pos
+                action[6] -= steadicam_pos
 
             policy.apply_action(action)
+            if model.nu > 14:
+                data.ctrl[14] = 1.0
 
         mujoco.mj_step(model, data)
 
         if step % steps_per_frame == 0:
-            p_trunk = data.xpos[trunk_bid]
-            target_x = p_trunk[0] + 0.08
-            target_z = p_trunk[2] + 0.02
-            smooth_x = 0.94 * smooth_x + 0.06 * target_x
-            smooth_z = 0.94 * smooth_z + 0.06 * target_z
-            cam.lookat = [smooth_x, p_trunk[1], smooth_z]
-
-            renderer.update_scene(data, camera=cam)
+            renderer.update_scene(data, camera=cam, scene_option=vopt)
             frames.append(renderer.render())
 
     render_to_mp4_and_webp(frames, output_name, fps=fps)
