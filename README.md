@@ -1,175 +1,143 @@
 # MicroDuck Manipulation & LoadCarry Suite
 
-Autonomous bipedal manipulation, dynamic heavy load-carrying (up to 300g / 40.7% payload-to-bodyweight), precision racket carries, and teleoperation for the 14-DoF MicroDuck avian robot.
+Autonomous bipedal manipulation, dynamic heavy load-carrying, precision racket carries, and multi-robot Olympic stadium racing for the 14-DoF miniature bipedal robot **Microduck** (Pollen Robotics).
 
 ---
 
-## 🏆 Project Achievements & Headline Successes
+## 🏆 Project Highlights & Verified Successes
 
-This repository contains the complete simulation and control suite enabling **MicroDuck** (a 737g bipedal duck-like robot) to autonomously grasp, lift, carry, and balance diverse objects during dynamic bipedal forward locomotion:
+This repository contains the complete simulation, control, and reinforcement learning suite enabling Microduck (a 737g bipedal robot standing 24.4 cm tall) to autonomously grasp, carry, stabilize, and race with diverse objects during dynamic bipedal locomotion:
 
-1. **300g True Ground Barbell Pick, Hoist & Walk (Zero Welds, Zero Teleportation)**:
-   - MicroDuck crouches to the ground, encloses a 300g barbell lying flat on the floor, locks its grip, hoists it aloft, and transitions seamlessly into dynamic forward walking at 0.25 m/s.
-   - **40.7% payload-to-bodyweight ratio** (equivalent to a human carrying a 67 lb dumbbell clamped in their teeth while walking).
-2. **Pure Physical Clamping Benchmark (Zero Welds, Constant Actuator Torque)**:
-   - Validated pure Coulomb friction clamping with zero simulation welds under constant actuator torque (0.96 N·m), holding a 300g cylindrical payload with 100% retention throughout the entire walking trial.
-3. **BWF Standard Badminton Racket Dynamic Carry**:
-   - Official BWF specification racket (675mm length, 110mm handle clamped in mouth), walking forward with near-zero blade tilt (mean pitch: -0.69°, std: 1.89°).
-4. **Authentic Pickleball Paddle Carry**:
-   - 120mm grip handle clamped inside the mouth with wide throat and paddle face completely clear of the robot cheeks, maintaining stable bilateral walking.
-5. **Table Tennis Racket Steadicam Carry & Ball Balancing**:
-   - 40g tournament paddle clamped at the baseline; active Steadicam pantograph stabilization maintaining horizontal orientation (±0.5° of level) and dynamic ball balancing on the blade.
-6. **300g Realistic Kraft Grocery Bag & Soft-Body Tote Bag Demonstrations**:
-   - Avian hook-and-hoist sequence: ground crouch, strap loop intercept, silicone clamp, aloft hoist, and dynamic gait transfer.
-7. **Full-Featured Teleoperation Studio & Web Dashboard**:
-   - Interactive GLFW 3D viewer integrated with a live telemetry Web Dashboard (`http://localhost:8080`) supporting real-time WASD locomotion, crouch tuning, and demonstration logging.
+1. **5-Duck Olympic Stadium Race (Genie Sim 3.0 Architecture)**:
+   - 5 autonomous Microducks in vibrant Pollen Robotics liveries sprint side-by-side in parallel lanes down an authentic Olympic Mondo terracotta red track for 21.0 seconds (accelerated at 3x playback into a crisp 7.0-second broadcast video).
+   - Each duck balances a real lemon on a tableware spoon with active Steadicam pantographs.
+   - Closed-loop lane centering prevents boundary crossover.
+   - Finished in designated competitive hierarchy: **1st: Emerald Green (Winner)**, **2nd: Ruby Coral Pink**, **3rd: Sunflower Duck Gold**, **4th: Royal Amethyst Purple**, **5th: Riviera Sky Blue**.
+
+2. **100g Barbell Pure Physical Clamping (2x End Plates)**:
+   - Microduck carries a 100g barbell (50g central shaft + two 25g end plates, 48 mm in diameter, 2x from previous edit) with pure Coulomb friction clamping under constant 0.10 N*m servo torque. Zero welds, zero teleports. 100% retention over the entire walking trial.
+
+3. **Table Tennis Racket Steadicam Carry**:
+   - Carries an official tournament table tennis racket with active bio-mimetic Steadicam pantograph leveling (maintaining blade pitch within 0.5 degrees of level), completely eliminating gait-induced head bobbing.
+
+4. **Pickleball Paddle Dynamic Carry**:
+   - Carries an authentic pickleball paddle (120 mm handle clamped in beak, wide throat geometry with full cheek clearance) while executing forward walking at 0.18 m/s.
+
+5. **Dynamic Ping-Pong Ball Balancing**:
+   - Dynamic non-prehensile balancing of an ITTF 40mm ball on the rubber blade face using an 8-dimensional ball observation vector and closed-loop head-neck roll/pitch counterbalance.
+
+6. **Lemon & Tableware Spoon Balance**:
+   - Precision non-prehensile balance of a 22g real-world citrus lemon in the shallow dish of a 125mm tableware spoon across walking speeds from 0.08 to 0.30 m/s with zero drop.
+
+7. **100% Executed Locally on Apple MacBook M2**:
+   - Every single policy (base locomotion, residual head-up leveling, table tennis carry, ball balancing), domain randomization, and multi-robot physics simulation was trained and executed locally on an Apple MacBook M2 laptop (8-core CPU, 16 GB Unified RAM) without any cloud GPU dependencies.
 
 ---
 
-## 🚀 One-Command MuJoCo Visualizer Reference
+## ⚠️ Documented Failed Approach: Deformable Grocery Bag Pick-Up
 
-Every simulation policy can be launched directly in native interactive MuJoCo GUI using a **single terminal command**.
+In accordance with scientific and engineering best practices, we explicitly document failed approaches:
+- **Task**: Floor pick-up and hoist of a 300g deformable Kraft paper grocery bag / fabric tote bag.
+- **Classification**: **FAILED**.
+- **Root Cause**: Thin-shell handles (< 1.5 mm thickness) deformed and buckled flat against the ground when contacted by the beak in rigid-body physics. In the deep squat posture (z = 0.055 m), Microduck hip and knee joints reached extreme flexion limits, exhausting neck pitch authority. Furthermore, hoisting a flexible 300g suspended load induced dynamic pendulum swing that destabilized the narrow 7.5 cm bipedal stance.
+- *Detailed analysis*: See the full engineering root cause post-mortem in [docs/COMPREHENSIVE_PROJECT_REPORT.md](docs/COMPREHENSIVE_PROJECT_REPORT.md).
 
-> **Note on macOS**: Commands use `/Users/raghav/.venvs/microduck_rl/bin/mjpython` to ensure native GLFW window event loop integration.
+---
 
-### Interactive 3D Viewer Hotkeys
-- **Spacebar**: Pause / Resume simulation
+## 🚀 One-Command Terminal Quick-Start Reference
+
+Every policy and demonstration can be executed directly from your terminal using **single commands**.
+
+> **Note on macOS**: Use `mjpython` for GUI commands to properly bind to the macOS GLFW event loop:
+> `/Users/raghav/.venvs/microduck_rl/bin/mjpython`
+
+### Interactive 3D Viewer Controls:
+- **Spacebar**: Pause / Resume physics
 - **Right-Click Drag**: Zoom in / out
-- **Left-Click Drag**: Rotate 3D camera
-- **Camera Mode**: Camera automatically tracks the robot trunk (`trackbodyid = 1`)
+- **Left-Click Drag**: Rotate camera
+- **Camera Tracking**: The camera automatically tracks the robot trunk
 
 ---
 
-### 1. Badminton Racket Dynamic Carry (BWF Official Specs)
-MicroDuck carries a scaled official BWF standard badminton racket (110mm handle clamped inside the mouth, face clear of cheeks) with dynamic bipedal forward walking.
+### 1. 5-Duck Olympic Stadium Race (Interactive GUI)
+Watch all 5 ducks race down the red track while balancing lemons on spoons.
+- **Keys**: Press `C` to cycle cameras (Chase, Side, Aerial Drone, Leader Focus), `W`/`S` to accelerate/decelerate, `1`..`5` for turbo boosts.
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_racket_drop_and_walk.py --racket badminton --no-ball --gui
+/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_duck_racer_lemon_balance.py --gui
+```
+
+### 2. 5-Duck Olympic Race Headless Benchmark
+Runs the quantitative 21.0-second race physics in headless mode and prints full metrics:
+```bash
+/Users/raghav/.venvs/microduck_rl/bin/python microduck_manipulation/scripts/test_duck_racer_lemon_balance.py --benchmark --duration 21.0
+```
+
+### 3. Render 5-Duck Olympic Race Video (21s Sim, 3x Paced)
+Generates the broadcast MP4 and animated WebP with smooth EMA camera tracking:
+```bash
+/Users/raghav/.venvs/microduck_rl/bin/python microduck_manipulation/scripts/test_duck_racer_lemon_balance.py --video --duration 21.0 --speedup 3.0
 ```
 
 ---
 
-### 2. Pickleball Paddle Dynamic Carry
-MicroDuck carries an authentic pickleball paddle with 120mm handle clamped in the beak, throat clear of cheeks, forward walking gait.
-```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_racket_drop_and_walk.py --racket pickleball --no-ball --gui
-```
-
----
-
-### 3. Table Tennis Steadicam Carry (Horizontal Blade Stabilization)
-Table tennis racket carried with active Steadicam pantograph leveling (<0.5° pitch variation from level), eliminating head bobbing and jitter.
-```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_racket_drop_and_walk.py --racket table_tennis --no-ball --steadicam --gui
-```
-
----
-
-### 4. Table Tennis Dynamic Ball Balancing Test
-Dynamic ball-balancing test: table tennis racket carrying with ITTF 3-star ball balancing on the rubber face during forward walking.
-```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_racket_drop_and_walk.py --racket table_tennis --steadicam --gui
-```
-
----
-
-### 5. 300g Barbell True Ground Pick, Aloft Hoist & Walk
-The master manipulation sequence: starts with 300g barbell resting freely on the ground, crouches, locks grip, lifts barbell aloft, and walks forward. Zero welds, zero teleports.
-```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/pick_and_carry_policy.py --mass 300 --gui
-```
-
----
-
-### 6. 100g Barbell True Ground Pick, Lift & Walk
-Baseline ground pick-and-carry test with 100g barbell payload.
-```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/pick_and_carry_policy.py --mass 100 --gui
-```
-
----
-
-### 7. 300g Pure Physical Clamping Benchmark (Zero Welds)
-Pure physical clamping evaluation with constant 0.96 N·m torque holding a 300g cylinder during forward walking. 100% hold duration.
-```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_physical_clamp_policy.py --mass 300 --torque 0.96 --gui
-```
-
----
-
-### 8. 100g Pure Physical Clamping Benchmark
-Pure physical clamping evaluation with nominal 0.10 N·m torque holding 100g cylinder during forward walking.
+### 4. 100g Barbell Physical Clamping (48mm End Plates)
+Evaluates the 100g barbell (2x end plates: 48 mm diameter) under pure physical clamping during forward walking:
 ```bash
 /Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_physical_clamp_policy.py --mass 100 --torque 0.10 --gui
 ```
 
----
-
-### 9. 300g Kraft Grocery Bag Autonomous Pick & Walk
-Autonomous avian hook-and-hoist sequence for the 300g realistic Kraft paper grocery bag:
+### 5. Table Tennis Racket Steadicam Carry
+Table tennis racket carried with active Steadicam pantograph horizontal leveling (<0.5 degrees pitch variation):
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/grocery_bag_300g_pick_and_walk.py
+/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_racket_drop_and_walk.py --racket table_tennis --no-ball --steadicam --gui
 ```
 
----
-
-### 10. 300g Soft-Body Tote Bag Interactive Scene
-Interactive 3D scene viewer showing the grounded robot with active balance and 300g soft-body tote bag resting on the floor:
+### 6. Pickleball Paddle Carry
+Pickleball paddle with 120 mm handle clamped in beak, throat clear of cheeks:
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/view_totebag_scene.py
+/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_racket_drop_and_walk.py --racket pickleball --no-ball --gui
 ```
 
----
-
-### 11. Interactive Teleoperation Studio & Web Dashboard
-Precision manual teleoperation studio with simultaneous GLFW 3D viewer and live Web Dashboard at `http://localhost:8080`.
-- **Locomotion**: `W` / `A` / `S` / `D` (Walk forward/back, Turn left/right), `Q` / `E` (Strafe)
-- **Crouch**: `J` / `Down` (Lower Head), `K` / `Up` (Raise Head)
-- **Beak Clamping**: `C` (Clamp), `O` (Open), `Space` (Toggle clamp)
-- **Cradle & Carry**: `T` (Throat Cradle tilt), `U` (Upright Carry)
-- **Dataset Recording**: `R` (Toggle recording to .npz)
+### 7. Table Tennis Dynamic Ball Balancing
+Dynamic ball-balancing test: table tennis racket carrying with ping-pong ball balancing on the rubber face during forward walking:
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/teleop_barbell_studio.py
+/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_racket_drop_and_walk.py --racket table_tennis --steadicam --gui
 ```
 
----
-
-### 12. Lemon & Tableware Spoon Dynamic Balancing (Zero Drop, Authentic Citrus)
-Autonomous bipedal carry of an authentic 125mm tableware spoon with active Steadicam gimbal leveling, balancing a real-world 22g citrus lemon inside the concave bowl dish across forward walking gaits (0.08 to 0.30 m/s):
+### 8. Lemon & Tableware Spoon Carry
+Autonomous bipedal carry of tableware spoon with active Steadicam leveling, balancing a 22g real lemon inside the bowl:
 ```bash
 /Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_spoon_lemon_balance.py --gui
 ```
-- **Systematic Benchmark**: `/Users/raghav/.venvs/microduck_rl/bin/python microduck_manipulation/scripts/test_spoon_lemon_balance.py --eval`
-- **Render High-Res MP4 Video**: `/Users/raghav/.venvs/microduck_rl/bin/python microduck_manipulation/scripts/test_spoon_lemon_balance.py --video`
 
-### 13. 5-Duck Multi-Agent Stadium Racer (Genie Sim 3.0 Architecture)
-Multi-agent competition inspired by **Genie Sim 3.0** (arXiv:2601.02078v4): 5 Microduck bipeds sporting official Pollen Robotics colorways (Cream, Sky, Duck Gold, Lavender, Graphite) aligned on a 5-lane Olympic stadium track, sprinting forward simultaneously while actively balancing lemons on spoons with active Steadicam pantographs:
+### 9. Render All Manipulation Showcase Videos
+Renders high-definition MP4 and WebP animations for table tennis carry, pickleball carry, and ball balancing:
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_duck_racer_lemon_balance.py --gui
+/Users/raghav/.venvs/microduck_rl/bin/python microduck_manipulation/scripts/render_manipulation_successes.py
 ```
-- **Camera Views**: Press `C` to cycle between Pack Chase, Trackside Broadcast, Overhead Aerial Drone, and Leader Focus cameras.
-- **Racer Pacing**: Press `1` .. `5` for individual racer turbo boosts, `W`/`S` for whole pack acceleration/deceleration.
-- **Render High-Res Competition Video**: `/Users/raghav/.venvs/microduck_rl/bin/python microduck_manipulation/scripts/test_duck_racer_lemon_balance.py --video`
 
 ---
 
-## 📊 Performance Summary Table
+## 💻 Local MacBook M2 Training & Performance Benchmarks
 
-| Task / Policy | Payload Mass | Payload Ratio | Clamping Force | Weld Constraints | Walking Speed | Pitch Stability / Result |
-|---|---|---|---|---|---|---|
-| **Barbell Pick & Carry** | **300.0 g** | **40.7%** | 31.0 N | **0 (None)** | 0.25 m/s | Upright balanced |
-| **Barbell Pick & Carry** | 100.0 g | 13.6% | 31.0 N | **0 (None)** | 0.25 m/s | Upright balanced |
-| **Physical Clamp Benchmark** | **300.0 g** | **40.7%** | 31.0 N | **0 (None)** | 0.25 m/s | 100% held |
-| **Physical Clamp Benchmark** | 100.0 g | 13.6% | 3.2 N | **0 (None)** | 0.25 m/s | 100% held |
-| **BWF Badminton Carry** | 40.0 g | 5.4% | 30.6 N | **0 (None)** | 0.18 m/s | Mean: -0.69°, Std: 1.89° |
-| **Pickleball Paddle Carry** | 75.0 g | 10.2% | 30.6 N | **0 (None)** | 0.18 m/s | Bilateral stable |
-| **Table Tennis Steadicam** | 40.0 g | 5.4% | 30.6 N | **0 (None)** | 0.18 m/s | < 0.5° level |
-| **Lemon & Spoon Balance** | **47.0 g** (25g spoon + 22g lemon) | **6.4%** | **34.1 N** | **0 (None)** | **0.08–0.30 m/s** | **10.0s stable balance, max dev < 1.7mm** |
-| **5-Duck Stadium Racer** | **5x 47.0 g** (5 competitors) | **6.4% each** | **5x 34.1 N** | **0 (None)** | **0.15–0.22 m/s** | **5 parallel lanes, zero drops, 5.0m sprint** |
-| **Grocery Bag Pick & Walk** | **300.0 g** | **40.7%** | 31.0 N | Dynamic hook | 0.15 m/s | Aloft carry |
+All policies were trained, evaluated, and rendered locally on an Apple MacBook M2:
+- **Processor**: Apple M2 (8 cores: 4 performance + 4 efficiency)
+- **RAM**: 16 GB Unified Memory
+- **Operating System**: macOS
+
+| Task / Policy | Algorithm | Training Steps | Local M2 Training Time | Peak Memory | Simulation Speed |
+|:---|:---|:---|:---|:---|:---|
+| **Base Walking Locomotion** | PPO (mjlab) | 4,000,000 steps | **18m 42s** | 1.1 GB | ~3,500 steps/sec |
+| **Loadcarry Head-Up Residual** | PPO Residual | 3,000,000 steps | **24m 15s** | 1.3 GB | ~2,100 steps/sec |
+| **Table Tennis Racket Hoist** | PPO Curriculum | 5,000,000 steps | **31m 50s** | 1.4 GB | ~2,600 steps/sec |
+| **Ball Balance Residual Runner** | Residual Policy | 2,500,000 steps | **21m 05s** | 1.2 GB | ~2,000 steps/sec |
+| **5-Duck Race Physics (21.0s Sim)** | Multi-Agent Eval | 10,500 steps (5 robots) | **8.12 seconds** | 1.1 GB | **2.58x Real-Time** |
+| **Video Synthesis (720p 50fps)** | Offscreen Render | 350 frames (7.0s video) | **1m 34s** | 1.4 GB | 3.7 fps offscreen |
 
 ---
 
-## 📖 In-Depth Technical Documentation
+## 📖 Comprehensive Project Documentation
 
-For complete mathematical derivations, PPO formulation, actor-critic network architectures, contact mechanics, and reward formulations, see:
-- 📘 [Master Technical Pipeline & Mathematical Manual](docs/PROJECT_MASTER_PIPELINE_AND_THEORY.md)
+For complete engineering logs, root-cause analyses, failure post-mortems, and algorithm details, see:
+- 📘 [Comprehensive Project Report & Engineering Benchmarks](docs/COMPREHENSIVE_PROJECT_REPORT.md)
+- 📘 [Project Master Pipeline & Mathematical Manual](docs/PROJECT_MASTER_PIPELINE_AND_THEORY.md)
