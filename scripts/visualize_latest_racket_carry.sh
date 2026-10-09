@@ -6,10 +6,12 @@
 # and launches the interactive MuJoCo 3D viewer.
 # ==============================================================================
 
-ROOT="/Users/raghav/Desktop/microduck_manipulation"
-VENV="/Users/raghav/.venvs/microduck_rl"
-PYTHON="$VENV/bin/python"
-MJPYTHON="$VENV/bin/mjpython"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MANIP_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+ROOT="$(cd "$MANIP_DIR/.." && pwd)"
+
+PYTHON="${PYTHON:-python3}"
+MJPYTHON="${MJPYTHON:-mjpython}"
 
 # Find latest training run directory
 RUN_DIR=$(ls -td $ROOT/microduck_rl/logs/rsl_rl/table_tennis_racket_carry/2026* 2>/dev/null | head -n 1)
