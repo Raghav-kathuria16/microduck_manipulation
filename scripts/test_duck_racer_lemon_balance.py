@@ -438,15 +438,6 @@ class DuckRacer:
         self.lemon_dropped = False
         self.finished = False
         self.finish_time = None
-        self.prev_targets = self.default_pose.copy()
-        self.target_ctrl = self.default_pose.copy()
-
-    def step_sub_ctrl(self, sub_idx, decimation):
-        """Linearly interpolates control targets between policy inference steps for silky smooth actuation."""
-        alpha = float(sub_idx + 1) / float(decimation)
-        interp = (1.0 - alpha) * self.prev_targets + alpha * self.target_ctrl
-        for i, act_id in enumerate(self.act_ids):
-            self.data.ctrl[act_id] = interp[i]
 
     def place_spoon(self):
         p_jaw = self.data.xpos[self.jaw_bid]
@@ -531,8 +522,6 @@ class DuckRacer:
         action[6] -= self.head_pos_steadicam
 
         targets = self.default_pose + action
-        self.prev_targets = self.target_ctrl.copy()
-        self.target_ctrl = targets.copy()
         for i, act_id in enumerate(self.act_ids):
             self.data.ctrl[act_id] = targets[i]
 
@@ -661,13 +650,14 @@ def render_racer_visual_proofs():
     return p_start, p_side, p_top, p_close
 
 
-def render_racer_video(output_path=None, duration_sec=21.0, fps=50, speedup=3.0):
-    """Renders offscreen MP4 video of the 5-duck race with live dynamic Steadicam."""
+def render_racer_video(output_path=None, duration_sec=21.0, fps=50):
+    """Renders offscreen MP4 video of the 5-duck race with natural physics, speeding up recording 3x."""
     import imageio
     if output_path is None:
         output_path = os.path.join(_ARTIFACT_DIR, "duck_racer_competition_demo.mp4")
 
-    print(f"\n[VIDEO] Rendering {duration_sec:.1f}s 5-duck race video (paced at {speedup:.1f}x speedup) to {output_path}...")
+    raw_path = output_path.replace(".mp4", "_raw.mp4")
+    print(f"\n[VIDEO] Simulating {duration_sec:.1f}s race with natural physics, recording to {output_path} (3x playback)...")
     xml_str = create_racer_scene_xml()
     model = mujoco.MjModel.from_xml_string(xml_str)
     model.opt.timestep = 0.002
@@ -677,13 +667,13 @@ def render_racer_video(output_path=None, duration_sec=21.0, fps=50, speedup=3.0)
     ducks = [DuckRacer(cfg["id"], cfg, model, data, session) for cfg in DUCK_CONFIGS]
     setup_racer_episode(ducks, model, data)
 
-    # Configured ranking speeds:
-    # 1st: Emerald (Green, Lane 4, idx 3) -> 0.190 m/s (Fastest / Gold Winner)
-    # 2nd: Ruby Coral / Pink (Lane 1, idx 0) -> 0.170 m/s (Silver)
-    # 3rd: Duck Gold (Yellow, Lane 3, idx 2) -> 0.155 m/s (Bronze)
-    # 4th: Amethyst (Purple, Lane 5, idx 4) -> 0.140 m/s
-    # 5th: Riviera Sky (Blue, Lane 2, idx 1) -> 0.120 m/s (Slowest / Last)
-    pacing = [0.170, 0.120, 0.155, 0.190, 0.140]
+    # Distinct pacing speeds ensuring physical stability (all lemons 100% balanced):
+    # #1 Emerald Green (Lane 4): 0.175 m/s (Winner)
+    # #2 Ruby Coral Pink (Lane 1): 0.165 m/s (2nd Place)
+    # #3 Duck Gold Yellow (Lane 3): 0.155 m/s (3rd Place)
+    # #4 Royal Amethyst Purple (Lane 5): 0.148 m/s (4th Place)
+    # #5 Riviera Sky Blue (Lane 2): 0.140 m/s (5th Place Last)
+    pacing = [0.165, 0.140, 0.155, 0.175, 0.148]
     for i, d in enumerate(ducks):
         d.target_vx = pacing[i]
 
@@ -693,29 +683,25 @@ def render_racer_video(output_path=None, duration_sec=21.0, fps=50, speedup=3.0)
 
     cam = mujoco.MjvCamera()
     cam.type = mujoco.mjtCamera.mjCAMERA_FREE
-    cam.distance = 2.25
+    cam.distance = 2.15
     cam.elevation = -22.0
     cam.azimuth = 68.0  # Dynamic Isometric Broadcast Steadicam tracking pack
 
     total_sim_steps = int(duration_sec / model.opt.timestep)
-    sim_steps_per_frame = int(round(speedup / (fps * model.opt.timestep)))
+    sim_steps_per_frame = int(round(1.0 / (fps * model.opt.timestep)))
     decimation = 10
     sim_dt = model.opt.timestep
 
-    writer = imageio.get_writer(output_path, fps=fps, codec="libx264", quality=8)
+    writer = imageio.get_writer(raw_path, fps=fps, codec="libx264", quality=8)
     frame_count = 0
-
     smooth_lookat_x = 0.45
-    smooth_lookat_z = 0.16
 
     for step in range(total_sim_steps):
         t_sim = step * sim_dt
-        sub_idx = step % decimation
         for d in ducks:
             d.step_clamp()
-            d.step_sub_ctrl(sub_idx, decimation)
 
-        if sub_idx == 0:
+        if step % decimation == 0:
             for d in ducks:
                 d.infer_and_apply(decimation, sim_dt)
                 d.update_telemetry(t_sim)
@@ -723,32 +709,42 @@ def render_racer_video(output_path=None, duration_sec=21.0, fps=50, speedup=3.0)
         mujoco.mj_step(model, data)
 
         if step % sim_steps_per_frame == 0:
-            # Dynamic Steadicam with EMA smoothing to eliminate footstep impact jitter
+            # Dynamic Steadicam with smooth camera tracking
             xs = [d.distance for d in ducks]
             pack_mean_x = float(np.mean(xs))
-            target_x = pack_mean_x + 0.40
-            smooth_lookat_x = 0.94 * smooth_lookat_x + 0.06 * target_x
-            cam.lookat = [smooth_lookat_x, 0.0, smooth_lookat_z]
+            target_x = pack_mean_x + 0.45
+            smooth_lookat_x = 0.95 * smooth_lookat_x + 0.05 * target_x
+            cam.lookat = [smooth_lookat_x, 0.0, 0.16]
 
             renderer.update_scene(data, camera=cam, scene_option=vopt)
             img = renderer.render()
             writer.append_data(img)
             frame_count += 1
 
-            if frame_count % (fps // 2) == 0:
+            if frame_count % (fps * 2) == 0:
                 lead_d = max(ducks, key=lambda d: d.distance)
-                expected_total_frames = int(round(total_sim_steps / sim_steps_per_frame))
-                print(f"  Frame {frame_count:3d}/{expected_total_frames} (sim t={t_sim:.2f}s, video t={frame_count/fps:.2f}s): "
-                      f"Leader={lead_d.cfg['name']} (x={lead_d.distance:.2f}m) | Spread={max(xs)-min(xs):.2f}m")
+                print(f"  Frame {frame_count:3d}/{int(duration_sec*fps)} (t={t_sim:.2f}s): "
+                      f"Leader={lead_d.cfg['name']} (x={lead_d.distance:.2f}m) | Pack Spread={max(xs)-min(xs):.2f}m")
 
     writer.close()
-    print(f"[VIDEO SUCCESS] Saved {frame_count} frames to {output_path}")
+    print(f"[RAW SUCCESS] Saved {frame_count} frames to {raw_path}")
 
-    # Generate high-resolution animated WebP
+    # Speed up the video recording by 3x as requested
+    print(f"[3X PACING] Applying 3x speedup to the recording via ffmpeg...")
+    cmd_3x = f'ffmpeg -y -i "{raw_path}" -filter:v "setpts=0.3333333333*PTS" -r 50 "{output_path}"'
+    os.system(cmd_3x)
+    print(f"[VIDEO SUCCESS] 3x paced video saved to {output_path}")
+
+    # Generate high quality WebP from the 3x paced video
     webp_path = output_path.replace(".mp4", ".webp")
-    cmd = f'ffmpeg -y -i "{output_path}" -vf "fps=25,scale=720:-1:flags=lanczos" -vcodec libwebp -lossless 0 -compression_level 4 -q:v 75 -loop 0 "{webp_path}"'
-    os.system(cmd)
+    cmd_webp = f'ffmpeg -y -i "{output_path}" -vf "fps=25,scale=720:-1:flags=lanczos" -vcodec libwebp -lossless 0 -compression_level 4 -q:v 75 -loop 0 "{webp_path}"'
+    os.system(cmd_webp)
     print(f"[WEBP SUCCESS] Converted to {webp_path}")
+
+    # Cleanup raw video
+    if os.path.exists(raw_path):
+        os.remove(raw_path)
+
     return output_path
 
 
@@ -814,7 +810,6 @@ def main():
     parser.add_argument("--gui", action="store_true", help="Launch native interactive GLFW MuJoCo viewer")
     parser.add_argument("--video", action="store_true", help="Render offscreen MP4 competition video")
     parser.add_argument("--duration", type=float, default=21.0, help="Duration for video render (seconds, default: 21.0)")
-    parser.add_argument("--speedup", type=float, default=3.0, help="Playback speedup factor for video (default: 3.0x)")
     parser.add_argument("--speed", type=float, default=1.0, help="Viewer playback speed multiplier")
     args = parser.parse_args()
 
@@ -827,7 +822,7 @@ def main():
         return
 
     if args.video:
-        render_racer_video(duration_sec=args.duration, speedup=args.speedup)
+        render_racer_video(duration_sec=args.duration)
         return
 
     if not args.gui:
