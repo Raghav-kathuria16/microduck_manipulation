@@ -18,19 +18,16 @@ import imageio
 import mujoco
 import numpy as np
 
-# Ensure paths
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _MANIP_DIR = os.path.dirname(_SCRIPT_DIR)
-_EXTERNAL_REPO = os.path.join(_MANIP_DIR, ".external_repo")
-sys.path.insert(0, os.path.join(_EXTERNAL_REPO, "scripts"))
-sys.path.insert(0, os.path.join(_EXTERNAL_REPO, "src"))
+sys.path.insert(0, _SCRIPT_DIR)
 
 from infer_policy import PolicyInference, DEFAULT_POSE
 
 PHYSICAL_CLAMP_XML = os.path.join(
-    _EXTERNAL_REPO, "src/mjlab_microduck/robot/microduck/scene_loadcarry_physical_clamp.xml"
+    _MANIP_DIR, "models/scene_loadcarry_physical_clamp.xml"
 )
-DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/loadcarry_ppo_headup_v3.onnx")
+DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/loadcarry_ppo_headup_v4.onnx")
 
 
 def setup_physical_clamp_sim(

@@ -172,6 +172,17 @@ Training complex bipedal manipulation policies usually demands expensive multi-G
    - The residual policy learns corrective joint position offsets directly on top of the base walking policy.
    - Training completes in **18 to 31 minutes per task**, using under 1.5 GB of RAM.
 
+### Curriculum Progression: Kinematic Weld Bootstrap to Physical Clamping Transfer
+
+To solve the challenging dynamics of carrying heavy payloads (up to 300g, over 40% of the robot's total bodyweight) without policy divergence during initial learning, we developed a two-stage curriculum strategy:
+1. **Stage 1 (Kinematic Weld Bootstrap)**:
+   - The payload was initially affixed inside the mouth cavity using an idealized equality weld constraint.
+   - This allowed the reinforcement learning algorithm to isolate the gross whole-body balance problem — discovering how to pitch the torso back, adjust hip flexion, and counteract forward rotational inertia without having to simultaneously master micro-contact friction dynamics.
+2. **Stage 2 (Zero-Weld Coulomb Clamping Transfer)**:
+   - Once stable gait rhythms and posture compensations were established, the weld was completely removed.
+   - The payload was placed inside the open mouth cavity and held purely via 6D spatial Coulomb friction (`condim="6"`) under active beak actuator clamping torque (0.10 to 0.50 N·m).
+   - Because the policy had already learned to balance the forward center-of-mass shift, transferring from the idealized weld to pure physical clamping was achieved seamlessly with zero drops.
+
 ### Local M2 Training Benchmarks
 
 | Policy / Task | Algorithm | Environment Steps | Local M2 Training Time | Peak RAM | Throughput |
@@ -187,7 +198,7 @@ Training complex bipedal manipulation policies usually demands expensive multi-G
 
 ## 🚀 Quick-Start Guide (Clone and Run Anywhere)
 
-This repository is designed to be completely portable and accessible for any user. Anyone can clone and run all interactive simulations and benchmarks on macOS or Linux.
+This repository is completely self-contained. Anyone can clone and run all interactive simulations and benchmarks on macOS or Linux out of the box:
 
 ### 1. Clone the Repository
 
@@ -210,7 +221,7 @@ pip install -r requirements.txt
 > **Note for macOS Users**: For native interactive 3D GUI viewers, install and use `mjpython` (bundled with MuJoCo) to properly attach to the macOS GLFW event loop:
 > ```bash
 > pip install mujoco
-> # mjpython will now be available in your .venv/bin/
+> # mjpython is available in your .venv/bin/
 > ```
 
 ---
@@ -296,39 +307,39 @@ python scripts/render_all_readme_media.py
 
 ---
 
-## 📁 Repository Structure
+## 📁 Clean & Modular Repository Structure
+
+This repository is organized so that any researcher or robotics engineer can clone it and run the policies immediately in MuJoCo:
 
 ```
 microduck_manipulation/
 ├── docs/
-│   ├── COMPREHENSIVE_PROJECT_REPORT.md      # Detailed engineering report & logs
+│   ├── COMPREHENSIVE_PROJECT_REPORT.md      # Detailed engineering report & benchmarks
 │   ├── PROJECT_MASTER_PIPELINE_AND_THEORY.md # Control theory & math documentation
-│   └── media/                               # Embedded MP4 & WebP demonstration media
-│       ├── duck_racer_competition_1x.webp
-│       ├── barbell_100g_carry.webp
-│       ├── barbell_200g_carry.webp
-│       ├── barbell_300g_carry.webp
-│       ├── table_tennis_carry.webp
-│       ├── badminton_carry.webp
-│       ├── pickleball_carry.webp
-│       └── lemon_spoon_balance.webp
-├── models/                                  # MJCF XML robot, racket & object models
-│   ├── table_tennis_racket.xml
-│   ├── badminton_racket.xml
-│   ├── pickleball_paddle.xml
-│   └── spoon_and_lemon.xml
+│   └── media/                               # All 8 showcase MP4 & WebP demonstration files
+├── models/                                  # Self-contained MJCF robot, racket & object models
+│   ├── assets/                              # 3D CAD meshes for Microduck, rackets & spoon
+│   ├── scene_loadcarry_physical_clamp.xml   # Core non-welded physical clamping scene
+│   ├── scene_microduck_badminton.xml        # Badminton athletic scene
+│   ├── scene_microduck_pickleball.xml       # Pickleball paddle scene
+│   ├── table_tennis_racket.xml              # Tournament table tennis racket
+│   ├── badminton_racket.xml                 # BWF badminton racket
+│   ├── pickleball_paddle.xml                # Wide composite pickleball paddle
+│   └── spoon_and_lemon.xml                  # Tableware spoon & citrus lemon
 ├── policies/                                # Pre-trained ONNX neural network policies
 │   └── onnx/
-│       ├── loadcarry_ppo_headup_v4.onnx
-│       ├── table_tennis_racket_carry_precision_level.onnx
-│       └── ...
-├── scripts/                                 # Executable evaluation & rendering tools
-│   ├── test_duck_racer_lemon_balance.py
-│   ├── test_physical_clamp_policy.py
-│   ├── test_racket_drop_and_walk.py
-│   ├── test_spoon_lemon_balance.py
-│   └── render_all_readme_media.py
-└── requirements.txt                         # Python dependencies
+│       ├── loadcarry_ppo_headup_v4.onnx     # Primary heavy load-carrying & balance policy
+│       ├── table_tennis_racket_carry_precision_level.onnx # Precision Steadicam racket carry
+│       └── table_tennis_ball_balance.onnx   # Closed-loop ping-pong ball balance
+├── scripts/                                 # Executable evaluation & rendering suite
+│   ├── infer_policy.py                      # Standalone ONNX policy inference engine
+│   ├── test_duck_racer_lemon_balance.py     # 5-Duck Olympic Race GUI & Benchmark
+│   ├── test_physical_clamp_policy.py        # 100g, 200g, 300g Barbell Clamping GUI & Eval
+│   ├── test_racket_drop_and_walk.py         # Athletic Racket Carries & Ball Balance GUI
+│   ├── test_spoon_lemon_balance.py          # Lemon & Spoon Balance GUI & Eval
+│   └── render_all_readme_media.py           # Batch media rendering script
+├── requirements.txt                         # Python dependencies
+└── README.md
 ```
 
 ---

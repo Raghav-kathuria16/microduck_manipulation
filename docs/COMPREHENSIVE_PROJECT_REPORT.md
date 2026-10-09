@@ -186,6 +186,11 @@ Level 5: Multi-Agent Stadium Racing with Closed-Loop Steering
   `yaw_rate_cmd = - 2.5 * heading_yaw - 0.25 * yaw_rate - 2.5 * lateral_error - 0.8 * integrated_error`
 - Guaranteed all 5 ducks remained strictly inside their 30 cm lanes over the entire sprint.
 
+#### 6. Curriculum Progression: Kinematic Weld Bootstrap to Physical Clamping Transfer
+Carrying heavy payloads up to 300g (over 40% of the robot bodyweight) under pure physical contact is notoriously prone to policy exploration failure if learned from scratch: early exploratory actions drop the load before the gait can adapt. We resolved this through a structured two-stage curriculum:
+- **Stage 1 (Idealized Kinematic Weld Constraint)**: The payload was initially attached to the mouth cavity via an equality weld constraint. This isolated whole-body balance and momentum compensation from contact chatter, enabling the policy to discover optimal trunk pitch-back angles and hip/ankle counter-torques.
+- **Stage 2 (Zero-Weld Coulomb Friction Clamping Transfer)**: With the balance controller converged, the weld constraint was deactivated and the cylinder was clamped purely via frictional contact forces under constant beak actuator torque (0.10 to 0.50 N·m). Because the robot already anticipated the payload mass and inertia, the policy transferred seamlessly with 100% payload retention across all walking trials.
+
 ---
 
 ### Local MacBook M2 Benchmarks & Compute Efficiency

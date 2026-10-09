@@ -23,21 +23,16 @@ from PIL import Image
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _MANIP_DIR = os.path.dirname(_SCRIPT_DIR)
-_ROOT = os.path.dirname(_MANIP_DIR)
-_EXTERNAL_REPO = os.path.join(_MANIP_DIR, ".external_repo")
-sys.path.insert(0, os.path.join(_EXTERNAL_REPO, "scripts"))
-sys.path.insert(0, os.path.join(_EXTERNAL_REPO, "src"))
+sys.path.insert(0, _SCRIPT_DIR)
 
 from infer_policy import PolicyInference, DEFAULT_POSE
 
-_BASE_SCENE_XML = os.path.join(
-    _ROOT, "microduck_rl/src/mjlab_microduck/robot/microduck/scene_loadcarry_physical_clamp.xml"
-)
+_BASE_SCENE_XML = os.path.join(_MANIP_DIR, "models/scene_loadcarry_physical_clamp.xml")
 _DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/loadcarry_ppo_headup_v4.onnx")
 _TT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/table_tennis_ball_balance.onnx")
 _TT_CARRY_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/table_tennis_racket_carry_precision_level.onnx")
-_ARTIFACT_DIR = "/Users/raghav/.gemini/antigravity-ide/brain/3cbde2a4-1f27-4d9b-b2f2-4ff527f5f996"
-os.makedirs(_ARTIFACT_DIR, exist_ok=True)
+_OUTPUT_DIR = os.path.join(_MANIP_DIR, "docs/media")
+os.makedirs(_OUTPUT_DIR, exist_ok=True)
 
 
 class TableTennisPolicyInference(PolicyInference):
@@ -140,7 +135,7 @@ def create_scaled_scene_xml(racket_type="table_tennis", include_ball=True):
     with open(_BASE_SCENE_XML, "r") as f:
         base = f.read()
 
-    assets_dir = os.path.join(_ROOT, "microduck_manipulation/scenes/weld_cylinder_demo/assets")
+    assets_dir = os.path.join(_MANIP_DIR, "models/assets")
     import re
     base = re.sub(r'meshdir="[^"]*"', f'meshdir="{assets_dir}/" balanceinertia="true"', base)
     base = base.replace('elevation="-20"/>', 'elevation="-20" offwidth="1280" offheight="960"/>')

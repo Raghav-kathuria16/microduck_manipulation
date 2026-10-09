@@ -22,9 +22,6 @@ _MANIP_DIR = os.path.dirname(_SCRIPT_DIR)
 _DOCS_MEDIA = os.path.join(_MANIP_DIR, "docs", "media")
 os.makedirs(_DOCS_MEDIA, exist_ok=True)
 
-_EXTERNAL_REPO = os.path.join(_MANIP_DIR, ".external_repo")
-sys.path.insert(0, os.path.join(_EXTERNAL_REPO, "scripts"))
-sys.path.insert(0, os.path.join(_EXTERNAL_REPO, "src"))
 sys.path.insert(0, _SCRIPT_DIR)
 
 from infer_policy import PolicyInference
