@@ -8,7 +8,38 @@ If an actuator of higher torque is used, the problem would be fixed. One approac
 
 ---
 
-## 1. Barbell Clamping Extended Locomotion Matrix
+## 1. Lemon and Spoon Dynamic Balance: Velocity Envelope
+
+The primary non-prehensile balancing benchmark, tested over continuous locomotion:
+
+| Forward Walking Speed | Outcome | Extended Horizon Behavior | Pacing Dynamics |
+| :---: | :---: | :---: | :--- |
+| **0.08 m/s** | Drops after some time | Low-speed gait hesitation causes lateral rocking; lemon spills after some time | Active Steadicam recovery attempted |
+| **0.12 m/s** | Drops after some time | Long-term drift causes lemon to drop after some time | Cadence smoothing active |
+| **0.15 m/s** | **Continuous Balance** | Lemon retained continuously | Steadicam head stabilization active |
+| **0.20 m/s** | **Continuous Balance** | Lemon retained continuously | Steadicam head stabilization active |
+| **0.25 m/s** | **Continuous Balance** | Lemon retained continuously | Steadicam head stabilization active |
+
+### Why Low Speeds Fail:
+- At very low speeds (0.08 m/s), the walking policy exhibits gait hesitation with higher lateral roll oscillations. This lateral rocking tips the spoon rim, and it drops after some time.
+- At nominal cruising speeds (0.15 to 0.25 m/s), bipedal cadence is smooth and continuous. The active Steadicam pantograph maintains spoon levelness, preserving balance throughout extended locomotion.
+
+---
+
+## 2. Athletic Rackets and Object Retention
+
+| Athletic Asset | Total Mass | Clamping Status (Showcase Clip) | Ball / Object Status | Extended Locomotion Behavior | Failure Root Cause |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **Table Tennis Racket** | 40g | **100% Retained** | Ping-Pong Ball | Drops after some time | Unconstrained ball vibration; footstep impacts bounce ball off rubber blade |
+| **Badminton Racket** | 45g | **100% Retained** | Pure Racket Carry | Gradual slip | Slip occurs due to head movement and actuator torque limits |
+| **Pickleball Paddle** | 75g | **100% Retained** | Pure Racket Carry | Gradual slip | Slip occurs due to head movement and actuator torque limits |
+
+- **Key Finding on Ball Balancing**: While the table tennis racket handle itself is clamped firmly with high stability, balancing an unconstrained sphere on a flat rubber surface during dynamic walking is unstable without an active visual tracking policy. Walking impact forces cause the ping-pong ball to bounce, roll, and it drops after some time.
+- **Athletic Racket Clamping Dynamics**: In Badminton and Pickleball carries, showcase clips demonstrate reliable payload retention with full clearance. Over extended locomotion horizons, there is some slip due to head movement and insufficient torque provided by the actuator. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.
+
+---
+
+## 3. Barbell Clamping Extended Locomotion Matrix
 
 Continuous walking trial at 0.25 m/s forward velocity. A trial is flagged as a failure if the payload slips relative to the mouth cavity and drops, or if the robot loses bipedal balance.
 
@@ -45,7 +76,7 @@ Continuous walking trial at 0.25 m/s forward velocity. A trial is flagged as a f
 
 ---
 
-## 2. Why Clamping Drops: Physical Contact Mechanisms
+## 4. Why Clamping Drops: Physical Contact Mechanisms
 
 Three distinct physical phenomena dictate behavior over extended locomotion:
 
@@ -60,37 +91,6 @@ Three distinct physical phenomena dictate behavior over extended locomotion:
 - Payloads exceeding 40% of robot bodyweight create a substantial forward pitch moment arm.
 - At 400g, the robot trunk tilts forward during walking, reducing the effective vertical normal force clamping the shaft, and it drops after some time.
 - At 500g, the combined robot-payload center of mass moves outside the support polygon of the stance foot. The ankle pitch actuators saturate, and the entire robot topples after some time.
-
----
-
-## 3. Athletic Rackets and Object Retention
-
-| Athletic Asset | Total Mass | Clamping Status (Showcase Clip) | Ball / Object Status | Extended Locomotion Behavior | Failure Root Cause |
-| :--- | :---: | :---: | :---: | :---: | :--- |
-| **Table Tennis Racket** | 40g | **100% Retained** | Ping-Pong Ball | Drops after some time | Unconstrained ball vibration; footstep impacts bounce ball off rubber blade |
-| **Badminton Racket** | 45g | **100% Retained** | Pure Racket Carry | Gradual slip | Slip occurs due to head movement and actuator torque limits |
-| **Pickleball Paddle** | 75g | **100% Retained** | Pure Racket Carry | Gradual slip | Slip occurs due to head movement and actuator torque limits |
-
-- **Key Finding on Ball Balancing**: While the table tennis racket handle itself is clamped firmly with high stability, balancing an unconstrained sphere on a flat rubber surface during dynamic walking is unstable without an active visual tracking policy. Walking impact forces cause the ping-pong ball to bounce, roll, and it drops after some time.
-- **Athletic Racket Clamping Dynamics**: In Badminton and Pickleball carries, showcase clips demonstrate reliable payload retention with full clearance. Over extended locomotion horizons, there is some slip due to head movement and insufficient torque provided by the actuator. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.
-
----
-
-## 4. Lemon and Spoon Dynamic Balance: Velocity Envelope
-
-Tested over continuous locomotion:
-
-| Forward Walking Speed | Outcome | Extended Horizon Behavior | Pacing Dynamics |
-| :---: | :---: | :---: | :--- |
-| **0.08 m/s** | Drops after some time | Low-speed gait hesitation causes lateral rocking; lemon spills after some time | Active Steadicam recovery attempted |
-| **0.12 m/s** | Drops after some time | Long-term drift causes lemon to drop after some time | Cadence smoothing active |
-| **0.15 m/s** | **Continuous Balance** | Lemon retained continuously | Steadicam head stabilization active |
-| **0.20 m/s** | **Continuous Balance** | Lemon retained continuously | Steadicam head stabilization active |
-| **0.25 m/s** | **Continuous Balance** | Lemon retained continuously | Steadicam head stabilization active |
-
-### Why Low Speeds Fail:
-- At very low speeds (0.08 m/s), the walking policy exhibits gait hesitation with higher lateral roll oscillations. This lateral rocking tips the spoon rim, and it drops after some time.
-- At nominal cruising speeds (0.15 to 0.25 m/s), bipedal cadence is smooth and continuous. The active Steadicam pantograph maintains spoon levelness, preserving balance throughout extended locomotion.
 
 ---
 

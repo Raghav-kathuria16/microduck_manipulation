@@ -14,6 +14,12 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### 2026-10-10 — Prioritization of Lemon & Spoon Training Policy and Video-Centric Streamlining
+
+**What:** Restructured the repository documentation to place the single-duck Dynamic Lemon & Tableware Spoon Balancing policy as headline showcase #1 (immediately preceding the multi-duck Olympic Stadium Race #2), streamlined racket and barbell sections into concise, video-focused showcases, highlighted empirical retention during demonstrations while documenting that continuous locomotion is not robust due to slippage, provided the higher torque actuator approach solution, and removed the quick-start subtitle phrase from git documentation.
+
+**Why:** The user emphasized that the central core concept of the project is the spoon and lemon training policy, requested placing it above the Olympic race, requested streamlining rackets and barbells into much shorter video-focused descriptions while acknowledging slippage and the actuator upgrade approach, and requested removing the subtitle phrase.
+
 ### 2026-10-10 — Physical Clamping Documentation Refinement: Contact Mechanics and Torque Upgrade Solution
 
 **What:** Refined documentation across the repository to describe physical clamping contact mechanics, removed numerical drop timestamps and dimensional measurements, and documented the physical upgrade path: if an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo to eliminate slip during dynamic locomotion.

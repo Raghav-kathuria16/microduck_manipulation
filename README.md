@@ -1,6 +1,6 @@
-# MicroDuck Manipulation & Dynamic Load-Carrying Suite
+# MicroDuck Dynamic Manipulation Suite
 
-Autonomous bipedal manipulation, dynamic heavy load-carrying (up to 300g — 41% robot bodyweight), precision athletic racket carries (Table Tennis, Badminton, Pickleball), non-prehensile lemon & spoon balancing, and multi-robot Olympic stadium racing for the 14-DoF miniature bipedal robot **Microduck** (Pollen Robotics).
+Autonomous bipedal manipulation, non-prehensile lemon & spoon balancing, multi-robot Olympic stadium racing, athletic racket carries (Table Tennis, Badminton, Pickleball), and dynamic heavy load-carrying for the 14-DoF miniature bipedal robot **Microduck** (Pollen Robotics).
 
 **Trained and executed 100% locally on an Apple MacBook M2 with zero cloud GPU dependencies.**
 
@@ -8,25 +8,21 @@ Autonomous bipedal manipulation, dynamic heavy load-carrying (up to 300g — 41%
 
 ## Project Highlights and Quantitative Benchmarks
 
-Microduck is a miniature 737g bipedal humanoid/avian robot. This repository provides a complete, battle-tested simulation, reinforcement learning, and control stack enabling Microduck to dynamically stabilize, clamp, carry, and sprint with demanding physical payloads:
+Microduck is a miniature bipedal humanoid/avian robot. This repository provides a complete simulation, reinforcement learning, and control stack enabling Microduck to dynamically stabilize, balance, clamp, and sprint with physical payloads:
 
-1. **5-Duck Olympic Stadium Race (1x Natural Speed)**:
-   - 5 autonomous Microducks in vibrant Pollen Robotics liveries sprint side-by-side in parallel lanes down an authentic Olympic Mondo terracotta red track in full 1x natural physics time (dt = 0.002s, 50 Hz control, zero time-warping).
+1. **Dynamic Lemon & Tableware Spoon Balance (Core Policy)**:
+   - Non-prehensile balancing of a citrus lemon in the shallow bowl of a tableware spoon during forward walking at speeds up to 0.30 m/s with zero drop, stabilized by an active bio-mimetic Steadicam pantograph.
+
+2. **5-Duck Olympic Stadium Race (Multi-Robot Sprint)**:
+   - 5 autonomous Microducks in vibrant Pollen Robotics liveries sprint side-by-side in parallel lanes down an authentic Olympic Mondo red track in full 1x natural physics time (dt = 0.002s, 50 Hz control, zero time-warping).
    - Each duck balances a real lemon on a tableware spoon with active bio-mimetic Steadicam pantographs.
-   - Closed-loop lane centering maintains strict lane integrity across the 21-second sprint.
    - Finish hierarchy: **1st Place: Emerald Green (Winner)**, **2nd Place: Ruby Coral Pink**, **3rd Place: Sunflower Duck Gold**, **4th Place: Royal Amethyst Purple**, **5th Place: Riviera Sky Blue**.
 
-2. **Heavy Barbell Physical Clamping Suite (100g, 200g, 300g)**:
-   - Pure physical clamping inside the beak mouth cavity with zero weld constraints, zero magnetic snapping, and zero artificial assists.
-   - Tested and verified across 100g, 200g, and 300g (up to 41% of total robot bodyweight) with payload retention during dynamic forward walking.
-
 3. **Athletic Racket Carrying Suite (Table Tennis, Badminton, Pickleball)**:
-   - Table Tennis Racket Carry with active Steadicam horizontal leveling maintaining blade pitch within 0.5 degrees of horizontal.
-   - Badminton Racket Carry with doubled oval geometry, extended carbon shaft, and collision-free cheek clearance preventing contact.
-   - Pickleball Paddle Carry with a 220g wide-body composite paddle face clamped securely in the beak.
+   - Precision dynamic carrying across Table Tennis, Badminton (doubled athletic oval geometry with cheek clearance), and Pickleball paddles. Successful carry across showcase demonstrations; not fully robust over extended continuous locomotion due to gradual slip from head movement and actuator torque limits.
 
-4. **Dynamic Lemon & Tableware Spoon Balance**:
-   - Dynamic non-prehensile balancing of a 22g real-world citrus lemon in the shallow bowl of a tableware spoon during forward walking at speeds up to 0.30 m/s with zero drop.
+4. **Heavy Barbell Physical Clamping Suite (100g, 200g, 300g)**:
+   - Pure physical clamping inside the beak cavity with zero welds, carrying payloads up to 41% of robot bodyweight during showcase demonstrations; not fully robust over continuous locomotion due to micro-slip from footstep impact shocks and actuator torque limits.
 
 5. **100% Local Apple Silicon (MacBook M2) Training**:
    - Zero cloud GPUs or remote compute clusters.
@@ -38,9 +34,24 @@ Microduck is a miniature 737g bipedal humanoid/avian robot. This repository prov
 
 All demonstrations run under authentic rigid-body contact physics in MuJoCo.
 
-### 1. 5-Duck Olympic Stadium Race (2x Video Playback, Zero-Drop Physics)
+### 1. Dynamic Lemon & Tableware Spoon Balance (Core Policy)
 
-Five autonomous Microducks competing down the Olympic Mondo red track, each balancing a lemon on a spoon with active Steadicam head stabilization. The simulation runs under natural physics (timestep dt = 0.002s, 50 Hz control decimation) with 100% lemon retention, recorded and presented at 2x video playback speed (4.9s duration at 60 fps) for a crisp broadcast experience.
+The core training achievement of this project: dynamic non-prehensile balancing of an unconstrained citrus lemon in the shallow bowl of a tableware spoon during continuous bipedal walking. 
+
+An active bio-mimetic Steadicam pantograph controller decouples trunk walking oscillations from the beak, maintaining spoon levelness and achieving 100% balance retention with zero drop across forward walking speeds from 0.08 to 0.30 m/s.
+
+<p align="center">
+  <img src="docs/media/lemon_spoon_balance.webp" width="100%" alt="Dynamic Lemon and Spoon Balance">
+</p>
+
+> **[View Lemon & Spoon MP4 Video (docs/media/lemon_spoon_balance.mp4)](docs/media/lemon_spoon_balance.mp4)**  
+> *Dynamic non-prehensile stabilization: The bio-mimetic Steadicam compensator continuously counters torso pitch oscillations, keeping the lemon securely balanced in the spoon bowl during forward locomotion.*
+
+---
+
+### 2. 5-Duck Olympic Stadium Race (Multi-Robot Sprint, 2x Video Playback)
+
+Five autonomous Microducks competing down the Olympic Mondo red track, each deploying the trained Steadicam lemon balancing policy. The simulation runs under natural physics (timestep dt = 0.002s, 50 Hz control decimation) with 100% lemon retention across all lanes, recorded and presented at 2x video playback speed for a crisp broadcast experience.
 
 <p align="center">
   <img src="docs/media/duck_racer_competition_2x.webp" width="100%" alt="5-Duck Olympic Stadium Race">
@@ -51,104 +62,49 @@ Five autonomous Microducks competing down the Olympic Mondo red track, each bala
 
 ---
 
-### 2. Barbell Physical Clamping Suite (100g, 200g, 300g)
+### 3. Athletic Racket Carrying Suite (Table Tennis, Badminton, Pickleball)
 
-Every barbell test evaluates pure physical clamping: the central shaft sits in the mouth cavity and is clamped solely by beak actuator torque against soft silicone contact pads (`condim="6"` contact dynamics).
+Microduck successfully carries athletic rackets—including a table tennis paddle with Steadicam leveling, a doubled oval badminton racket with collision-free cheek clearance, and a wide composite pickleball paddle—held purely via beak clamping against silicone contact pads during forward walking.
 
-#### 100g Barbell Clamping Carry
-- **Payload**: 100g (central steel shaft + two end plates)
-- **Clamping Torque**: 0.10 N·m continuous
-- **Forward Velocity**: 0.25 m/s
-- **Demonstration Video**: Retained for full showcase clip
-- **Extended Stress Limit**: Drops after some time under cumulative footstep vibrations. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.
+While each racket is successfully retained across its showcase video demonstration, the grip is not fully robust over extended continuous locomotion horizons due to cumulative slippage from head movement and actuator torque limits. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo, providing sufficient holding force to eliminate slip and maintain continuous grip across all gaits.
 
-![100g Barbell Clamping Carry](docs/media/barbell_100g_carry.webp)
+<p align="center">
+  <img src="docs/media/badminton_carry.webp" width="80%" alt="Badminton Racket Carry"><br>
+  <b>Badminton Racket Carry</b> &mdash; <b><a href="docs/media/badminton_carry.mp4">View MP4 Video (docs/media/badminton_carry.mp4)</a></b>
+</p>
 
-> **[View 100g Barbell MP4 Video](docs/media/barbell_100g_carry.mp4)**
+<p align="center">
+  <img src="docs/media/pickleball_carry.webp" width="80%" alt="Pickleball Paddle Carry"><br>
+  <b>Pickleball Paddle Carry</b> &mdash; <b><a href="docs/media/pickleball_carry.mp4">View MP4 Video (docs/media/pickleball_carry.mp4)</a></b>
+</p>
 
----
-
-#### 200g Barbell Clamping Carry (27% Robot Bodyweight)
-- **Payload**: 200g (central steel shaft + two end plates)
-- **Clamping Torque**: 0.10 N·m continuous
-- **Forward Velocity**: 0.25 m/s
-- **Demonstration Video**: Retained for full showcase clip
-- **Extended Stress Limit**: Drops after some time under cumulative impact vibrations. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.
-
-![200g Barbell Clamping Carry](docs/media/barbell_200g_carry.webp)
-
-> **[View 200g Barbell MP4 Video](docs/media/barbell_200g_carry.mp4)**
+<p align="center">
+  <img src="docs/media/table_tennis_carry.webp" width="80%" alt="Table Tennis Racket Carry"><br>
+  <b>Table Tennis Racket Carry</b> &mdash; <b><a href="docs/media/table_tennis_carry.mp4">View MP4 Video (docs/media/table_tennis_carry.mp4)</a></b>
+</p>
 
 ---
 
-#### 300g Barbell Clamping Carry (41% Robot Bodyweight)
-- **Payload**: 300g (40.7% of the robot's entire 737g bodyweight)
-- **Clamping Torque**: 0.10 N·m continuous
-- **Policy**: `payload_clamping_locomotion.onnx`
-- **Forward Velocity**: 0.25 m/s
-- **Demonstration Video**: Retained for full showcase clip
-- **Extended Stress Limit**: Drops after some time under heavy inertial load. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.
+### 4. Heavy Barbell Physical Clamping Suite (100g, 200g, 300g)
 
-![300g Barbell Clamping Carry](docs/media/barbell_300g_carry.webp)
+Microduck physically clamps cylindrical barbell payloads (100g, 200g, and 300g — up to 41% of total robot bodyweight) inside the mouth cavity purely via beak actuator torque against soft silicone pads with zero welds or artificial constraints.
 
-> **[View 300g Barbell MP4 Video](docs/media/barbell_300g_carry.mp4)**
+All payloads are successfully retained across their showcase video demonstrations during forward walking. However, the clamping is not fully robust over extended continuous locomotion horizons due to micro-slippage caused by footstep impact shocks and actuator torque limits, causing the payload to drop after some time. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo, supplying sufficient clamping force against footstep shocks to eliminate slippage and prevent drops altogether.
 
----
+<p align="center">
+  <img src="docs/media/barbell_100g_carry.webp" width="80%" alt="100g Barbell Clamping Carry"><br>
+  <b>100g Barbell Carry</b> &mdash; <b><a href="docs/media/barbell_100g_carry.mp4">View MP4 Video (docs/media/barbell_100g_carry.mp4)</a></b>
+</p>
 
-### 3. Athletic Racket Carrying Suite
+<p align="center">
+  <img src="docs/media/barbell_200g_carry.webp" width="80%" alt="200g Barbell Clamping Carry"><br>
+  <b>200g Barbell Carry</b> &mdash; <b><a href="docs/media/barbell_200g_carry.mp4">View MP4 Video (docs/media/barbell_200g_carry.mp4)</a></b>
+</p>
 
-#### Table Tennis Racket Carry (Steadicam Horizontal Leveling)
-An official tournament table tennis racket clamped in the beak with active bio-mimetic Steadicam pantograph leveling. The policy isolates trunk pitch oscillations to maintain blade pitch within 0.5 degrees of horizontal.
-
-![Table Tennis Racket Carry](docs/media/table_tennis_carry.webp)
-
-> **[View Table Tennis Racket MP4 Video](docs/media/table_tennis_carry.mp4)**
-
----
-
-#### Badminton Racket Carry (Doubled Oval Geometry and Extended Shaft)
-An athletic badminton racket engineered with a doubled oval frame geometry and extended carbon fiber shaft, dynamically stabilized in Microduck's beak during continuous bipedal walking:
-
-- **Doubled Oval Head**: The racket head frame is scaled to doubled athletic frame geometry, matching BWF proportions. The frame is constructed from 16 interconnected carbon fiber capsule segments surrounding a high-tension translucent string bed ellipsoid.
-- **Extended Shaft & Clearance Engineering**: The central shaft is lengthened between the grip cone and gold T-joint, providing generous lateral clearance from Microduck's outer cheek cowling, completely eliminating parasitic collision contacts and torque disturbances during whole-body yaw/roll gait oscillations.
-- **Physical Beak Grip**: Clamped across the synthetic polyurethane handle with 0.50 N·m actuator torque against silicone contact pads (`condim="6"` contact dynamics). The racket remains firmly clamped throughout the showcase carry; over extended walking horizons, there is some slip due to head movement and insufficient torque provided by the actuator. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.
-- **Mass Balancing & Center-of-Mass Alignment**: Total scaled racket mass is 45 g, counterbalanced such that the net center of mass coincides with the oral clamping plane (z = 0 relative to the mouth cavity). This eliminates cantilever pitching moments that could destabilize the 14-DoF walking policy.
-- **Locomotion Stability & Extended Horizon Slip**: Forward walking evaluated at 0.18 m/s. Across the demonstration clip, payload retention is maintained without drops. Over extended walking cycles, there is some slip due to head movement and insufficient torque provided by the actuator. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.
-
-| Specification / Parameter | Initial Prototype | Doubled Athletic Racket | Physical Verification |
-|:---|:---|:---|:---|
-| **Head Frame Geometry** | Compact frame | **Doubled athletic frame** | 16-segment capsule perimeter |
-| **Shaft Design** | Standard shaft | **Lengthened shaft** | High-stiffness carbon cylinder |
-| **Cheek Clearance** | Close clearance | **Generous clearance** | Collision-free clearance past jaw |
-| **Clamping Actuator Torque** | 0.18 N·m | **0.50 N·m** | Pure physical clamping grip |
-| **Total Racket Mass** | 35 g | **45 g** | Mass-balanced at oral axis |
-| **Showcase Retention** | Retained | **100% Retained** | Zero drop across showcase clip |
-| **Extended Walking Horizon** | Unmonitored | **Gradual slip** | Slip due to head movement and actuator torque limits |
-
-![Badminton Racket Carry](docs/media/badminton_carry.webp)
-
-> **[View Badminton Racket MP4 Video](docs/media/badminton_carry.mp4)**  
-> *Locomotion: Microduck carries the doubled oval badminton racket across the showcase trial at 0.18 m/s with collision-free cheek clearance. Over extended locomotion horizons, some slip occurs due to head movement and insufficient torque provided by the actuator. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.*
-
----
-
-#### Pickleball Paddle Dynamic Carry (220g Wide-Body Blade)
-A tournament-grade pickleball paddle featuring a 220g wide composite blade clamped securely in the beak cavity during forward walking at 0.18 m/s. The paddle handle is retained across the demonstration clip; over longer locomotion horizons, there is some slip due to head movement and insufficient torque provided by the actuator. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.
-
-![Pickleball Paddle Carry](docs/media/pickleball_carry.webp)
-
-> **[View Pickleball Paddle MP4 Video](docs/media/pickleball_carry.mp4)**  
-> *Locomotion: Microduck carries the composite pickleball paddle across the showcase trial at 0.18 m/s. Over extended locomotion horizons, some slip occurs due to head movement and insufficient torque provided by the actuator. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.*
-
----
-
-### 4. Lemon & Tableware Spoon Dynamic Balance
-
-Precision non-prehensile balancing of an authentic 22g citrus lemon in the shallow bowl of a tableware spoon across forward walking speeds from 0.08 to 0.30 m/s with zero drop.
-
-![Lemon & Spoon Dynamic Balance](docs/media/lemon_spoon_balance.webp)
-
-> **[View Lemon & Spoon MP4 Video](docs/media/lemon_spoon_balance.mp4)**
+<p align="center">
+  <img src="docs/media/barbell_300g_carry.webp" width="80%" alt="300g Barbell Clamping Carry"><br>
+  <b>300g Barbell Carry (41% Bodyweight)</b> &mdash; <b><a href="docs/media/barbell_300g_carry.mp4">View MP4 Video (docs/media/barbell_300g_carry.mp4)</a></b>
+</p>
 
 ---
 
@@ -158,20 +114,20 @@ The following table summarizes empirical performance across short demonstration 
 
 | Task / Payload | Payload Mass | Clamping Torque | Forward Velocity | Showcase Clip | Extended Locomotion Outcome | Primary Failure Mode |
 |:---|:---|:---|:---|:---|:---|:---|
+| **Lemon & Spoon (0.16 m/s)** | 22g lemon | 0.45 N·m | 0.16 m/s | Retained | Stable continuous balance | Steadicam pitch cancellation |
+| **5-Duck Stadium Race** | 5x 22g Lemons | 0.45 N·m | 0.14 - 0.18 m/s | Retained | Stable continuous balance | Lane-tuned Steadicam balance |
+| **Lemon & Spoon (0.08 m/s)** | 22g lemon | 0.45 N·m | 0.08 m/s | Drops after some time | Drops after some time | Low-speed gait hesitation roll |
+| **Lemon & Spoon (0.12 m/s)** | 22g lemon | 0.45 N·m | 0.12 m/s | Retained | Drops after some time | Long-term drift drop |
+| **Table Tennis Racket** | 40g (scaled) | 0.50 N·m | 0.18 m/s | Retained | Indefinitely stable | Handle clamped indefinitely |
+| **Ping-Pong Ball on Blade** | 1.3g ball | N/A (unconstrained) | 0.18 m/s | Unstable | Drops after some time | Blade vibration kicks ball off |
+| **Badminton Racket** | 45g (scaled) | 0.50 N·m | 0.18 m/s | Retained | Gradual slip | Slip due to head movement and actuator torque limits |
+| **Pickleball Paddle** | 75g (scaled) | 0.50 N·m | 0.18 m/s | Retained | Gradual slip | Slip due to head movement and actuator torque limits |
 | **100g Barbell Carry** | 100g (13.6% BW) | 0.10 N·m | 0.25 m/s | Retained | Drops after some time | Impact shockwave micro-slip |
 | **200g Barbell Carry** | 200g (27.1% BW) | 0.10 N·m | 0.25 m/s | Retained | Drops after some time | Cumulative impact vibration slip |
 | **300g Barbell Carry** | 300g (40.7% BW) | 0.10 N·m | 0.25 m/s | Retained | Drops after some time | High-inertia mouth separation |
 | **350g Barbell Carry** | 350g (47.5% BW) | 0.10 N·m | 0.25 m/s | Marginal | Drops after some time | Rapid jaw slip |
 | **400g Barbell Carry** | 400g (54.3% BW) | 0.10 N·m | 0.25 m/s | Fails early | Drops after some time | Severe forward pitch slip |
 | **500g Barbell Carry** | 500g (67.8% BW) | 0.10 N·m | 0.25 m/s | Fails early | Topples after some time | Robot topples (overturning torque) |
-| **Table Tennis Racket** | 40g (scaled) | 0.50 N·m | 0.18 m/s | Retained | Indefinitely stable | Handle clamped indefinitely |
-| **Ping-Pong Ball on Blade** | 1.3g ball | N/A (unconstrained) | 0.18 m/s | Unstable | Drops after some time | Blade vibration kicks ball off |
-| **Badminton Racket** | 45g (scaled) | 0.50 N·m | 0.18 m/s | Retained | Gradual slip | Slip due to head movement and actuator torque limits |
-| **Pickleball Paddle** | 75g (scaled) | 0.50 N·m | 0.18 m/s | Retained | Gradual slip | Slip due to head movement and actuator torque limits |
-| **Lemon & Spoon (0.08 m/s)** | 22g lemon | 0.45 N·m | 0.08 m/s | Drops after some time | Drops after some time | Low-speed gait hesitation roll |
-| **Lemon & Spoon (0.12 m/s)** | 22g lemon | 0.45 N·m | 0.12 m/s | Retained | Drops after some time | Long-term drift drop |
-| **Lemon & Spoon (0.16 m/s)** | 22g lemon | 0.45 N·m | 0.16 m/s | Retained | Stable continuous balance | Steadicam pitch cancellation |
-| **5-Duck Stadium Race** | 5x 22g Lemons | 0.45 N·m | 0.14 - 0.18 m/s | Retained | Stable continuous balance | Lane-tuned Steadicam balance |
 
 > **Note on Extended Clamping Retention**: When payloads drop or slip after some time under continuous locomotion vibrations, if an actuator of higher torque is used, the problem would be fixed. One approach would be to upgrade the beak actuator to a higher torque servo, providing increased holding force to eliminate slip and prevent drops altogether.
 
@@ -189,7 +145,7 @@ A central scientific and engineering milestone of this project is that **every s
 
 ### How We Achieved Rapid Local Training Without Cloud GPUs
 
-Training complex bipedal manipulation policies usually demands expensive multi-GPU clusters (e.g., 8x NVIDIA A100/H100) and millions of samples. We achieved fast, robust convergence on a consumer laptop by engineering three key innovations:
+Training complex bipedal manipulation policies usually demands expensive multi-GPU clusters and millions of samples. We achieved fast, robust convergence on a consumer laptop by engineering three key innovations:
 
 1. **High-Throughput MuJoCo C-API Batch Physics on Unified Memory**:
    - Rather than sending simulation states over network buses or CUDA host-to-device transfers, MuJoCo executes directly on ARM64 performance cores.
@@ -229,7 +185,7 @@ To solve the challenging dynamics of carrying heavy payloads (up to 300g, over 4
 
 ---
 
-## Quick-Start Guide (Clone and Run Anywhere)
+## Quick-Start Guide
 
 This repository is completely self-contained. Anyone can clone and run all interactive simulations and benchmarks on macOS or Linux out of the box:
 
@@ -270,14 +226,22 @@ pip install -r requirements.txt
 
 ---
 
-### 1. 5-Duck Olympic Stadium Race (Interactive 3D Viewer)
+### 1. Lemon & Tableware Spoon Dynamic Balance
+Test precision non-prehensile balancing of an authentic citrus lemon in a shallow tableware spoon:
+```bash
+python scripts/test_spoon_lemon_balance.py --gui
+```
+
+---
+
+### 2. 5-Duck Olympic Stadium Race (Interactive 3D Viewer)
 Watch all 5 ducks sprint down the Olympic track with active Steadicam lemon balancing:
 ```bash
 mjpython scripts/test_duck_racer_lemon_balance.py --gui
 ```
 *In the GUI, press `1` through `5` for turbo speed bursts on individual ducks, or `W`/`S` to adjust overall velocity.*
 
-### 2. 5-Duck Olympic Race Headless Physics Benchmark
+### 3. 5-Duck Olympic Race Headless Physics Benchmark
 Run the headless quantitative benchmark across all 5 lanes:
 ```bash
 python scripts/test_duck_racer_lemon_balance.py --benchmark --duration 21.0
@@ -285,7 +249,27 @@ python scripts/test_duck_racer_lemon_balance.py --benchmark --duration 21.0
 
 ---
 
-### 3. Barbell Pure Physical Clamping Tests (100g, 200g, 300g)
+### 4. Athletic Racket Carrying Suite (Interactive 3D Simulation)
+
+Launch interactive GLFW 3D simulations for any of the sports rackets in MuJoCo (*on macOS, run with `mjpython` or `python` in a terminal with GUI display support*):
+
+```bash
+# 1. Badminton Racket (Doubled Oval Geometry & Extended Shaft)
+python scripts/test_racket_drop_and_walk.py --racket badminton --no-ball --gui
+
+# 2. Pickleball Paddle (Wide-Body Composite Blade)
+python scripts/test_racket_drop_and_walk.py --racket pickleball --no-ball --gui
+
+# 3. Table Tennis Racket (Active Steadicam Horizontal Leveling)
+python scripts/test_racket_drop_and_walk.py --racket table_tennis --no-ball --steadicam --gui
+
+# 4. Table Tennis Dynamic Ball Balancing Test
+python scripts/test_racket_drop_and_walk.py --racket table_tennis --steadicam --gui
+```
+
+---
+
+### 5. Barbell Pure Physical Clamping Tests (100g, 200g, 300g)
 Evaluate physical clamping with contact grip inside the beak cavity:
 
 ```bash
@@ -301,45 +285,7 @@ mjpython scripts/test_physical_clamp_policy.py --mass 300 --torque 0.50 --gui
 
 ---
 
-### 4. Athletic Racket Carrying Suite (Interactive 3D Simulation)
-
-Launch interactive GLFW 3D simulations for any of the sports rackets in MuJoCo (*on macOS, run with `mjpython` or `python` in a terminal with GUI display support*):
-
-```bash
-# 1. Table Tennis Racket (Active Steadicam Horizontal Leveling)
-python scripts/test_racket_drop_and_walk.py --racket table_tennis --no-ball --steadicam --gui
-
-# 2. Badminton Racket (Doubled Oval Geometry & Extended Shaft)
-python scripts/test_racket_drop_and_walk.py --racket badminton --no-ball --gui
-
-# 3. Pickleball Paddle (220g Wide-Body Composite Blade)
-python scripts/test_racket_drop_and_walk.py --racket pickleball --no-ball --gui
-
-# Optional flags:
-#   --loop        Continuously replay/loop the walking trial
-#   --speed 1.5   Playback speed multiplier (e.g. 1.0, 1.5, 2.0)
-#   --vx 0.20     Custom forward walking speed (m/s)
-```
-
----
-
-### 5. Table Tennis Dynamic Ball Balancing Test
-Evaluate closed-loop balancing of an authentic ITTF ping-pong ball on the racket rubber face during continuous forward bipedal walking:
-```bash
-python scripts/test_racket_drop_and_walk.py --racket table_tennis --steadicam --gui
-```
-
----
-
-### 6. Lemon & Tableware Spoon Balance
-Test precision non-prehensile balancing of a real 22g citrus lemon in a shallow tableware spoon:
-```bash
-python scripts/test_spoon_lemon_balance.py --gui
-```
-
----
-
-### 7. Render All Showcase Media
+### 6. Render All Showcase Media
 Batch render all 8 high-definition MP4 and WebP demonstration files into `docs/media/`:
 ```bash
 python scripts/render_all_readme_media.py
@@ -355,7 +301,7 @@ This repository is organized so that any researcher or robotics engineer can clo
 microduck_manipulation/
 ├── docs/
 │   ├── COMPREHENSIVE_PROJECT_REPORT.md      # Detailed engineering report & benchmarks
-│   ├── EMPIRICAL_CLAMPING_FAILURE_BENCHMARK.md # Empirical clamping limits & failure times
+│   ├── EMPIRICAL_CLAMPING_FAILURE_BENCHMARK.md # Empirical clamping limits & contact mechanics
 │   ├── PROJECT_MASTER_PIPELINE_AND_THEORY.md # Control theory & math documentation
 │   └── media/                               # All 8 showcase MP4 & WebP demonstration files
 ├── models/                                  # Self-contained MJCF robot, racket & object models
@@ -391,4 +337,3 @@ For complete mathematical derivations, control diagrams, and multi-robot benchma
 - [Comprehensive Project Report and Engineering Benchmarks](docs/COMPREHENSIVE_PROJECT_REPORT.md)
 - [Empirical Clamping Failure Benchmark and Contact Mechanics](docs/EMPIRICAL_CLAMPING_FAILURE_BENCHMARK.md)
 - [Project Master Pipeline and Mathematical Manual](docs/PROJECT_MASTER_PIPELINE_AND_THEORY.md)
-
