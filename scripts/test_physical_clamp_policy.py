@@ -14,7 +14,6 @@ import argparse
 import os
 import sys
 import time
-import imageio
 import mujoco
 import numpy as np
 
@@ -191,6 +190,7 @@ def run_and_record(
             renderer.update_scene(data, camera=camera)
             frames.append(renderer.render())
 
+    import imageio
     writer = imageio.get_writer(video_path, fps=fps, quality=9)
     for frame in frames:
         writer.append_data(frame)

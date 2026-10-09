@@ -32,6 +32,7 @@ _DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/loadcarry_ppo_headup_v
 _TT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/table_tennis_ball_balance.onnx")
 _TT_CARRY_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/table_tennis_racket_carry_precision_level.onnx")
 _OUTPUT_DIR = os.path.join(_MANIP_DIR, "docs/media")
+_ARTIFACT_DIR = _OUTPUT_DIR
 os.makedirs(_OUTPUT_DIR, exist_ok=True)
 
 
@@ -354,9 +355,9 @@ def run_drop_and_walk_test(
     # Check input dimension of the selected policy
     input_dim = 61
     try:
-        import onnx
-        m_onnx = onnx.load(policy_path)
-        input_dim = m_onnx.graph.input[0].type.tensor_type.shape.dim[1].dim_value
+        import onnxruntime as ort
+        sess = ort.InferenceSession(policy_path, providers=["CPUExecutionProvider"])
+        input_dim = sess.get_inputs()[0].shape[1]
     except Exception:
         pass
 

@@ -43,7 +43,8 @@ Every barbell evaluation tests pure Coulomb friction clamping: the central shaft
 - **Geometry**: 50g central shaft + two 25g end plates (48 mm diameter, 15 mm thickness — 2x from previous edit)
 - **Clamping Torque**: 0.10 N·m
 - **Forward Velocity**: 0.25 m/s
-- **Payload Retention**: 100% (Slip: 0.00 mm)
+- **Demonstration Video**: Retained for full 2.50s clip (0.00 mm slip)
+- **Extended Stress Horizon**: Drops at **8.74 seconds** due to footstep shockwave micro-slip
 
 ![100g Barbell Carry Demo](media/barbell_100g_carry.webp)
 
@@ -53,9 +54,10 @@ Every barbell evaluation tests pure Coulomb friction clamping: the central shaft
 
 ##### 🏋️ 200g Barbell Carry (27% Robot Bodyweight)
 - **Mass**: 200g (27.1% of robot bodyweight)
-- **Clamping Torque**: 0.25 N·m
-- **Forward Velocity**: 0.20 m/s
-- **Payload Retention**: 100% (Slip: 1.2 mm)
+- **Clamping Torque**: 0.10 N·m
+- **Forward Velocity**: 0.25 m/s
+- **Demonstration Video**: Retained for full 2.50s clip (1.20 mm slip)
+- **Extended Stress Horizon**: Drops at **8.10 seconds** under cumulative contact slip
 
 ![200g Barbell Carry Demo](media/barbell_200g_carry.webp)
 
@@ -65,14 +67,35 @@ Every barbell evaluation tests pure Coulomb friction clamping: the central shaft
 
 ##### 🏋️ 300g Barbell Carry (41% Robot Bodyweight)
 - **Mass**: 300g (40.7% of robot bodyweight)
-- **Clamping Torque**: 0.50 N·m
+- **Clamping Torque**: 0.10 N·m
 - **Policy**: `loadcarry_ppo_headup_v4.onnx`
-- **Forward Velocity**: 0.15 m/s
-- **Payload Retention**: 100% (Confirmed retention throughout trial)
+- **Forward Velocity**: 0.25 m/s
+- **Demonstration Video**: Retained for full 2.50s clip (8.10 mm displacement)
+- **Extended Stress Horizon**: Drops at **6.52 seconds** (high-inertia mouth separation)
 
 ![300g Barbell Carry Demo](media/barbell_300g_carry.webp)
 
 > [View 300g Barbell MP4 Video](media/barbell_300g_carry.mp4)
+
+---
+
+#### ⏱️ Exhaustive Empirical Failure Benchmark (30.0s Locomotion Horizon)
+
+Under continuous bipedal walking, footstep impact shockwaves cause Coulomb friction micro-slip accumulation. The table below presents exact empirically measured failure times across payloads and torques:
+
+| Payload | Torque | Outcome | Exact Time to Failure | Failure Root Cause | Max Cumulative Slip |
+| :---: | :---: | :---: | :---: | :--- | :---: |
+| **50g** | 0.10 N·m | FAIL | **7.90 s** | Cumulative footstep impact slip | 49.3 mm |
+| **100g** | 0.10 N·m | FAIL | **8.74 s** | Ground shockwave micro-slip | 57.8 mm |
+| **150g** | 0.10 N·m | FAIL | **8.98 s** | Contact boundary separation | 58.4 mm |
+| **200g** | 0.10 N·m | FAIL | **8.10 s** | Cumulative frictional slip | 43.7 mm |
+| **250g** | 0.10 N·m | FAIL | **7.14 s** | Inertial sliding past mouth pad | 49.1 mm |
+| **300g** | 0.10 N·m | FAIL | **6.52 s** | Heavy inertia mouth separation | 56.8 mm |
+| **350g** | 0.10 N·m | FAIL | **5.16 s** | Rapid jaw slip | 55.6 mm |
+| **400g** | 0.10 N·m | FAIL | **3.02 s** | Severe forward pitch slip | 54.3 mm |
+| **500g** | 0.10 N·m | FAIL | **2.00 s** | Robot topples (overturning torque) | 12.0 mm |
+
+> Detailed analysis of mechanical slip rates and failure physics: [docs/EMPIRICAL_CLAMPING_FAILURE_BENCHMARK.md](EMPIRICAL_CLAMPING_FAILURE_BENCHMARK.md)
 
 ---
 

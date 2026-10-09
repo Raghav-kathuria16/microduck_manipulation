@@ -57,7 +57,8 @@ Every barbell test evaluates pure physical clamping: the central shaft sits in t
 - **Payload**: 100g (50g steel shaft + two 25g end plates, 48 mm diameter)
 - **Clamping Torque**: 0.10 N·m continuous
 - **Forward Velocity**: 0.25 m/s
-- **Payload Retention**: **100%** (Slip: 0.00 mm)
+- **Demonstration Video**: Retained for full 2.50s clip (0.00 mm slip)
+- **Extended Stress Limit**: Drops at **8.74 seconds** due to footstep shockwave micro-slip
 
 ![100g Barbell Clamping Carry](docs/media/barbell_100g_carry.webp)
 
@@ -66,10 +67,11 @@ Every barbell test evaluates pure physical clamping: the central shaft sits in t
 ---
 
 #### 🏋️ 200g Barbell Carry (27% Robot Bodyweight)
-- **Payload**: 200g (100g steel shaft + two 50g end plates)
-- **Clamping Torque**: 0.25 N·m continuous
-- **Forward Velocity**: 0.20 m/s
-- **Payload Retention**: **100%** (Slip: 1.2 mm)
+- **Payload**: 200g (50g steel shaft + two 75g end plates, 68 mm diameter)
+- **Clamping Torque**: 0.10 N·m continuous
+- **Forward Velocity**: 0.25 m/s
+- **Demonstration Video**: Retained for full 2.50s clip (1.20 mm slip)
+- **Extended Stress Limit**: Drops at **8.10 seconds** under cumulative impact slip
 
 ![200g Barbell Clamping Carry](docs/media/barbell_200g_carry.webp)
 
@@ -78,11 +80,12 @@ Every barbell test evaluates pure physical clamping: the central shaft sits in t
 ---
 
 #### 🏋️ 300g Barbell Carry (41% Robot Bodyweight)
-- **Payload**: 300g (41% of the robot's entire 737g bodyweight)
-- **Clamping Torque**: 0.50 N·m continuous
+- **Payload**: 300g (40.7% of the robot's entire 737g bodyweight)
+- **Clamping Torque**: 0.10 N·m continuous
 - **Policy**: `loadcarry_ppo_headup_v4.onnx`
-- **Forward Velocity**: 0.15 m/s
-- **Payload Retention**: **100%** (Retention confirmed across entire trial)
+- **Forward Velocity**: 0.25 m/s
+- **Demonstration Video**: Retained for full 2.50s clip (8.10 mm displacement)
+- **Extended Stress Limit**: Drops at **6.52 seconds** (heavy inertia accelerates jaw slip)
 
 ![300g Barbell Clamping Carry](docs/media/barbell_300g_carry.webp)
 
@@ -131,18 +134,26 @@ Precision non-prehensile balancing of an authentic 22g citrus lemon in the shall
 
 ## 📊 Comprehensive Load & Manipulation Benchmark
 
-The following table summarizes empirical performance across all physical manipulation and payload tasks:
+The following table summarizes empirical performance across short demonstration clips versus continuous extended locomotion horizons:
 
-| Task / Payload | Payload Mass | Clamping Torque | Forward Velocity | Pitch Stability | Retention Rate | Status |
+| Task / Payload | Payload Mass | Clamping Torque | Forward Velocity | Short Clip (2.5-3.5s) | Extended Time-to-Failure (TTF) | Primary Failure Mode |
 |:---|:---|:---|:---|:---|:---|:---|
-| **100g Barbell Carry** | 100g (13.6% BW) | 0.10 N·m | 0.25 m/s | Head Level (+0.2°) | **100%** (0.0mm slip) | ✅ Verified |
-| **200g Barbell Carry** | 200g (27.1% BW) | 0.25 N·m | 0.20 m/s | Head Level (+0.4°) | **100%** (1.2mm slip) | ✅ Verified |
-| **300g Barbell Carry** | 300g (40.7% BW) | 0.50 N·m | 0.15 m/s | Head Level (+0.6°) | **100%** (8.1mm disp) | ✅ Verified |
-| **Table Tennis Racket** | 85g | 0.18 N·m | 0.18 m/s | Blade Pitch < 0.5° | **100%** (Active Level) | ✅ Verified |
-| **Badminton Racket** | 88g | 0.18 N·m | 0.18 m/s | Cheek Clearance > 15mm | **100%** (No Collision) | ✅ Verified |
-| **Pickleball Paddle** | 220g | 0.18 N·m | 0.18 m/s | Blade Pitch < 0.8° | **100%** (Stable Walk) | ✅ Verified |
-| **Lemon & Spoon Balance**| 22g (non-prehensile) | 0.45 N·m | 0.16 m/s | Spoon Pitch < 0.35° | **100%** (Zero Drop) | ✅ Verified |
-| **5-Duck Stadium Race** | 5x 22g Lemons | 0.45 N·m | 0.14 - 0.18 m/s | Multi-Agent Steadicam | **100%** (All 5 Finish) | ✅ Verified |
+| **100g Barbell Carry** | 100g (13.6% BW) | 0.10 N·m | 0.25 m/s | 100% Retained (0.0mm) | **8.74 s** | Impact shockwave micro-slip |
+| **200g Barbell Carry** | 200g (27.1% BW) | 0.10 N·m | 0.25 m/s | 100% Retained (1.2mm) | **8.10 s** | Cumulative frictional slip |
+| **300g Barbell Carry** | 300g (40.7% BW) | 0.10 N·m | 0.25 m/s | 100% Retained (8.1mm) | **6.52 s** | High-inertia mouth separation |
+| **350g Barbell Carry** | 350g (47.5% BW) | 0.10 N·m | 0.25 m/s | Marginal | **5.16 s** | Rapid jaw slip |
+| **400g Barbell Carry** | 400g (54.3% BW) | 0.10 N·m | 0.25 m/s | Fails early | **3.02 s** | Severe forward pitch slip |
+| **500g Barbell Carry** | 500g (67.8% BW) | 0.10 N·m | 0.25 m/s | Fails early | **2.00 s** | Robot topples (overturning torque) |
+| **Table Tennis Racket** | 40g (scaled) | 0.50 N·m | 0.18 m/s | 100% Retained (0.0mm) | **> 30.0 s** (Handle stable) | Handle clamped indefinitely |
+| **Ping-Pong Ball on Blade** | 1.3g ball | N/A (unconstrained) | 0.18 m/s | Unstable | **0.81 s** | Blade vibration kicks ball off |
+| **Badminton Racket** | 40g (scaled) | 0.50 N·m | 0.18 m/s | 100% Retained (0.0mm) | **> 30.0 s** (Handle stable) | Cheek clearance maintained |
+| **Pickleball Paddle** | 75g (scaled) | 0.50 N·m | 0.18 m/s | 100% Retained (0.0mm) | **> 30.0 s** (Handle stable) | Wide grip stability |
+| **Lemon & Spoon (0.08 m/s)** | 22g lemon | 0.45 N·m | 0.08 m/s | Drops at 5.8s | **5.83 s** | Low-speed gait hesitation roll |
+| **Lemon & Spoon (0.12 m/s)** | 22g lemon | 0.45 N·m | 0.12 m/s | 100% Retained | **10.41 s** | Long-term drift drop |
+| **Lemon & Spoon (0.16 m/s)** | 22g lemon | 0.45 N·m | 0.16 m/s | 100% Retained | **> 30.0 s (Stable)** | Steadicam pitch cancellation |
+| **5-Duck Stadium Race** | 5x 22g Lemons | 0.45 N·m | 0.14 - 0.18 m/s | 100% Retained (4.9s 2x)| **10.0 s (Full race)** | Lane-tuned Steadicam balance |
+
+> 📖 **Full Empirical Report**: See [docs/EMPIRICAL_CLAMPING_FAILURE_BENCHMARK.md](docs/EMPIRICAL_CLAMPING_FAILURE_BENCHMARK.md) for the complete 50g-500g failure matrix, slip accumulation rates, and physical mechanics.
 
 ---
 
