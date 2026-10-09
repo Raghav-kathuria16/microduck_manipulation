@@ -197,9 +197,9 @@ def create_scaled_scene_xml(racket_type="table_tennis", include_ball=True):
       <geom name="tt_lens_vis" type="mesh" mesh="tt_handle_lens_mesh" material="tt_lens_gold" contype="0" conaffinity="0" group="0"/>
 
       <!-- Collision Geoms (group="3" purely invisible collision) -->
-      <!-- Solid Wood Handle for Beak Clamping (CAD dimensions: length 62mm, thickness 5.88mm, width 23.1mm, sticky grip friction 8.0) -->
+      <!-- Solid Wood Handle for Beak Clamping -->
       <geom name="racket_handle" type="box" pos="0 0 0.008" size="0.01155 0.00294 0.031" material="tt_handle_wood" friction="8.0 0.5 0.5" contype="0" conaffinity="0" group="3"/>
-      <!-- Flat Rubber Surface for Ball Contact (width 105mm, length 110mm, half thickness 3.5mm) -->
+      <!-- Flat Rubber Surface for Ball Contact -->
       <geom name="racket_face" type="box" pos="0 0 0.1015" size="0.0525 0.0035 0.0540" material="tt_rubber_red" friction="0.80 0.005 0.005" contype="0" conaffinity="0" group="3"/>
     </body>"""
         if include_ball:
@@ -300,8 +300,8 @@ def create_scaled_scene_xml(racket_type="table_tennis", include_ball=True):
 """
     xml = xml.replace('                <geom name="jaw_soft_lower_collision"', jaw_cradle_str + '                <geom name="jaw_soft_lower_collision"')
 
-    # 5. High-friction Coulomb contact pairs for silicone mouth beds
-    contact_str = """    <!-- Pure rigid Coulomb contact pairs with analytical mouth silicone beds -->
+    # 5. Spatial contact pairs for silicone mouth beds
+    contact_str = """    <!-- Pure rigid contact pairs with analytical mouth silicone beds -->
     <pair geom1="racket_handle" geom2="mouth_roof_pad" condim="6" friction="4.5 4.5 0.2 0.2 0.2" solref="0.002 1.0" solimp="0.99 0.999 0.0001 0.5 2"/>
     <pair geom1="racket_handle" geom2="jaw_cradle_bed" condim="6" friction="4.5 4.5 0.2 0.2 0.2" solref="0.002 1.0" solimp="0.99 0.999 0.0001 0.5 2"/>
 """

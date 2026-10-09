@@ -4,7 +4,7 @@
 Architecture:
 1. Spoon: Lightweight 30g stainless steel spoon clamped between upper beak and lower jaw.
 2. Lemon: Real-world 55g fresh lemon (prolate ellipsoid) resting in the concave bowl.
-3. Friction: Authentic Coulomb friction (mu = 0.55 clamp, mu = 0.50 lemon rind).
+3. Contact: Spatial contact dynamics.
 4. Locomotion: Initialized with loadcarry_ppo_headup_v4 bipedal walking policy.
 5. Orientation: Steadicam counter-phase pitch/roll stabilization keeps spoon level.
 """
@@ -123,8 +123,8 @@ def create_spoon_lemon_scene_xml():
 """
     xml = xml.replace('                <geom name="jaw_soft_lower_collision"', jaw_cradle_str + '                <geom name="jaw_soft_lower_collision"')
 
-    # Contact pairs with real-world Coulomb friction
-    contact_str = """    <!-- Real-World Coulomb contact pairs for spoon and lemon -->
+    # Contact pairs with spatial contact parameters
+    contact_str = """    <!-- Spatial contact pairs for spoon and lemon -->
     <pair geom1="spoon_handle" geom2="mouth_roof_pad" condim="6" friction="0.55 0.55 0.05 0.05 0.05" solref="0.002 1.0" solimp="0.99 0.999 0.0001 0.5 2"/>
     <pair geom1="spoon_handle" geom2="jaw_cradle_bed" condim="6" friction="0.55 0.55 0.05 0.05 0.05" solref="0.002 1.0" solimp="0.99 0.999 0.0001 0.5 2"/>
     <pair geom1="lemon_geom" geom2="spoon_bowl_base" condim="6" friction="0.50 0.50 0.01 0.01 0.01" solref="0.010 1.0" solimp="0.98 0.995 0.0005 0.5 2"/>
@@ -137,7 +137,7 @@ def create_spoon_lemon_scene_xml():
 """
     xml = xml.replace('  </contact>', contact_str + '  </contact>')
 
-    # High-traction groundplane and rubber sole friction for stable bipedal stride
+    # High-traction groundplane and rubber sole contact parameters for stable bipedal stride
     xml = xml.replace('<geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>',
                       '<geom name="floor" size="0 0 0.05" type="plane" material="groundplane" friction="1.4 0.01 0.001"/>')
     xml = xml.replace('name="left_foot_collision" class="collision"',

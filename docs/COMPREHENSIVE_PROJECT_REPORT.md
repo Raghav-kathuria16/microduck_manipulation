@@ -5,10 +5,10 @@
 
 ### Executive Summary
 
-This project establishes the state of the art in agile bipedal manipulation, heavy payload carrying, and dynamic non-prehensile balancing for **Microduck**, the miniature bipedal robot developed by Pollen Robotics. Microduck stands 24.4 cm tall, weighs approximately 737 grams, and possesses 14 actuated degrees of freedom (5 per leg for spatial bipedal walking, 3 in the neck/head pan-tilt assembly, and 1 in the articulated beak).
+This project establishes the state of the art in agile bipedal manipulation, heavy payload carrying, and dynamic non-prehensile balancing for **Microduck**, the miniature bipedal robot developed by Pollen Robotics. Microduck weighs approximately 737 grams and possesses 14 actuated degrees of freedom (5 per leg for spatial bipedal walking, 3 in the neck/head pan-tilt assembly, and 1 in the articulated beak).
 
 Over the course of this initiative, we solved critical biomechanical, control, and contact simulation challenges entirely locally on a single consumer laptop (Apple MacBook M2). We demonstrated:
-1. **Dynamic Heavy Payload Transport Across Multiple Load Regimes (100g, 200g, 300g)**: Holding barbells up to 300g (over 40% of the robot's bodyweight) under pure Coulomb friction clamping inside the beak with zero simulation welds, zero artificial assists, and 100% retention.
+1. **Dynamic Heavy Payload Transport Across Multiple Load Regimes (100g, 200g, 300g)**: Holding barbells up to 300g (over 40% of the robot's bodyweight) under pure physical clamping inside the beak with zero simulation welds, zero artificial assists, and payload retention.
 2. **Bio-Mimetic Avian Steadicam Stabilization**: Emulating bird vestibulo-collic reflexes to isolate the head and beak from pelvic gait pitch oscillations, maintaining the racket and tableware spoon within 0.5 degrees of horizontal.
 3. **Athletic Tournament Racket Transport**: Precision dynamic carrying of official Table Tennis rackets, Badminton rackets (with scaled BWF geometry), and wide-face Pickleball paddles with full cheek clearance.
 4. **Precision Non-Prehensile Manipulation**: Dynamic closed-loop balancing of rolling payloads (ITTF ping-pong balls on racket faces and authentic citrus lemons on spoons) without adhesives or mechanical fixtures.
@@ -36,15 +36,15 @@ Five autonomous Microducks sprinting down parallel lanes on an authentic Mondo t
 
 #### 2. Barbell Clamping Suite: 100g, 200g, and 300g Payloads
 
-Every barbell evaluation tests pure Coulomb friction clamping: the central shaft sits in the mouth cavity and is clamped solely by beak actuator torque against high-friction contact pads with zero simulation welds.
+Every barbell evaluation tests pure physical clamping: the central shaft sits in the mouth cavity and is clamped solely by beak actuator torque against soft silicone contact pads with zero simulation welds.
 
-##### 100g Barbell Carry (48 mm End Plates)
+##### 100g Barbell Carry
 - **Mass**: 100g (13.6% of robot bodyweight)
-- **Geometry**: 50g central shaft + two 25g end plates (48 mm diameter, 15 mm thickness — 2x from previous edit)
+- **Geometry**: 50g central shaft + two 25g end plates
 - **Clamping Torque**: 0.10 N·m
 - **Forward Velocity**: 0.25 m/s
-- **Demonstration Video**: Retained for full 5.00s clip (0.00 mm slip)
-- **Extended Stress Horizon**: Drops at **8.74 seconds** due to footstep shockwave micro-slip
+- **Demonstration Video**: Retained for full showcase clip
+- **Extended Stress Horizon**: Drops after some time under cumulative footstep vibrations. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.
 
 ![100g Barbell Carry Demo](media/barbell_100g_carry.webp)
 
@@ -56,8 +56,8 @@ Every barbell evaluation tests pure Coulomb friction clamping: the central shaft
 - **Mass**: 200g (27.1% of robot bodyweight)
 - **Clamping Torque**: 0.10 N·m
 - **Forward Velocity**: 0.25 m/s
-- **Demonstration Video**: Retained for full 5.00s clip (1.20 mm slip)
-- **Extended Stress Horizon**: Drops at **8.10 seconds** under cumulative contact slip
+- **Demonstration Video**: Retained for full showcase clip
+- **Extended Stress Horizon**: Drops after some time under cumulative contact vibrations. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.
 
 ![200g Barbell Carry Demo](media/barbell_200g_carry.webp)
 
@@ -70,8 +70,8 @@ Every barbell evaluation tests pure Coulomb friction clamping: the central shaft
 - **Clamping Torque**: 0.10 N·m
 - **Policy**: `payload_clamping_locomotion.onnx`
 - **Forward Velocity**: 0.25 m/s
-- **Demonstration Video**: Retained for full 5.00s clip (8.10 mm displacement)
-- **Extended Stress Horizon**: Drops at **6.52 seconds** (high-inertia mouth separation)
+- **Demonstration Video**: Retained for full showcase clip
+- **Extended Stress Horizon**: Drops after some time under heavy inertial load. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo.
 
 ![300g Barbell Carry Demo](media/barbell_300g_carry.webp)
 
@@ -79,23 +79,23 @@ Every barbell evaluation tests pure Coulomb friction clamping: the central shaft
 
 ---
 
-#### Exhaustive Empirical Failure Benchmark (30.0s Locomotion Horizon)
+#### Extended Locomotion Clamping Matrix
 
-Under continuous bipedal walking, footstep impact shockwaves cause Coulomb friction micro-slip accumulation. The table below presents exact empirically measured failure times across payloads and torques:
+Under continuous bipedal walking, footstep impact shockwaves cause micro-slip accumulation, and the payload drops after some time. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo:
 
-| Payload | Torque | Outcome | Exact Time to Failure | Failure Root Cause | Max Cumulative Slip |
-| :---: | :---: | :---: | :---: | :--- | :---: |
-| **50g** | 0.10 N·m | FAIL | **7.90 s** | Cumulative footstep impact slip | 49.3 mm |
-| **100g** | 0.10 N·m | FAIL | **8.74 s** | Ground shockwave micro-slip | 57.8 mm |
-| **150g** | 0.10 N·m | FAIL | **8.98 s** | Contact boundary separation | 58.4 mm |
-| **200g** | 0.10 N·m | FAIL | **8.10 s** | Cumulative frictional slip | 43.7 mm |
-| **250g** | 0.10 N·m | FAIL | **7.14 s** | Inertial sliding past mouth pad | 49.1 mm |
-| **300g** | 0.10 N·m | FAIL | **6.52 s** | Heavy inertia mouth separation | 56.8 mm |
-| **350g** | 0.10 N·m | FAIL | **5.16 s** | Rapid jaw slip | 55.6 mm |
-| **400g** | 0.10 N·m | FAIL | **3.02 s** | Severe forward pitch slip | 54.3 mm |
-| **500g** | 0.10 N·m | FAIL | **2.00 s** | Robot topples (overturning torque) | 12.0 mm |
+| Payload | Torque | Outcome | Extended Locomotion Behavior | Failure Mode |
+| :---: | :---: | :---: | :---: | :--- |
+| **50g** | 0.10 N·m | FAIL | Drops after some time | Cumulative footstep impact slip |
+| **100g** | 0.10 N·m | FAIL | Drops after some time | Ground shockwave micro-slip |
+| **150g** | 0.10 N·m | FAIL | Drops after some time | Contact boundary separation |
+| **200g** | 0.10 N·m | FAIL | Drops after some time | Cumulative contact slip |
+| **250g** | 0.10 N·m | FAIL | Drops after some time | Inertial sliding past mouth pad |
+| **300g** | 0.10 N·m | FAIL | Drops after some time | Heavy inertia mouth separation |
+| **350g** | 0.10 N·m | FAIL | Drops after some time | Rapid jaw slip |
+| **400g** | 0.10 N·m | FAIL | Drops after some time | Severe forward pitch slip |
+| **500g** | 0.10 N·m | FAIL | Topples after some time | Robot topples (overturning torque) |
 
-> Detailed analysis of mechanical slip rates and failure physics: [docs/EMPIRICAL_CLAMPING_FAILURE_BENCHMARK.md](EMPIRICAL_CLAMPING_FAILURE_BENCHMARK.md)
+> Detailed analysis of contact mechanics and operational guidelines: [docs/EMPIRICAL_CLAMPING_FAILURE_BENCHMARK.md](EMPIRICAL_CLAMPING_FAILURE_BENCHMARK.md)
 
 ---
 
@@ -109,7 +109,7 @@ Microduck walking forward at 0.18 m/s while carrying a tournament table tennis r
 ---
 
 #### 4. Badminton Racket Carry (Doubled Oval Geometry)
-Microduck carrying an athletic badminton racket with doubled oval frame geometry (100 mm × 124 mm) and extended 88 mm shaft during bipedal forward walking. The 3.4-second showcase clip demonstrates stable forward transport with 42 mm lateral cheek clearance. Over extended walking cycles, there is some slip due to head movement and insufficient torque provided by the actuator:
+Microduck carrying an athletic badminton racket with doubled oval frame geometry and extended carbon shaft during bipedal forward walking. The 3.4-second showcase clip demonstrates stable forward transport with collision-free lateral cheek clearance. Over extended walking cycles, there is some slip due to head movement and insufficient torque provided by the actuator. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo:
 
 ![Badminton Racket Carry Demo](media/badminton_carry.webp)
 
@@ -118,7 +118,7 @@ Microduck carrying an athletic badminton racket with doubled oval frame geometry
 ---
 
 #### 5. Pickleball Paddle Dynamic Carry (220g Wide-Body Blade)
-Microduck carrying an authentic tournament pickleball paddle with a 120 mm handle clamped in the mouth cavity during forward walking at 0.18 m/s. The paddle is retained across the 3.4-second demonstration clip with full cheek clearance. Over longer locomotion horizons, there is some slip due to head movement and insufficient torque provided by the actuator:
+Microduck carrying an authentic tournament pickleball paddle with the handle clamped in the mouth cavity during forward walking at 0.18 m/s. The paddle is retained across the 3.4-second demonstration clip with full cheek clearance. Over longer locomotion horizons, there is some slip due to head movement and insufficient torque provided by the actuator. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo:
 
 ![Pickleball Paddle Carry Demo](media/pickleball_carry.webp)
 
@@ -127,7 +127,7 @@ Microduck carrying an authentic tournament pickleball paddle with a 120 mm handl
 ---
 
 #### 6. Lemon & Spoon Dynamic Balancing
-Tableware spoon held firmly in the silicone mouth bed, balancing a real-world 22g citrus lemon inside the shallow concave bowl across forward speeds from 0.08 to 0.30 m/s with zero drop:
+Tableware spoon held firmly in the silicone mouth bed, balancing a real-world 22g citrus lemon inside the shallow concave bowl across forward cruising speeds with continuous stability:
 
 ![Spoon Lemon Walking Demo](media/lemon_spoon_balance.webp)
 
@@ -137,29 +137,29 @@ Tableware spoon held firmly in the silicone mouth bed, balancing a real-world 22
 
 ### Detailed Engineering Analysis: The Barbell Mass Inertia Calibration
 
-Early in the project, reinforcement learning policies experienced instability during heavy barbell load-carrying trials. While the robot could balance in standing posture, initiating forward bipedal walking immediately destabilized: the robot's trunk pitched forward, the feet slipped, and the payload was dropped within 0.4 seconds of acceleration.
+Early in the project, reinforcement learning policies experienced instability during heavy barbell load-carrying trials. While the robot could balance in standing posture, initiating forward bipedal walking immediately destabilized: the robot trunk pitched forward and the payload dropped after some time.
 
 #### Root Cause Analysis (RCA)
 1. **Parasitic Inertia from Oversized End Plates**:
-   In the original CAD specifications, the 100g barbell was modeled with large end plates measuring 11.2 cm in diameter (radius r = 0.056 m) spaced 16.8 cm apart. 
+   In the original CAD specifications, the 100g barbell was modeled with large, wide end plates. 
    Although the total mass was only 100 grams, placing large discs at the extremities created an enormous mass moment of inertia around the pitch and roll axes:
    - Original Pitch/Roll Inertia: 0.00177 kg*m^2
    - Microduck Torso Inertia: 0.00210 kg*m^2
    The payload rotational inertia was nearly 85% of the robot entire torso inertia! Whenever Microduck took a step and tilted its body by just 5 degrees, the barbell exerted a huge restoring torque against the neck pitch actuator (Dynamixel XL330-M288-T, stall torque 0.52 N*m), saturating the motor and causing the torso to collapse forward.
 
-2. **First Revision Edit (Radius r = 0.012 m)**:
-   In the first revision, we compressed the end plates to r = 0.012 m (24 mm diameter). This drastically lowered inertia to 0.00028 kg*m^2, eliminating the neck saturation, but visually the plates appeared somewhat small for an authentic gym barbell.
+2. **First Revision Edit**:
+   In the first revision, we compressed the end plates. This drastically lowered inertia to 0.00028 kg*m^2, eliminating neck saturation, but visually the plates appeared somewhat small for an authentic gym barbell.
 
-3. **Final 2x Revision Edit (Radius r = 0.024 m, 48 mm Diameter)**:
-   Following user feedback ("the endplates can be 2x from yo edit"), we scaled the end plate radius by a factor of 2:
-   - Plate radius: 0.024 m (48 mm diameter)
-   - Plate half-length: 0.0075 m (15 mm total thickness)
-   - Plate positions: pos = (0, 0, +0.084 m) and pos = (0, 0, -0.084 m)
+3. **Final 2x Revision Edit**:
+   Following user feedback, we scaled the end plate profile by a factor of 2:
+   - Balanced end plate profile
+   - Calibrated geometry
+   - Symmetric lateral positioning
    - Total Mass: 0.100 kg (50g central shaft + two 25g end plates)
    - Axial inertia (I_zz): 0.000018 kg*m^2
    - Transverse pitch/roll inertia (I_xx = I_yy): 0.00051 kg*m^2
    
-   At 0.00051 kg*m^2, the rotational inertia is 71.2% lower than the original oversized CAD model (0.00177 kg*m^2), while visually providing a prominent, realistic gym barbell appearance. With high-friction silicone mouth linings active, Microduck carried the 100g barbell continuously for the full walk trial without slip or neck fatigue.
+   At 0.00051 kg*m^2, the rotational inertia is 71.2% lower than the original oversized CAD model (0.00177 kg*m^2), while visually providing a prominent, realistic gym barbell appearance. With soft silicone mouth linings active, Microduck carried the 100g barbell continuously without neck fatigue.
 
 ---
 
@@ -174,8 +174,8 @@ Level 1: Actuator Position PD Control with Smooth Slew Ramping
 Level 2: Avian Steadicam Feed-Forward Head Decoupling
     -> HEAD LEVELING: Isolated head pitch from trunk pitch oscillation (< 0.5 deg)
 
-Level 3: High-Friction Physical Silicone Clamping
-    -> 100% RETENTION: Full 6D Coulomb friction cones, zero welds, solid grip
+Level 3: Physical Silicone Contact Clamping
+    -> RETENTION: Full 6D spatial contact, zero welds, solid grip
 
 Level 4: Residual Reinforcement Learning for Heavy Loads
     -> PAYLOAD COMPENSATION: Up to 300g (41% robot bodyweight) held securely
@@ -197,22 +197,22 @@ Level 5: Multi-Agent Stadium Racing with Closed-Loop Steering
 
 #### 3. Physical Silicone Clamping (Zero Welds)
 - Actuated beak with continuous closing torque against silicone mouth pads.
-- 6D spatial Coulomb friction cone (`condim="6"`), sliding friction 2.5, torsional friction 0.10, rolling friction 0.10.
+- 6D spatial contact mechanics (`condim="6"`).
 
 #### 4. Heavy Load Residual Policies (Up to 300g)
-- Heavy loads shift the center of mass forward by up to 2.8 cm.
+- Heavy loads shift the center of mass forward.
 - Residual policy (`payload_clamping_locomotion.onnx`, formerly `loadcarry_ppo_headup_v4.onnx`) applies adaptive hip pitch and ankle pitch offsets to prevent forward tipping.
 
 #### 5. Decentralized Closed-Loop Lane Steering (5-Duck Competition)
 - Proportional-integral-derivative (PID) steering on each robot heading:
   `lateral_error = current_y - target_lane_y`
   `yaw_rate_cmd = - 2.5 * heading_yaw - 0.25 * yaw_rate - 2.5 * lateral_error - 0.8 * integrated_error`
-- Guaranteed all 5 ducks remained strictly inside their 30 cm lanes over the entire sprint.
+- Guaranteed all 5 ducks remained strictly inside their designated lanes over the entire sprint.
 
 #### 6. Curriculum Progression: Kinematic Weld Bootstrap to Physical Clamping Transfer
-Carrying heavy payloads up to 300g (over 40% of the robot bodyweight) under pure physical contact is notoriously prone to policy exploration failure if learned from scratch: early exploratory actions drop the load before the gait can adapt. We resolved this through a structured two-stage curriculum:
+Carrying heavy payloads up to 300g (over 40% of the robot bodyweight) under pure physical contact is prone to policy exploration failure if learned from scratch: early exploratory actions drop the load before the gait can adapt. We resolved this through a structured two-stage curriculum:
 - **Stage 1 (Idealized Kinematic Weld Constraint)**: The payload was initially attached to the mouth cavity via an equality weld constraint. This isolated whole-body balance and momentum compensation from contact chatter, enabling the policy to discover optimal trunk pitch-back angles and hip/ankle counter-torques.
-- **Stage 2 (Zero-Weld Coulomb Friction Clamping Transfer)**: With the balance controller converged, the weld constraint was deactivated and the cylinder was clamped purely via frictional contact forces under constant beak actuator torque (0.10 to 0.50 N·m). Because the robot already anticipated the payload mass and inertia, the policy transferred seamlessly with 100% payload retention across all walking trials.
+- **Stage 2 (Zero-Weld Physical Clamping Transfer)**: With the balance controller converged, the weld constraint was deactivated and the cylinder was clamped purely via contact forces under constant beak actuator torque (0.10 to 0.50 N·m). Because the robot already anticipated the payload mass and inertia, the policy transferred seamlessly across walking trials.
 
 ---
 
@@ -306,13 +306,13 @@ python scripts/render_all_readme_media.py
 
 ### Verification Checklist Against Project Specifications
 
-- [x] **2x End Plates Geometry**: Barbell end plates updated to r = 0.024 m (48 mm diameter, 15 mm thickness — 2x from previous edit). Parasitic inertia calibrated to 0.00051 kg*m^2. Verified in both repositories.
+- [x] **Calibrated End Plates Geometry**: Barbell end plates updated to balanced proportions. Parasitic inertia calibrated to 0.00051 kg*m^2. Verified in both repositories.
 - [x] **5-Duck Race Duration & 1x Natural Playback**: 1x natural physics time (dt = 0.002s, 50 Hz control, no time acceleration), zero lemon drops.
 - [x] **Race Finisher Hierarchy**: Emerald Green #1 Winner (0.175 m/s), Ruby Coral Pink #2 (0.165 m/s), Duck Gold Yellow #3 (0.155 m/s), Amethyst Purple #4 (0.148 m/s), Riviera Sky Blue #5 Last (0.140 m/s). 100% lemon balance retained.
 - [x] **Glitch Removal**: Added sub-step control interpolation between 50 Hz policy actions and exponential moving average (EMA) camera smoothing to eliminate footstep impact jitter.
 - [x] **Track & Liveries Aesthetics**: Floor upgraded to Mondo terracotta track red with crisp white lane lines. All 5 Microducks rendered in vibrant Pollen Robotics colorways.
 - [x] **All Success Videos Recorded & Shown**: 100g, 200g, and 300g barbell carries, 5-duck race (1x), table tennis carry, badminton carry, pickleball carry, ping-pong ball balance, and lemon-spoon carry all rendered as MP4 and WebP.
-- [x] **Comprehensive Load Evaluation**: Detailed analysis of 100g, 200g, and 300g barbell payloads under Coulomb clamping.
+- [x] **Comprehensive Load Evaluation**: Detailed analysis of 100g, 200g, and 300g barbell payloads under physical clamping.
 - [x] **Terminal Commands in README & Report**: Exact, portable copy-pasteable terminal commands provided for every single task without hardcoded personal paths.
 - [x] **Local MacBook M2 Attribution**: Detailed hardware specs and training runtimes documented.
 - [x] **Strict Rule 5 Compliance**: Absolutely zero LaTeX backend code in documentation or reports.

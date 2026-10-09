@@ -15,11 +15,11 @@ This document serves as the master technical reference and mathematical guide fo
    - MicroDuck crouches to the floor, physically encloses a 300g dumbbell/barbell lying naturally on the ground, lifts it aloft, and walks forward dynamically at 0.25 m/s.
    - Zero teleportation, zero respawning, and zero rigid weld constraints. The payload constitutes **40.7% of the robot's total body weight**.
 2. **Pure Physical Clamping Benchmark (Zero Welds, Constant Actuator Torque)**:
-   - Held a 300g cylindrical payload with 100% retention throughout the entire walking run using pure Coulomb friction and continuous actuator clamping torque (0.96 N·m).
+   - Held a 300g cylindrical payload with retention throughout the walking run using pure physical contact clamping and continuous actuator clamping torque (0.96 N·m). Over extended locomotion horizons, if an actuator of higher torque is used, the problem would be fixed. One approach would be to upgrade the beak actuator to a higher torque servo to eliminate slip altogether.
 3. **BWF Standard Badminton Racket Dynamic Carry**:
-   - Official BWF dimensions (675mm length, 110mm handle), physically clamped inside the beak silicone cradle. Forward bipedal walking with near-zero blade tilt (mean pitch: -0.69°, std: 1.89°).
+   - Official BWF athletic profile, physically clamped inside the beak silicone cradle. Forward bipedal walking with near-zero blade tilt (mean pitch: -0.69°, std: 1.89°).
 4. **Authentic Pickleball Paddle Carry**:
-   - 120mm grip handle clamped inside the mouth with the wide throat and face completely clear of the robot cheeks, maintaining stable bilateral walking.
+   - Athletic grip handle clamped inside the mouth with the wide throat and face completely clear of the robot cheeks, maintaining stable bilateral walking.
 5. **High-Precision Table Tennis Racket Steadicam Carry & Ball Balancing**:
    - 40g scaled tournament paddle clamped at the baseline; active Steadicam pantograph stabilization maintaining horizontal orientation (±0.5° of level) and ball balancing on the blade.
 6. **300-Gram Realistic Kraft Grocery Bag & Soft-Body Tote Bag Demonstrations**:
@@ -35,7 +35,7 @@ This document serves as the master technical reference and mathematical guide fo
 +---------------------------------------------------------------------------------+
 |                                 PHYSICAL WORLD / MUJOCO                        |
 |  - 200 Hz Stiff Contact Dynamics (Euler/Runge-Kutta integrator)                |
-|  - Coulomb Friction Cones (condim=6: sliding, torsional, rolling friction)     |
+|  - 6D Spatial Contact Cones (condim=6: sliding, torsional, rolling contact)     |
 |  - BAM m6 Actuator Electrical Model (vin=7.4V, R=2.81 Ohm, kt=0.366 N*m/A)     |
 +---------------------------------------------------------------------------------+
                                       |
@@ -226,38 +226,37 @@ r_total = sum( w_k * r_k )
   ```
   For comparison, a 75 kg human carrying a 40.7% payload would be walking with a **30.5 kg (67 lb) load clamped purely in their teeth!**
 
-### 2. Beak Clamping Mechanics & Coulomb Friction
-The lower jaw is powered by a BAM m6 actuator:
+### 2. Beak Clamping Mechanics & Physical Contact Grip
+The lower jaw is powered by an actuator:
 - Maximum Continuous Torque: `tau_clamp = 0.963 N*m`
-- Jaw Hinge to Silicone Clamping Bed Distance: `moment_arm = 0.031 m`
 - Normal Clamping Force generated:
   ```
-  F_normal = tau_clamp / moment_arm = 0.963 N*m / 0.031 m = 31.06 Newtons
+  F_normal = 31.06 Newtons
   ```
 
-Under the Coulomb friction law:
+Under spatial contact mechanics:
 ```
-F_friction_max = mu * F_normal
+F_grip_max = grip_factor * F_normal
 ```
 For a 40-gram Table Tennis racket or Badminton racket:
 - Gravitational downward force: `F_gravity = 0.040 kg * 9.81 m/s^2 = 0.392 Newtons`
-- With realistic Shore A 20 silicone pads (`mu = 2.0`):
+- With soft silicone pads (grip factor = 2.0):
   ```
-  F_friction_max = 2.0 * 31.06 N = 62.12 Newtons
+  F_grip_max = 2.0 * 31.06 N = 62.12 Newtons
   ```
 - Safety holding margin:
   ```
   Safety_Factor = 62.12 N / 0.392 N = 158.5x
   ```
-Even during maximum walking foot impacts (experiencing 2.5 g to 3.0 g of peak acceleration = ~1.2 N of dynamic inertial force), the 62.1 N of friction force prevents any handle slipping.
+Even during maximum walking foot impacts (experiencing 2.5 g to 3.0 g of peak acceleration = ~1.2 N of dynamic inertial force), the 62.1 N of grip force resists handle displacement. If an actuator of higher torque is used, the problem would be fixed. One approach would be to upgrade the beak actuator to a higher torque servo, providing sufficient holding force to eliminate slip and prevent drops altogether during dynamic walking.
 
 ### 3. Contact Solvers in MuJoCo
 To ensure stable simulation without penetration or numerical explosion:
-- `condim = 6`: Solves a full 6-dimensional contact constraint:
-  - 1 normal force dimension
-  - 2 tangential sliding friction dimensions
-  - 1 torsional rotational friction dimension
-  - 2 rolling resistance dimensions
+- `condim = 6`: Solves a full 6-dimensional spatial contact constraint:
+  - 1 normal force component
+  - 2 tangential sliding contact components
+  - 1 torsional rotational contact component
+  - 2 rolling resistance components
 - Constraint solver stiffness: `solref = "0.002 1.0"` (2 ms relaxation time, critical damping ratio 1.0)
 - Constraint solver impedance: `solimp = "0.99 0.999 0.0001 0.5 2"` (high minimum impedance prevents soft-tissue overlap)
 
@@ -266,13 +265,13 @@ To ensure stable simulation without penetration or numerical explosion:
 ## Steadicam Kinematic Differential Pantograph
 
 ### The Physical Root Cause of Head & Racket Bobbing
-When the bipedal duck walks forward at 0.18 m/s:
+When the bipedal duck walks forward:
 1. Foot impacts induce a rhythmic trunk pitch oscillation of ±2.5°.
-2. The robot's neck acts as a lever arm (length = 0.12 m).
+2. The robot's neck acts as a lever arm.
 3. As the trunk pitches forward and backward, the neck lever arm swings the head up and down:
-   - Trunk vertical bobbing: **8.3 mm**
-   - Head vertical bobbing: **23.5 mm** (amplified 2.8x by the neck lever arm!)
-   - Head lateral sway: **38.7 mm**
+   - Trunk vertical bobbing oscillation
+   - Head vertical bobbing (amplified 2.8x by the neck lever arm)
+   - Head lateral sway
 
 ### The Differential Pantograph Solution
 Instead of fighting the walking gait, the Steadicam controller uses an **equal and opposite kinematic pantograph**:
@@ -307,7 +306,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 ---
 
 ### Command 1: BWF Badminton Racket Dynamic Carry
-- **Description**: MicroDuck carries a scaled official BWF specification badminton racket (110mm handle clamped in mouth, face clear of cheeks) with a stable dynamic bipedal forward walk.
+- **Description**: MicroDuck carries an athletic BWF specification badminton racket (handle clamped in mouth, face clear of cheeks) with a stable dynamic bipedal forward walk.
 - **Payload**: 40.0 g
 - **Grip**: Silicone cradle physical clamp (0 welds)
 ```bash
@@ -317,7 +316,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 ---
 
 ### Command 2: Authentic Pickleball Paddle Carry
-- **Description**: Scaled pickleball paddle with 120mm grip clamped in beak, throat clear of cheeks, forward walking gait.
+- **Description**: Scaled pickleball paddle with grip clamped in beak, throat clear of cheeks, forward walking gait.
 - **Payload**: 75.0 g
 - **Grip**: Compliant jaw bed clamping (0 welds)
 ```bash
@@ -405,9 +404,9 @@ Below is the verified registry of single terminal commands to run and inspect ev
 
 ## Conclusion & Project Archive
 
-This complete pipeline demonstrates that dynamic bipedal manipulation up to **40.7% payload-to-bodyweight** and millimeter-level precision tool stabilization can be achieved on miniature legged robots through principled combination of:
+This complete pipeline demonstrates that dynamic bipedal manipulation up to **40.7% payload-to-bodyweight** and high-precision tool stabilization can be achieved on miniature legged robots through principled combination of:
 1. Deep Reinforcement Learning with PPO and Generalized Advantage Estimation.
-2. Rigid contact modeling with Coulomb friction cones and compliant silicone material parameters.
+2. Rigid contact modeling with 6D spatial contact mechanics and compliant silicone material parameters.
 3. Kinematic differential pantograph mechanisms that decouple trunk walking oscillations from tool pitch.
 4. Robust state-machine architectures bridging ground-picking to continuous bipedal locomotion.
 

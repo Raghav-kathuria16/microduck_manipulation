@@ -339,7 +339,7 @@ def create_racer_scene_xml():
   </sensor>
 </mujoco>"""
 
-    # Apply rubber sole friction
+    # Apply rubber sole contact grip
     full_xml = full_xml.replace('geom class="collision"', 'geom class="collision" friction="1.4 0.01 0.001"')
     return full_xml
 
