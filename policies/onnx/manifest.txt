@@ -1,0 +1,7 @@
+# Downloaded ONNX policies
+# Source: https://huggingface.co/spaces/pollen-robotics/microduck-simulator/resolve/main/app/public/policies
+
+OK  BEST_alpha_walking.onnx  # Walk locomotion (main driving policy)
+OK  BEST_alpha_stand.onnx  # Get-up / fall recovery
+OK  BEST_alpha_sitstand.onnx  # Sit ↔ stand toggle
+OK  alpha_ground_pick.onnx  # Ground peck (blind one-shot beak dip)

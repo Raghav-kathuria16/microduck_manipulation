@@ -1,71 +1,100 @@
 # ============================================================
 # Scene Configuration — Apartment v1
 # ============================================================
-# This file parametrizes the apartment scene WITHOUT defining
-# geometry. Scene geometry lives in scenes/apartment_v1/.
-# This config controls randomizable aspects: spawn zones,
-# target positions, lighting, camera presets.
+# Parametrizes the apartment scene WITHOUT defining geometry.
+# Scene geometry lives in scenes/apartment_v1/apartment_v1.xml
+# (official Microduck robot + obj_0..3 / ball_0..2 free objects
+# + charging dock). This config controls randomizable aspects:
+# spawn zones, target position, lighting presets.
 # ============================================================
 
 scene:
   name: apartment_v1
   description: >
-    Single-room-plus-alcove apartment segment, duck-scale.
-    Main room ~3.5m x 3.0m, alcove ~1.5m x 1.5m connected
-    via open doorway.
+    8m x 6m six-room apartment at duck-scale: kitchen and living
+    room west, centre corridor (with staircase opening), office,
+    bedroom and bathroom east. Official 14-servo Microduck robot,
+    7 interactable objects (4 cubes, 3 balls), charging dock.
 
 # --- Robot spawn poses ---
 # Position (x, y) in meters, heading in radians (0 = +x).
-# Multiple options for randomization across episodes.
+# Poses verified clear of furniture and the staircase opening.
 robot_spawn_poses:
-  - name: center_facing_alcove
-    position: [1.75, 1.50]
-    heading: 0.0
-  - name: near_wall_facing_sock_a
-    position: [0.80, 2.20]
-    heading: -0.78  # ~-45°
-  - name: far_corner
+  - name: bedroom_north_facing_south
+    position: [1.30, 2.40]
+    heading: -1.57
+  - name: bedroom_doorway_facing_east
+    position: [0.90, 2.30]
+    heading: 0.78
+  - name: office_facing_northwest
     position: [2.80, 0.60]
-    heading: 0.52   # ~30°
+    heading: 0.52
 
-# --- Sock spawn zones ---
-# Each zone is a rectangular region; sock spawns at a random
-# point within it. Multiple zones for diversity.
-sock_spawn_zones:
-  - name: zone_a
-    description: "Near center of main room"
+# --- Object spawn zones ---
+# Each zone is a rectangular region inside a room, clear of
+# furniture and the staircase hole; one random object spawns at
+# a random point within a randomly chosen zone. Objects are 5cm
+# cubes (obj_*) and 4cm-radius balls (ball_*).
+object_spawn_zones:
+  - name: kitchen_east_strip
+    description: "Kitchen, east of the island, along corridor wall"
+    bounds:
+      x_min: -1.60
+      x_max: -1.20
+      y_min: 0.60
+      y_max: 2.60
+  - name: living_south_strip
+    description: "Living room, south of the coffee table"
+    bounds:
+      x_min: -3.40
+      x_max: -1.40
+      y_min: -2.50
+      y_max: -1.60
+  - name: office_centre
+    description: "Office floor between cabinet and chair"
     bounds:
       x_min: 1.20
-      x_max: 2.00
-      y_min: 0.80
-      y_max: 1.50
-  - name: zone_b
-    description: "Near alcove doorway"
+      x_max: 2.90
+      y_min: -0.70
+      y_max: 0.70
+  - name: bedroom_north_strip
+    description: "Bedroom, north of the bed between nightstands"
     bounds:
-      x_min: 2.50
-      x_max: 3.20
-      y_min: 1.20
-      y_max: 2.00
-  - name: zone_c
-    description: "On or near the rug"
+      x_min: 1.20
+      x_max: 3.40
+      y_min: 2.10
+      y_max: 2.70
+  - name: bath_centre
+    description: "Bathroom floor between vanity and tub"
     bounds:
-      x_min: 0.50
-      x_max: 1.50
-      y_min: 0.50
-      y_max: 1.30
+      x_min: 1.40
+      x_max: 3.30
+      y_min: -2.60
+      y_max: -1.30
+  - name: corridor_north
+    description: "Corridor, north of the staircase opening"
+    bounds:
+      x_min: -0.45
+      x_max: 0.35
+      y_min: -0.60
+      y_max: 2.50
+  - name: corridor_south
+    description: "Corridor, south of the staircase opening"
+    bounds:
+      x_min: -0.45
+      x_max: 0.35
+      y_min: -2.50
+      y_max: -1.55
 
-# --- Target (basket) positions ---
-# v1: fixed in alcove. Later: randomize among multiple options.
+# --- Target positions ---
+# v1: fixed at the charging dock. Later: randomize among options.
 target_positions:
-  - name: alcove_default
-    position: [4.20, 2.00]
-    description: "Laundry basket in alcove, against far wall"
-  - name: alcove_near_door
-    position: [3.80, 1.20]
-    description: "Basket closer to the doorway (future variant)"
+  - name: dock_default
+    position: [-3.80, -2.78]
+    description: "Charging dock, SW corner of the living room (dock_site)"
 
 # --- Lighting presets ---
-# 2–3 presets for visual domain randomization.
+# 3 presets for visual domain randomization (headlight tint).
 lighting_presets:
   - name: daylight
     description: "Bright, warm overhead — simulates daytime"

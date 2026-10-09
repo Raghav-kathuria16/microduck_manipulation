@@ -37,14 +37,14 @@ The scene represents a single-room-plus-alcove apartment segment at duck-scale (
 ## How to Run
 
 ### Interactive Viewer
-To view the scene and play with it interactively, use the viewer script from the repository root:
+To view the scene and play with it interactively, use the viewer script from the repository root. Note: On macOS, you must use `mjpython` instead of `python3` to run the interactive viewer.
 
 ```bash
 # Basic load
-.venv/bin/python scripts/view_scene.py
+.venv/bin/mjpython scripts/view_scene.py
 
 # Load with random duck pose, sock spawn, and lighting
-.venv/bin/python scripts/view_scene.py --randomize
+.venv/bin/mjpython scripts/view_scene.py --randomize
 ```
 **Controls:**
 - **Tab**: Cycle cameras (Free, `top_down`, `chase`, `beak_cam`)

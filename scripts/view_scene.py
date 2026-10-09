@@ -2,7 +2,7 @@
 """Interactive 3D viewer for the Microduck Apartment Scene.
 
 Loads scenes/apartment_v1/apartment_v1.xml and opens the native MuJoCo viewer.
-Provides interactive randomization and beak control.
+Provides interactive randomization.
 """
 
 import argparse
@@ -44,7 +44,7 @@ def main():
     if os.path.exists(config_path):
         scene_config = load_scene_config(config_path)
         print(f"Scene Name: {scene_config.scene_name}")
-        print(f"Spawn Zones: {[z.name for z in scene_config.sock_spawn_zones]}")
+        print(f"Spawn Zones: {[z.name for z in scene_config.object_spawn_zones]}")
     else:
         print("Warning: config not found, randomization will be disabled.")
 
@@ -64,16 +64,11 @@ def main():
     print("  - [Double-click body + Ctrl-drag] Apply interactive forces (drag duck or sock)")
     if scene_config is not None:
         print("  - [R] Re-randomize scene (Duck pose, sock spawn, lighting)")
-    print("  - [G] Toggle beak open/closed")
     print("  - [Esc] Exit")
     print("=" * 60)
 
-    # Find the beak actuator
-    act_beak_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, "act_beak")
-    beak_open = False
 
     def keyboard_callback(keycode: int):
-        nonlocal beak_open
         # Keycode for 'R' is 82 (or 'r' 114)
         if keycode in (82, 114) and scene_config is not None:
             # Re-randomize
@@ -81,12 +76,6 @@ def main():
             print("\n--- Re-randomized ---")
             print(format_episode(ep))
             
-        # Keycode for 'G' is 71 (or 'g' 103)
-        elif keycode in (71, 103) and act_beak_id >= 0:
-            beak_open = not beak_open
-            data.ctrl[act_beak_id] = 0.5 if beak_open else 0.0
-            state = "OPEN" if beak_open else "CLOSED"
-            print(f"Beak: {state}")
 
     # Launch native passive viewer
     with mujoco.viewer.launch_passive(model, data, key_callback=keyboard_callback) as viewer:

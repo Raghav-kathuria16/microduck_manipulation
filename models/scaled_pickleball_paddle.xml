@@ -1,0 +1,55 @@
+<mujoco model="scaled_pickleball_paddle">
+  <compiler angle="radian" autolimits="true"/>
+  <visual>
+    <global offwidth="1280" offheight="960"/>
+    <headlight ambient="0.45 0.45 0.48" diffuse="0.75 0.75 0.78" specular="0.25 0.25 0.25"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+  </visual>
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.35 0.55 0.75" rgb2="0.08 0.08 0.12" width="512" height="512"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.22 0.26 0.32" rgb2="0.16 0.19 0.24" markrgb="0.75 0.75 0.8" width="300" height="300"/>
+    <material name="groundmat" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.15"/>
+    <material name="pb_edge_guard" rgba="0.12 0.12 0.14 1" specular="0.3" shininess="0.4"/>
+    <material name="pb_face_cyan" rgba="0.08 0.65 0.84 1" specular="0.5" shininess="0.6"/>
+    <material name="pb_face_yellow" rgba="0.98 0.82 0.15 1" specular="0.6" shininess="0.7"/>
+    <material name="pb_grip_white" rgba="0.94 0.94 0.96 1" specular="0.1" shininess="0.1"/>
+    <material name="pb_butt_cap" rgba="0.12 0.12 0.15 1" specular="0.4" shininess="0.5"/>
+  </asset>
+
+  <worldbody>
+    <geom name="floor" type="plane" size="1.5 1.5 0.1" material="groundmat"/>
+
+    <!-- Scaled Pickleball Paddle (Total Length: 175mm, Mass: 75g) -->
+    <!-- Handle length: 120mm, Diameter: 8.0mm uniform cylindrical grip -->
+    <!-- ONLY the 8.0mm handle is inside the 88mm mouth aperture -->
+    <!-- 20mm clearance on both sides prevents any collision with robot jaws/cheeks -->
+    <body name="pickleball_paddle" pos="0 0 0.10">
+      <freejoint name="pickleball_paddle_free"/>
+      <!-- Mass: 75g, counterbalanced so COM is at mouth center (z=0) -->
+      <inertial pos="0 0 0" mass="0.075" diaginertia="0.00018 0.00015 0.000035"/>
+
+      <!-- 1. Handle Butt Cap (z = -0.064, outside mouth on right) -->
+      <geom name="pb_butt_cap" type="cylinder" pos="0 0 -0.064" size="0.007 0.002" material="pb_butt_cap" friction="2.5 0.1 0.1"/>
+
+      <!-- 2. Authentic 8.0mm Handle Grip (Length 120mm: z from -0.060 to +0.060) -->
+      <geom name="pb_handle" type="cylinder" pos="0 0 0" size="0.004 0.060" material="pb_grip_white" friction="3.5 0.2 0.2"/>
+
+      <!-- 3. Throat Taper (z = +0.068, over 22mm clear of jaw cheek) -->
+      <geom name="pb_throat" type="box" pos="0 0 0.068" size="0.012 0.003 0.008" material="pb_edge_guard"/>
+
+      <!-- 4. Paddle Face Core (Length 92mm, Width 70mm, Thickness 6mm) -->
+      <geom name="pb_face_core" type="box" pos="0 0 0.128" size="0.035 0.0028 0.046" material="pb_face_cyan" friction="1.8 0.1 0.1"/>
+      <geom name="pb_accent_front" type="box" pos="0 0.0030 0.128" size="0.028 0.0003 0.016" material="pb_face_yellow"/>
+      <geom name="pb_accent_back" type="box" pos="0 -0.0030 0.128" size="0.028 0.0003 0.016" material="pb_face_yellow"/>
+
+      <!-- 5. Protective Edge Guard Bumper -->
+      <geom name="pb_edge_left" type="capsule" fromto="-0.039 0 0.082 -0.039 0 0.160" size="0.0035" material="pb_edge_guard"/>
+      <geom name="pb_edge_right" type="capsule" fromto="0.039 0 0.082 0.039 0 0.160" size="0.0035" material="pb_edge_guard"/>
+      <geom name="pb_edge_top" type="capsule" fromto="-0.026 0 0.174 0.026 0 0.174" size="0.0035" material="pb_edge_guard"/>
+      <geom name="pb_corner_tl" type="capsule" fromto="-0.039 0 0.160 -0.026 0 0.174" size="0.0035" material="pb_edge_guard"/>
+      <geom name="pb_corner_tr" type="capsule" fromto="0.039 0 0.160 0.026 0 0.174" size="0.0035" material="pb_edge_guard"/>
+      <geom name="pb_corner_bl" type="capsule" fromto="-0.039 0 0.082 -0.012 0 0.070" size="0.0035" material="pb_edge_guard"/>
+      <geom name="pb_corner_br" type="capsule" fromto="0.039 0 0.082 0.012 0 0.070" size="0.0035" material="pb_edge_guard"/>
+    </body>
+  </worldbody>
+</mujoco>

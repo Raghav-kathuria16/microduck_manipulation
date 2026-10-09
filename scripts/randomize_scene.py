@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Scene randomization for Microduck Apartment v1.
+"""Scene randomization for Microduck Apartment v1 (official robot).
 
 Reads configs/scene_apartment_v1.yaml and applies randomized initial
 conditions to a loaded MuJoCo model + data pair:
-  - Duck spawn pose (position + heading)
-  - Sock spawn position (within a randomly chosen zone)
+  - Robot spawn pose (trunk_base_freejoint: position + heading)
+  - One interactable object (obj_*/ball_*) re-placed inside a random zone
   - Lighting preset (ambient + diffuse on headlight)
 
 Usage as a library:
     from randomize_scene import load_scene_config, randomize_episode
 
 Usage as a CLI:
-    python scripts/randomize_scene.py           # print a random config
+    python scripts/randomize_scene.py            # print a random config
     python scripts/randomize_scene.py --seed 42  # reproducible
 """
 
@@ -37,7 +37,7 @@ class SpawnPose:
 
 @dataclass
 class SpawnZone:
-    """Rectangular sock spawn zone."""
+    """Rectangular object spawn zone (floor region)."""
     name: str
     description: str
     x_min: float
@@ -54,7 +54,7 @@ class SpawnZone:
 
 @dataclass
 class TargetPosition:
-    """Basket / target position."""
+    """Target position (charging dock)."""
     name: str
     position: list[float]
     description: str
@@ -76,7 +76,7 @@ class SceneConfig:
     scene_name: str
     scene_description: str
     robot_spawn_poses: list[SpawnPose] = field(default_factory=list)
-    sock_spawn_zones: list[SpawnZone] = field(default_factory=list)
+    object_spawn_zones: list[SpawnZone] = field(default_factory=list)
     target_positions: list[TargetPosition] = field(default_factory=list)
     lighting_presets: list[LightingPreset] = field(default_factory=list)
 
@@ -85,8 +85,7 @@ class SceneConfig:
 class EpisodeConfig:
     """Concrete configuration for a single episode after randomization."""
     robot_pose: SpawnPose
-    sock_position: tuple[float, float]
-    sock_zone_name: str
+    object_zone: SpawnZone
     target: TargetPosition
     lighting: LightingPreset
     seed: int | None = None
@@ -112,7 +111,7 @@ def load_scene_config(config_path: str) -> SceneConfig:
         for p in raw.get("robot_spawn_poses", [])
     ]
 
-    sock_zones = [
+    object_zones = [
         SpawnZone(
             name=z["name"],
             description=z.get("description", ""),
@@ -121,7 +120,7 @@ def load_scene_config(config_path: str) -> SceneConfig:
             y_min=z["bounds"]["y_min"],
             y_max=z["bounds"]["y_max"],
         )
-        for z in raw.get("sock_spawn_zones", [])
+        for z in raw.get("object_spawn_zones", [])
     ]
 
     targets = [
@@ -148,7 +147,7 @@ def load_scene_config(config_path: str) -> SceneConfig:
         scene_name=scene_info.get("name", "unknown"),
         scene_description=scene_info.get("description", ""),
         robot_spawn_poses=robot_poses,
-        sock_spawn_zones=sock_zones,
+        object_spawn_zones=object_zones,
         target_positions=targets,
         lighting_presets=lighting,
     )
@@ -178,10 +177,10 @@ def sample_episode_config(
     pose_idx = rng.integers(0, len(config.robot_spawn_poses))
     robot_pose = config.robot_spawn_poses[pose_idx]
 
-    # Sock spawn zone + position
-    zone_idx = rng.integers(0, len(config.sock_spawn_zones))
-    zone = config.sock_spawn_zones[zone_idx]
-    sock_pos = zone.sample(rng)
+    # Object spawn zone + position
+    zone_idx = rng.integers(0, len(config.object_spawn_zones))
+    zone = config.object_spawn_zones[zone_idx]
+    obj_pos = zone.sample(rng)
 
     # Target (v1: always use the first/default)
     target = config.target_positions[0]
@@ -198,54 +197,68 @@ def sample_episode_config(
 
     return EpisodeConfig(
         robot_pose=robot_pose,
-        sock_position=sock_pos,
-        sock_zone_name=zone.name,
+        object_zone=zone,
         target=target,
         lighting=lighting,
     )
 
 
-def apply_episode_config(model, data, episode: EpisodeConfig) -> None:
+def apply_episode_config(model, data, episode: EpisodeConfig, rng: np.random.Generator) -> None:
     """Apply an EpisodeConfig to a loaded MuJoCo model + data.
 
-    Modifies `data` in-place:
-    - Sets the duck root joints (root_x, root_y, root_yaw)
-    - Sets the sock freejoint qpos (position)
-    - Updates headlight ambient + diffuse on the model
+    Sets the robot root freejoint (trunk_base_freejoint) from the episode
+    pose, scatters the free objects inside the episode's zone at rest
+    height, zeroes velocities, and applies the lighting preset.
 
     Args:
         model: mujoco.MjModel
         data: mujoco.MjData
         episode: The concrete episode configuration to apply.
+        rng: NumPy random generator for object scatter sampling.
     """
     import mujoco
+    # --- Robot spawn pose ---
+    # The robot root is trunk_base_freejoint (qpos = [x, y, z, qw, qx, qy, qz]).
+    jnt_root = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "trunk_base_freejoint")
+    if jnt_root >= 0:
+        adr = model.jnt_qposadr[jnt_root]
+        data.qpos[adr + 0] = episode.robot_pose.position[0]
+        data.qpos[adr + 1] = episode.robot_pose.position[1]
+        # Keep qpos0 height (standing clearance); identity quat with yaw.
+        data.qpos[adr + 2] = model.qpos0[adr + 2]
+        yaw = episode.robot_pose.heading
+        data.qpos[adr + 3] = np.cos(yaw / 2.0)
+        data.qpos[adr + 4] = 0.0
+        data.qpos[adr + 5] = 0.0
+        data.qpos[adr + 6] = np.sin(yaw / 2.0)
 
-    # --- Duck spawn pose ---
-    # The duck_base body has 3 joints: root_x (slide), root_y (slide), root_yaw (hinge)
-    # These map to qpos indices that we look up by joint name.
-    jnt_x = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "root_x")
-    jnt_y = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "root_y")
-    jnt_yaw = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "root_yaw")
-
-    if jnt_x >= 0:
-        data.qpos[model.jnt_qposadr[jnt_x]] = episode.robot_pose.position[0]
-    if jnt_y >= 0:
-        data.qpos[model.jnt_qposadr[jnt_y]] = episode.robot_pose.position[1]
-    if jnt_yaw >= 0:
-        data.qpos[model.jnt_qposadr[jnt_yaw]] = episode.robot_pose.heading
-
-    # --- Sock spawn position ---
-    # The sock has a freejoint; its qpos is [x, y, z, qw, qx, qy, qz]
-    jnt_sock = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "sock_joint")
-    if jnt_sock >= 0:
-        adr = model.jnt_qposadr[jnt_sock]
-        data.qpos[adr + 0] = episode.sock_position[0]      # x
-        data.qpos[adr + 1] = episode.sock_position[1]      # y
-        data.qpos[adr + 2] = 0.04                           # z (slightly above floor)
-        data.qpos[adr + 3] = 1.0                            # qw (identity quaternion)
-        data.qpos[adr + 4] = 0.0                            # qx
-        data.qpos[adr + 5] = 0.0                            # qy
-        data.qpos[adr + 6] = 0.0                            # qz
+    # Every body with a free joint besides the robot root is an object;
+    # scatter them inside the episode zone with per-object rejection
+    # sampling so each stays in-bounds and no two objects overlap.
+    root_id = jnt_root
+    zone = episode.object_zone
+    placed: list[tuple[float, float]] = []
+    for j in range(model.njnt):
+        if j == root_id or model.jnt_type[j] != mujoco.mjtJoint.mjJNT_FREE:
+            continue
+        bid = model.jnt_bodyid[j]
+        # Rest height: max geom bottom offset among this body's geoms.
+        z = 0.0
+        for g in range(model.body_geomadr[bid], model.body_geomadr[bid] + model.body_geomnum[bid]):
+            if model.geom_contype[g] == 0 and model.geom_conaffinity[g] == 0:
+                continue  # visual geom, no collision footprint
+            z = max(z, float(model.geom_pos[g][2]) + float(model.geom_size[g][2]))
+        # Reject-sample (x, y): inside zone + at least 9cm from all
+        # previously placed objects (objects are <= 8cm wide).
+        for _ in range(200):
+            px, py = zone.sample(rng)
+            if all((px - qx) ** 2 + (py - qy) ** 2 >= 0.09**2 for qx, qy in placed):
+                break
+        placed.append((px, py))
+        data.qpos[model.jnt_qposadr[j] + 0] = px
+        data.qpos[model.jnt_qposadr[j] + 1] = py
+        data.qpos[model.jnt_qposadr[j] + 2] = z
+        data.qpos[model.jnt_qposadr[j] + 3: model.jnt_qposadr[j] + 7] = [1.0, 0.0, 0.0, 0.0]
 
     # --- Zero all velocities ---
     data.qvel[:] = 0.0
@@ -279,7 +292,7 @@ def randomize_episode(
         The applied EpisodeConfig.
     """
     episode = sample_episode_config(config, rng, lighting_name)
-    apply_episode_config(model, data, episode)
+    apply_episode_config(model, data, episode, rng)
     return episode
 
 
@@ -291,13 +304,12 @@ def format_episode(ep: EpisodeConfig) -> str:
     """Pretty-print an episode configuration."""
     lines = [
         "=" * 50,
-        "🎲 Randomized Episode Configuration",
+        "Randomized Episode Configuration",
         "=" * 50,
         f"  Robot pose:  {ep.robot_pose.name}",
         f"    Position:  ({ep.robot_pose.position[0]:.2f}, {ep.robot_pose.position[1]:.2f})",
-        f"    Heading:   {ep.robot_pose.heading:.2f} rad ({np.degrees(ep.robot_pose.heading):.1f}°)",
-        f"  Sock zone:   {ep.sock_zone_name}",
-        f"    Position:  ({ep.sock_position[0]:.3f}, {ep.sock_position[1]:.3f})",
+        f"    Heading:   {ep.robot_pose.heading:.2f} rad ({np.degrees(ep.robot_pose.heading):.1f} deg)",
+        f"  Object zone: {ep.object_zone.name} — {ep.object_zone.description}",
         f"  Target:      {ep.target.name} at ({ep.target.position[0]:.2f}, {ep.target.position[1]:.2f})",
         f"  Lighting:    {ep.lighting.name} — {ep.lighting.description}",
         "=" * 50,

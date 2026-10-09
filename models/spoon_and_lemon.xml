@@ -1,0 +1,61 @@
+<mujoco model="spoon_and_lemon">
+  <compiler angle="radian" autolimits="true" meshdir="assets/"/>
+  <visual>
+    <global offwidth="1280" offheight="960"/>
+    <headlight ambient="0.55 0.55 0.58" diffuse="0.75 0.75 0.78" specular="0.35 0.35 0.35"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+  </visual>
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.35 0.55 0.75" rgb2="0.08 0.08 0.12" width="512" height="512"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.22 0.26 0.32" rgb2="0.16 0.19 0.24" markrgb="0.75 0.75 0.8" width="300" height="300"/>
+    <material name="groundmat" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.15"/>
+
+    <mesh name="spoon_cad_mesh" file="spoon.stl"/>
+
+    <material name="stainless_steel" rgba="0.86 0.88 0.92 1" specular="0.9" shininess="0.85" reflectance="0.35"/>
+    <material name="citrus_lemon" rgba="0.96 0.82 0.14 1" specular="0.4" shininess="0.35"/>
+    <material name="lemon_tip" rgba="0.74 0.82 0.18 1" specular="0.25" shininess="0.2"/>
+  </asset>
+
+  <worldbody>
+    <geom name="floor" type="plane" size="1.5 1.5 0.1" material="groundmat"/>
+
+    <!-- Tableware Spoon Body (Aligned with TT Beak Clamping)
+         Total Length: 125 mm
+         Handle Center: z = +0.008 m (matches proven HOVER_LOCAL grip aperture)
+         Handle: length 75mm, width 8.0mm, thickness 2.2mm
+         Bowl Center: z = +0.070 m (length 40mm, width 27mm, depth 6.8mm)
+         Mass: 25 grams (0.025 kg)
+         Friction: mu = 0.55 (stainless steel on silicone) -->
+    <body name="spoon" pos="0 0 0.1500" quat="0.7071068 0.7071068 0 0">
+      <freejoint name="spoon_free"/>
+      <inertial pos="0 -0.001 0.028" mass="0.025" diaginertia="0.000028 0.000024 0.000006"/>
+
+      <!-- 100% Seamless CAD Mesh (Visual CAD, Zero Gaps) -->
+      <geom name="spoon_vis" type="mesh" mesh="spoon_cad_mesh" material="stainless_steel" contype="0" conaffinity="0" group="2"/>
+
+      <!-- Collision Model (group 3) -->
+      <geom name="spoon_handle" type="box" pos="0 0 0.008" size="0.0040 0.0011 0.035" material="stainless_steel" friction="0.55 0.05 0.05" group="3"/>
+      <geom name="spoon_bowl_base" type="ellipsoid" pos="0 -0.0068 0.070" size="0.012 0.0012 0.018" material="stainless_steel" friction="0.50 0.01 0.01" group="3"/>
+      <geom name="rim_front" type="capsule" fromto="-0.007 -0.0020 0.088  0.007 -0.0020 0.088" size="0.0018" material="stainless_steel" friction="0.50 0.01 0.01" group="3"/>
+      <geom name="rim_back"  type="capsule" fromto="-0.006 -0.0022 0.052  0.006 -0.0022 0.052" size="0.0018" material="stainless_steel" friction="0.50 0.01 0.01" group="3"/>
+      <geom name="rim_left_m"  type="capsule" fromto="-0.0135 -0.0022 0.070 -0.007 -0.0020 0.088" size="0.0018" material="stainless_steel" friction="0.50 0.01 0.01" group="3"/>
+      <geom name="rim_right_m" type="capsule" fromto=" 0.0135 -0.0020 0.070  0.007 -0.0020 0.088" size="0.0018" material="stainless_steel" friction="0.50 0.01 0.01" group="3"/>
+      <geom name="rim_left_b"  type="capsule" fromto="-0.006 -0.0022 0.052 -0.0135 -0.0022 0.070" size="0.0018" material="stainless_steel" friction="0.50 0.01 0.01" group="3"/>
+      <geom name="rim_right_b" type="capsule" fromto=" 0.006 -0.0022 0.052  0.0135 -0.0020 0.070" size="0.0018" material="stainless_steel" friction="0.50 0.01 0.01" group="3"/>
+    </body>
+
+    <!-- Authentic Proportionate Small Lemon
+         Prolate Ellipsoid: diameter 24mm (rx=ry=12mm), length 32mm (rz=16mm)
+         Mass: 22 grams (0.022 kg)
+         Friction: mu = 0.50 (citrus peel on metal)
+         Nestled horizontally inside concave spoon bowl at z = +0.070 m -->
+    <body name="lemon" pos="0 -0.070 0.154" quat="0.7071068 0.7071068 0 0">
+      <freejoint name="lemon_free"/>
+      <inertial pos="0 0 0" mass="0.022" diaginertia="0.0000018 0.0000018 0.0000013"/>
+      <geom name="lemon_geom" type="ellipsoid" size="0.012 0.012 0.016" material="citrus_lemon" friction="0.50 0.01 0.01" condim="6"/>
+      <geom name="lemon_tip_front" type="sphere" pos="0 0  0.016" size="0.0030" material="lemon_tip" contype="0" conaffinity="0" group="2"/>
+      <geom name="lemon_tip_back"  type="sphere" pos="0 0 -0.016" size="0.0025" material="lemon_tip" contype="0" conaffinity="0" group="2"/>
+    </body>
+  </worldbody>
+</mujoco>

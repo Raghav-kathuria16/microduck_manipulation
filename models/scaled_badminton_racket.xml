@@ -1,0 +1,70 @@
+<mujoco model="scaled_badminton_racket">
+  <compiler angle="radian" autolimits="true"/>
+  <visual>
+    <global offwidth="1280" offheight="960"/>
+    <headlight ambient="0.45 0.45 0.48" diffuse="0.75 0.75 0.78" specular="0.25 0.25 0.25"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+  </visual>
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.35 0.55 0.75" rgb2="0.08 0.08 0.12" width="512" height="512"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.22 0.26 0.32" rgb2="0.16 0.19 0.24" markrgb="0.75 0.75 0.8" width="300" height="300"/>
+    <material name="groundmat" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.15"/>
+    <material name="bm_frame_blue" rgba="0.12 0.25 0.48 1" specular="0.8" shininess="0.9"/>
+    <material name="bm_shaft_carbon" rgba="0.09 0.14 0.22 1" specular="0.8" shininess="0.9"/>
+    <material name="bm_t_joint_gold" rgba="0.90 0.78 0.22 1" specular="0.95" shininess="0.95"/>
+    <material name="bm_strings" rgba="0.95 0.98 0.98 0.42" specular="0.3" shininess="0.5"/>
+    <material name="bm_grip_black" rgba="0.12 0.12 0.12 1" specular="0.1" shininess="0.1"/>
+    <material name="bm_cone_grey" rgba="0.25 0.28 0.32 1" specular="0.5" shininess="0.6"/>
+    <material name="bm_butt_green" rgba="0.05 0.52 0.28 1" specular="0.5" shininess="0.6"/>
+  </asset>
+
+  <worldbody>
+    <geom name="floor" type="plane" size="1.5 1.5 0.1" material="groundmat"/>
+
+    <!-- Scaled Badminton Racket (Total Length: 175mm, Mass: 40g) -->
+    <!-- Handle length: 110mm, Diameter: 8.0mm uniform cylindrical grip -->
+    <!-- ONLY the 8.0mm handle is inside the 88mm mouth aperture -->
+    <!-- 15mm clearance prevents any collision with robot jaws/cheeks -->
+    <body name="badminton_racket" pos="0 0 0.10">
+      <freejoint name="badminton_racket_free"/>
+      <!-- Mass: 40g, counterbalanced so COM is at mouth center (z=0) -->
+      <inertial pos="0 0 0" mass="0.040" diaginertia="0.00014 0.00014 0.000008"/>
+
+      <!-- 1. Handle Butt Cap (z = -0.058) -->
+      <geom name="bm_butt_cap" type="cylinder" pos="0 0 -0.058" size="0.0055 0.0015" material="bm_butt_green" friction="2.0 0.1 0.1"/>
+
+      <!-- 2. Authentic 8.0mm Handle Grip (Length 110mm: z from -0.055 to +0.055) -->
+      <geom name="bm_handle" type="cylinder" pos="0 0 0" size="0.004 0.055" material="bm_grip_black" friction="3.5 0.2 0.2"/>
+
+      <!-- 3. Control Cone (z = +0.058) -->
+      <geom name="bm_cone" type="cylinder" pos="0 0 0.058" size="0.003 0.003" material="bm_cone_grey"/>
+
+      <!-- 4. Slim Carbon Shaft (Diameter 4.0mm: z from +0.061 to +0.095) -->
+      <geom name="bm_shaft" type="cylinder" pos="0 0 0.078" size="0.002 0.0175" material="bm_shaft_carbon" friction="2.5 0.1 0.1"/>
+
+      <!-- 5. Built-in T-Joint (z = +0.098) -->
+      <geom name="bm_t_joint" type="cylinder" pos="0 0 0.098" size="0.0028 0.002" material="bm_t_joint_gold"/>
+
+      <!-- 6. Aerodynamic Isometric Head Frame (Length 62mm, Width 50mm, centered at z = 0.130) -->
+      <geom name="bm_fr_0" type="capsule" fromto="0.0250 0 0.130 0.0231 0 0.142" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_1" type="capsule" fromto="0.0231 0 0.142 0.0177 0 0.152" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_2" type="capsule" fromto="0.0177 0 0.152 0.0096 0 0.159" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_3" type="capsule" fromto="0.0096 0 0.159 0.0000 0 0.161" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_4" type="capsule" fromto="0.0000 0 0.161 -0.0096 0 0.159" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_5" type="capsule" fromto="-0.0096 0 0.159 -0.0177 0 0.152" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_6" type="capsule" fromto="-0.0177 0 0.152 -0.0231 0 0.142" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_7" type="capsule" fromto="-0.0231 0 0.142 -0.0250 0 0.130" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_8" type="capsule" fromto="-0.0250 0 0.130 -0.0231 0 0.118" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_9" type="capsule" fromto="-0.0231 0 0.118 -0.0177 0 0.108" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_10" type="capsule" fromto="-0.0177 0 0.108 -0.0096 0 0.101" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_11" type="capsule" fromto="-0.0096 0 0.101 0.0000 0 0.099" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_12" type="capsule" fromto="0.0000 0 0.099 0.0096 0 0.101" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_13" type="capsule" fromto="0.0096 0 0.101 0.0177 0 0.108" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_14" type="capsule" fromto="0.0177 0 0.108 0.0231 0 0.118" size="0.0015" material="bm_frame_blue"/>
+      <geom name="bm_fr_15" type="capsule" fromto="0.0231 0 0.118 0.0250 0 0.130" size="0.0015" material="bm_frame_blue"/>
+
+      <!-- 7. High-Tension String Bed Membrane (Semi-transparent) -->
+      <geom name="bm_strings" type="ellipsoid" pos="0 0 0.130" size="0.0235 0.0002 0.0295" material="bm_strings" contype="0" conaffinity="0"/>
+    </body>
+  </worldbody>
+</mujoco>
