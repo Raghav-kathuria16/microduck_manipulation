@@ -14,6 +14,12 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### 2026-10-10 — Halved Showcase Duration for Badminton and Pickleball & Slip Characterization
+
+**What:** Cut the video demonstration duration of badminton carry and pickleball carry by half (from 6.87s to 3.44s, 102 frames at 30 fps), and documented empirical contact mechanics across all repository documentation acknowledging that while both rackets are retained across the showcase demonstrations, there is some slip over extended locomotion horizons due to head movement and insufficient torque provided by the beak actuator (without quoting arbitrary numbers).
+
+**Why:** The user requested cutting the showcase length in half and explicitly acknowledging the physical reality of gradual slip under continuous head movement and actuator torque limits without publishing a specific numerical slip figure.
+
 ### 2026-10-10 — Doubled Badminton Racket Geometry, Full-Width Olympic Race Showcase, and Repository Professionalization
 
 **What:** Scaled up the badminton racket oval frame head to 2x doubled dimensions (100 mm lateral width by 124 mm longitudinal length, 16 capsule frame segments), lengthened the carbon fiber shaft to 88 mm between the grip cone and gold T-joint to guarantee 42 mm lateral cheek clearance past Microduck's outer jaw cowl, expanded the Olympic Stadium Race showcase in README.md into a full-width container (width="100%"), removed all emojis across the entire repository documentation, enforced strict frontend-only math notation (zero LaTeX backend syntax), and substantially expanded the Badminton technical documentation section.

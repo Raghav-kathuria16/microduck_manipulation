@@ -108,8 +108,8 @@ Microduck walking forward at 0.18 m/s while carrying a tournament table tennis r
 
 ---
 
-#### 4. Badminton Racket Carry (BWF Scaled Geometry)
-Microduck carrying an authentic BWF geometry badminton racket during dynamic bipedal forward walking. The elongated shaft and throat design provides ample clearance from the robot's cheek shells:
+#### 4. Badminton Racket Carry (Doubled Oval Geometry)
+Microduck carrying an athletic badminton racket with doubled oval frame geometry (100 mm × 124 mm) and extended 88 mm shaft during bipedal forward walking. The 3.4-second showcase clip demonstrates stable forward transport with 42 mm lateral cheek clearance. Over extended walking cycles, there is some slip due to head movement and insufficient torque provided by the actuator:
 
 ![Badminton Racket Carry Demo](media/badminton_carry.webp)
 
@@ -117,8 +117,8 @@ Microduck carrying an authentic BWF geometry badminton racket during dynamic bip
 
 ---
 
-#### 5. Pickleball Paddle Dynamic Carry
-Microduck carrying an authentic pickleball paddle with a 120 mm handle clamped firmly in the mouth. The wide throat geometry clears the robot cheeks completely, executing stable bilateral biped walking:
+#### 5. Pickleball Paddle Dynamic Carry (220g Wide-Body Blade)
+Microduck carrying an authentic tournament pickleball paddle with a 120 mm handle clamped in the mouth cavity during forward walking at 0.18 m/s. The paddle is retained across the 3.4-second demonstration clip with full cheek clearance. Over longer locomotion horizons, there is some slip due to head movement and insufficient torque provided by the actuator:
 
 ![Pickleball Paddle Carry Demo](media/pickleball_carry.webp)
 

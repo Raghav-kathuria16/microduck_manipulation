@@ -111,9 +111,9 @@ An athletic badminton racket engineered with a doubled oval frame geometry and e
 
 - **2x Doubled Oval Head**: The racket head frame is scaled to 100 mm lateral width by 124 mm longitudinal height (doubled from the 50 mm × 62 mm initial scale), providing realistic athletic proportions matching the full BWF aspect ratio. The frame is constructed from 16 interconnected carbon fiber capsule segments (`bm_fr_0` through `bm_fr_15`) surrounding a high-tension translucent string bed ellipsoid.
 - **Extended Shaft & Clearance Engineering**: The central shaft is lengthened to 88 mm (spanning z = 0.060 m to z = 0.148 m) between the grip cone and gold T-joint. This elongation guarantees 42 mm of lateral clearance from Microduck's outer cheek cowling (maximum cheek span 45.7 mm), completely eliminating parasitic collision contacts and torque disturbances during whole-body yaw/roll gait oscillations.
-- **High-Torque Coulomb Beak Grip**: Clamped across the 110 mm synthetic polyurethane handle with 0.50 N·m continuous actuator torque against silicone contact pads (`condim="6"` spatial friction, friction coefficient μ = 3.5). The handle achieves 0.00 mm slip across all forward walking trials.
+- **High-Torque Coulomb Beak Grip**: Clamped across the 110 mm synthetic polyurethane handle with 0.50 N·m actuator torque against silicone contact pads (`condim="6"` spatial friction, friction coefficient μ = 3.5). The racket remains firmly clamped throughout the 3.4s showcase carry; over extended walking horizons, there is some slip due to head movement and insufficient torque provided by the actuator.
 - **Mass Balancing & Center-of-Mass Alignment**: Total scaled racket mass is 45 g, counterbalanced such that the net center of mass coincides with the oral clamping plane (z = 0 relative to the mouth cavity). This eliminates cantilever pitching moments that could destabilize the 14-DoF walking policy.
-- **Locomotion Stability**: Forward walking evaluated at 0.18 m/s with 100% payload retention over extended horizons (> 30.0 seconds) with zero handle slip and zero drops.
+- **Locomotion Stability & Extended Horizon Slip**: Forward walking evaluated at 0.18 m/s. Across the 3.4s demonstration clip, payload retention is maintained without drops. Over extended walking cycles, there is some slip due to head movement and insufficient torque provided by the actuator.
 
 | Specification / Parameter | Initial Prototype | Doubled Athletic Racket | Physical Verification |
 |:---|:---|:---|:---|
@@ -123,21 +123,23 @@ An athletic badminton racket engineered with a doubled oval frame geometry and e
 | **Lateral Cheek Clearance** | 12 mm | **42 mm** | Collision-free clearance past 45.7 mm jaw |
 | **Clamping Actuator Torque** | 0.18 N·m | **0.50 N·m** | Pure Coulomb friction grip (μ = 3.5) |
 | **Total Racket Mass** | 35 g | **45 g** | Mass-balanced at oral axis |
-| **Locomotion Stability** | Stable | **100% Retained (> 30.0 s)** | Zero drop, zero handle rotation |
+| **Showcase Retention (3.4s)** | Retained | **100% Retained** | Zero drop across 3.4s clip |
+| **Extended Walking Horizon** | Unmonitored | **Gradual slip** | Slip due to head movement and actuator torque limits |
 
 ![Badminton Racket Carry](docs/media/badminton_carry.webp)
 
 > **[View Badminton Racket MP4 Video](docs/media/badminton_carry.mp4)**  
-> *Locomotion: Microduck carries the doubled oval badminton racket at 0.18 m/s with 0.50 N·m beak clamping torque, maintaining 42 mm cheek clearance and zero handle slip.*
+> *Locomotion: Microduck carries the doubled oval badminton racket across the 3.4s showcase trial at 0.18 m/s with 42 mm cheek clearance. Over extended locomotion horizons, some slip occurs due to head movement and insufficient torque provided by the actuator.*
 
 ---
 
 #### Pickleball Paddle Dynamic Carry (220g Wide-Body Blade)
-A tournament-grade pickleball paddle featuring a 220g wide composite blade clamped securely in the beak cavity with stable forward walking at 0.18 m/s.
+A tournament-grade pickleball paddle featuring a 220g wide composite blade clamped securely in the beak cavity during forward walking at 0.18 m/s. The paddle handle is retained across the 3.4s demonstration clip; over longer locomotion horizons, there is some slip due to head movement and insufficient torque provided by the actuator.
 
 ![Pickleball Paddle Carry](docs/media/pickleball_carry.webp)
 
-> **[View Pickleball Paddle MP4 Video](docs/media/pickleball_carry.mp4)**
+> **[View Pickleball Paddle MP4 Video](docs/media/pickleball_carry.mp4)**  
+> *Locomotion: Microduck carries the composite pickleball paddle across the 3.4s showcase trial at 0.18 m/s. Over extended locomotion horizons, some slip occurs due to head movement and insufficient torque provided by the actuator.*
 
 ---
 
@@ -155,7 +157,7 @@ Precision non-prehensile balancing of an authentic 22g citrus lemon in the shall
 
 The following table summarizes empirical performance across short demonstration clips versus continuous extended locomotion horizons:
 
-| Task / Payload | Payload Mass | Clamping Torque | Forward Velocity | Showcase Clip (5.0-7.0s) | Extended Time-to-Failure (TTF) | Primary Failure Mode |
+| Task / Payload | Payload Mass | Clamping Torque | Forward Velocity | Showcase Clip (3.4-7.0s) | Extended Time-to-Failure (TTF) | Primary Failure Mode |
 |:---|:---|:---|:---|:---|:---|:---|
 | **100g Barbell Carry** | 100g (13.6% BW) | 0.10 N·m | 0.25 m/s | 100% Retained (0.0mm) | **8.74 s** | Impact shockwave micro-slip |
 | **200g Barbell Carry** | 200g (27.1% BW) | 0.10 N·m | 0.25 m/s | 100% Retained (1.2mm) | **8.10 s** | Cumulative frictional slip |
@@ -165,8 +167,8 @@ The following table summarizes empirical performance across short demonstration 
 | **500g Barbell Carry** | 500g (67.8% BW) | 0.10 N·m | 0.25 m/s | Fails early | **2.00 s** | Robot topples (overturning torque) |
 | **Table Tennis Racket** | 40g (scaled) | 0.50 N·m | 0.18 m/s | 100% Retained (0.0mm) | **> 30.0 s** (Handle stable) | Handle clamped indefinitely |
 | **Ping-Pong Ball on Blade** | 1.3g ball | N/A (unconstrained) | 0.18 m/s | Unstable | **0.81 s** | Blade vibration kicks ball off |
-| **Badminton Racket** | 45g (scaled) | 0.50 N·m | 0.18 m/s | 100% Retained (0.0mm) | **> 30.0 s** (Handle stable) | Cheek clearance maintained |
-| **Pickleball Paddle** | 75g (scaled) | 0.50 N·m | 0.18 m/s | 100% Retained (0.0mm) | **> 30.0 s** (Handle stable) | Wide grip stability |
+| **Badminton Racket** | 45g (scaled) | 0.50 N·m | 0.18 m/s | Retained (3.4s clip) | Gradual slip | Slip due to head movement and actuator torque limits |
+| **Pickleball Paddle** | 75g (scaled) | 0.50 N·m | 0.18 m/s | Retained (3.4s clip) | Gradual slip | Slip due to head movement and actuator torque limits |
 | **Lemon & Spoon (0.08 m/s)** | 22g lemon | 0.45 N·m | 0.08 m/s | Drops at 5.8s | **5.83 s** | Low-speed gait hesitation roll |
 | **Lemon & Spoon (0.12 m/s)** | 22g lemon | 0.45 N·m | 0.12 m/s | 100% Retained | **10.41 s** | Long-term drift drop |
 | **Lemon & Spoon (0.16 m/s)** | 22g lemon | 0.45 N·m | 0.16 m/s | 100% Retained | **> 30.0 s (Stable)** | Steadicam pitch cancellation |

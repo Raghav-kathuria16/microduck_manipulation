@@ -237,7 +237,8 @@ def render_racket(racket_type, output_name):
     cam.elevation = -14.0
     cam.azimuth = 138.0
 
-    total_steps = int(6.87 / model.opt.timestep)  # 6.87s walk (100% longer)
+    duration_s = 3.44 if racket_type in ["badminton", "pickleball"] else 6.87
+    total_steps = int(duration_s / model.opt.timestep)
     fps = 30
     steps_per_frame = int(round(1.0 / (fps * model.opt.timestep)))
     decimation = 10

@@ -65,13 +65,14 @@ Three distinct physical phenomena dictate failure over time:
 
 ## 3. Athletic Rackets & Unconstrained Ball Retention
 
-| Athletic Asset | Total Mass | Clamping Status (15s Walk) | Ball / Object Status | Exact Failure Time | Failure Root Cause |
+| Athletic Asset | Total Mass | Clamping Status (Showcase Clip) | Ball / Object Status | Extended Walking Behavior | Failure Root Cause |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Table Tennis Racket** | 40g (scaled) | **100% RETAINED** (0 mm slip) | Ping-Pong Ball | **0.81 s** | Unconstrained ball vibration; footstep impacts bounce ball off rubber blade |
-| **Badminton Racket** | 40g (scaled) | **100% RETAINED** (0 mm slip) | Pure Racket Carry | **> 15.0 s (Stable)** | Long slender carbon handle firmly cradled in beak |
-| **Pickleball Paddle** | 75g (scaled) | **100% RETAINED** (0 mm slip) | Pure Racket Carry | **> 15.0 s (Stable)** | High handle contact area maintains 0.5 to 1.2 N normal force |
+| **Table Tennis Racket** | 40g (scaled) | **100% RETAINED** (6.9s clip) | Ping-Pong Ball | **0.81 s** (Ball drop) | Unconstrained ball vibration; footstep impacts bounce ball off rubber blade |
+| **Badminton Racket** | 45g (scaled) | **100% RETAINED** (3.4s clip) | Pure Racket Carry | **Gradual slip** | Slip occurs over extended horizons due to head movement and insufficient torque provided by actuator |
+| **Pickleball Paddle** | 75g (scaled) | **100% RETAINED** (3.4s clip) | Pure Racket Carry | **Gradual slip** | Slip occurs over extended horizons due to head movement and insufficient torque provided by actuator |
 
-- **Key Finding on Ball Balancing**: While the racket handle itself is clamped firmly with zero slip for the entire trial, balancing an unconstrained sphere on a flat rubber surface during dynamic walking is unstable without an active visual tracking policy. Walking impact forces cause the ping-pong ball to bounce and roll off the blade within **0.81 seconds**.
+- **Key Finding on Ball Balancing**: While the table tennis racket handle itself is clamped firmly with high stability for the entire trial, balancing an unconstrained sphere on a flat rubber surface during dynamic walking is unstable without an active visual tracking policy. Walking impact forces cause the ping-pong ball to bounce and roll off the blade within **0.81 seconds**.
+- **Athletic Racket Clamping Dynamics**: In Badminton and Pickleball carries, the 3.4-second showcase clips demonstrate reliable payload retention with full clearance. Over extended locomotion horizons, there is some slip due to head movement and insufficient torque provided by the actuator.
 
 ---
 
