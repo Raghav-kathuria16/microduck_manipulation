@@ -27,7 +27,7 @@ sys.path.insert(0, _SCRIPT_DIR)
 from infer_policy import PolicyInference, DEFAULT_POSE
 
 _BASE_SCENE_XML = os.path.join(_MANIP_DIR, "models/scene_loadcarry_physical_clamp.xml")
-_DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/loadcarry_ppo_headup_v4.onnx")
+_DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/payload_clamping_locomotion.onnx")
 _OUTPUT_DIR = os.path.join(_MANIP_DIR, "docs/media")
 os.makedirs(_OUTPUT_DIR, exist_ok=True)
 

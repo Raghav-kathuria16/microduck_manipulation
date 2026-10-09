@@ -28,9 +28,9 @@ sys.path.insert(0, _SCRIPT_DIR)
 from infer_policy import PolicyInference, DEFAULT_POSE
 
 _BASE_SCENE_XML = os.path.join(_MANIP_DIR, "models/scene_loadcarry_physical_clamp.xml")
-_DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/loadcarry_ppo_headup_v4.onnx")
-_TT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/table_tennis_ball_balance.onnx")
-_TT_CARRY_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/table_tennis_racket_carry_precision_level.onnx")
+_DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/payload_clamping_locomotion.onnx")
+_TT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/racket_ball_balance.onnx")
+_TT_CARRY_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/racket_steadicam_carry.onnx")
 _OUTPUT_DIR = os.path.join(_MANIP_DIR, "docs/media")
 _ARTIFACT_DIR = _OUTPUT_DIR
 os.makedirs(_OUTPUT_DIR, exist_ok=True)
@@ -888,7 +888,7 @@ def main():
     parser.add_argument("--racket", choices=["table_tennis", "pickleball", "badminton"], default="table_tennis",
                         help="Racket type: authentic ITTF table tennis (180g + 40mm ball), pickleball, or badminton")
     parser.add_argument("--policy", type=str, default=None,
-                        help="Path to ONNX policy (defaults to table_tennis_ball_balance.onnx)")
+                        help="Path to ONNX policy (defaults to racket_ball_balance.onnx)")
     parser.add_argument("--steps", type=int, default=1000, help="Number of 200Hz physics steps (1000 = 5.0s, 0 or negative = infinite)")
     parser.add_argument("--drop-height", type=float, default=0.002,
                         help="Initial ball drop height above paddle face in meters (e.g. 0.08 for 8cm air drop)")

@@ -123,7 +123,7 @@ def render_barbell(mass_g, torque_nm, vel_x, output_name):
     print(f"\nRendering {mass_g:.0f}g Barbell Carry...")
     model, data, policy, meta = setup_physical_clamp_sim(
         xml_path=PHYSICAL_CLAMP_XML,
-        policy_path=os.path.join(_MANIP_DIR, "policies/onnx/loadcarry_ppo_headup_v4.onnx"),
+        policy_path=os.path.join(_MANIP_DIR, "policies/onnx/payload_clamping_locomotion.onnx"),
         payload_mass_g=mass_g,
         vel_x=vel_x,
         clamp_torque_nm=torque_nm,
@@ -139,7 +139,7 @@ def render_barbell(mass_g, torque_nm, vel_x, output_name):
 
     frames = []
     beak_dof = meta["beak_dof"]
-    num_steps = 150  # 150 policy steps * 0.02s = 3.0s walk
+    num_steps = 300  # 300 policy steps * 0.02s = 6.0s walk (150 frames @ 30fps = 5.0s video, 100% longer)
     fps = 30
 
     for step in range(num_steps):
@@ -166,9 +166,9 @@ def render_racket(racket_type, output_name):
     data = mujoco.MjData(model)
 
     policy_path = _TT_CARRY_POLICY if racket_type == "table_tennis" and os.path.exists(_TT_CARRY_POLICY) else _DEFAULT_POLICY
-    import onnx
-    m_onnx = onnx.load(policy_path)
-    input_dim = m_onnx.graph.input[0].type.tensor_type.shape.dim[1].dim_value
+    import onnxruntime as ort
+    sess = ort.InferenceSession(policy_path, providers=["CPUExecutionProvider"])
+    input_dim = sess.get_inputs()[0].shape[1]
 
     if input_dim == 64:
         policy = TableTennisRacketCarryPolicyInference(model, data, onnx_path=policy_path)
@@ -231,7 +231,7 @@ def render_racket(racket_type, output_name):
     cam.elevation = -12.0
     cam.azimuth = 135.0
 
-    total_steps = int(3.5 / model.opt.timestep)  # 3.5s walk
+    total_steps = int(7.0 / model.opt.timestep)  # 7.0s walk (100% longer)
     fps = 30
     steps_per_frame = int(round(1.0 / (fps * model.opt.timestep)))
     decimation = 10
@@ -283,16 +283,21 @@ def render_lemon_spoon():
     print("\nRendering Lemon & Spoon Balance...")
     mp4_path = os.path.join(_DOCS_MEDIA, "lemon_spoon_balance.mp4")
     webp_path = os.path.join(_DOCS_MEDIA, "lemon_spoon_balance.webp")
-    spoon_sim.render_walking_video(output_path=mp4_path, duration_sec=3.5, vx=0.16)
+    spoon_sim.render_walking_video(output_path=mp4_path, duration_sec=7.0, vx=0.16)
     cmd = f'ffmpeg -y -i "{mp4_path}" -vf "fps=20,scale=540:-1:flags=lanczos" -vcodec libwebp -lossless 0 -compression_level 4 -q:v 70 -loop 0 "{webp_path}" >/dev/null 2>&1'
     os.system(cmd)
     print(f"  [SAVED] {webp_path}")
 
 
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Render all showcase videos")
+    parser.add_argument("--force", action="store_true", help="Force re-rendering all videos")
+    args = parser.parse_args()
+
     print(f"Target media directory: {_DOCS_MEDIA}")
     def exists(name):
-        return os.path.exists(os.path.join(_DOCS_MEDIA, f"{name}.webp"))
+        return (not args.force) and os.path.exists(os.path.join(_DOCS_MEDIA, f"{name}.webp"))
 
     if not exists("duck_racer_competition_1x"):
         render_duck_race_1x()

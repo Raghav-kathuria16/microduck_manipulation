@@ -57,7 +57,7 @@ Every barbell test evaluates pure physical clamping: the central shaft sits in t
 - **Payload**: 100g (50g steel shaft + two 25g end plates, 48 mm diameter)
 - **Clamping Torque**: 0.10 N·m continuous
 - **Forward Velocity**: 0.25 m/s
-- **Demonstration Video**: Retained for full 2.50s clip (0.00 mm slip)
+- **Demonstration Video**: Retained for full 5.00s clip (0.00 mm slip)
 - **Extended Stress Limit**: Drops at **8.74 seconds** due to footstep shockwave micro-slip
 
 ![100g Barbell Clamping Carry](docs/media/barbell_100g_carry.webp)
@@ -70,7 +70,7 @@ Every barbell test evaluates pure physical clamping: the central shaft sits in t
 - **Payload**: 200g (50g steel shaft + two 75g end plates, 68 mm diameter)
 - **Clamping Torque**: 0.10 N·m continuous
 - **Forward Velocity**: 0.25 m/s
-- **Demonstration Video**: Retained for full 2.50s clip (1.20 mm slip)
+- **Demonstration Video**: Retained for full 5.00s clip (1.20 mm slip)
 - **Extended Stress Limit**: Drops at **8.10 seconds** under cumulative impact slip
 
 ![200g Barbell Clamping Carry](docs/media/barbell_200g_carry.webp)
@@ -82,9 +82,9 @@ Every barbell test evaluates pure physical clamping: the central shaft sits in t
 #### 🏋️ 300g Barbell Carry (41% Robot Bodyweight)
 - **Payload**: 300g (40.7% of the robot's entire 737g bodyweight)
 - **Clamping Torque**: 0.10 N·m continuous
-- **Policy**: `loadcarry_ppo_headup_v4.onnx`
+- **Policy**: `payload_clamping_locomotion.onnx`
 - **Forward Velocity**: 0.25 m/s
-- **Demonstration Video**: Retained for full 2.50s clip (8.10 mm displacement)
+- **Demonstration Video**: Retained for full 5.00s clip (8.10 mm displacement)
 - **Extended Stress Limit**: Drops at **6.52 seconds** (heavy inertia accelerates jaw slip)
 
 ![300g Barbell Clamping Carry](docs/media/barbell_300g_carry.webp)
@@ -136,7 +136,7 @@ Precision non-prehensile balancing of an authentic 22g citrus lemon in the shall
 
 The following table summarizes empirical performance across short demonstration clips versus continuous extended locomotion horizons:
 
-| Task / Payload | Payload Mass | Clamping Torque | Forward Velocity | Short Clip (2.5-3.5s) | Extended Time-to-Failure (TTF) | Primary Failure Mode |
+| Task / Payload | Payload Mass | Clamping Torque | Forward Velocity | Showcase Clip (5.0-7.0s) | Extended Time-to-Failure (TTF) | Primary Failure Mode |
 |:---|:---|:---|:---|:---|:---|:---|
 | **100g Barbell Carry** | 100g (13.6% BW) | 0.10 N·m | 0.25 m/s | 100% Retained (0.0mm) | **8.74 s** | Impact shockwave micro-slip |
 | **200g Barbell Carry** | 200g (27.1% BW) | 0.10 N·m | 0.25 m/s | 100% Retained (1.2mm) | **8.10 s** | Cumulative frictional slip |
@@ -279,33 +279,40 @@ mjpython scripts/test_physical_clamp_policy.py --mass 300 --torque 0.50 --gui
 
 ---
 
-### 4. Athletic Racket Carrying Suite (Interactive 3D)
+### 4. Athletic Racket Carrying Suite (Interactive 3D Simulation)
+
+Launch interactive GLFW 3D simulations for any of the sports rackets in MuJoCo (*on macOS, run with `mjpython` or `python` in a terminal with GUI display support*):
 
 ```bash
-# Table Tennis Racket with active Steadicam horizontal leveling
-mjpython scripts/test_racket_drop_and_walk.py --racket table_tennis --no-ball --steadicam --gui
+# 1. Table Tennis Racket (Active Steadicam Horizontal Leveling)
+python scripts/test_racket_drop_and_walk.py --racket table_tennis --no-ball --steadicam --gui
 
-# Badminton Racket with BWF scaled geometry
-mjpython scripts/test_racket_drop_and_walk.py --racket badminton --no-ball --gui
+# 2. Badminton Racket (Official BWF Scaled Geometry)
+python scripts/test_racket_drop_and_walk.py --racket badminton --no-ball --gui
 
-# Pickleball Paddle (220g wide-body paddle)
-mjpython scripts/test_racket_drop_and_walk.py --racket pickleball --no-ball --gui
+# 3. Pickleball Paddle (220g Wide-Body Composite Blade)
+python scripts/test_racket_drop_and_walk.py --racket pickleball --no-ball --gui
+
+# Optional flags:
+#   --loop        Continuously replay/loop the walking trial
+#   --speed 1.5   Playback speed multiplier (e.g. 1.0, 1.5, 2.0)
+#   --vx 0.20     Custom forward walking speed (m/s)
 ```
 
 ---
 
 ### 5. Table Tennis Dynamic Ball Balancing Test
-Evaluate closed-loop balancing of a 40mm ITTF table tennis ball on the racket face during forward walking:
+Evaluate closed-loop balancing of an authentic 40mm ITTF ping-pong ball on the racket rubber face during continuous forward bipedal walking:
 ```bash
-mjpython scripts/test_racket_drop_and_walk.py --racket table_tennis --steadicam --gui
+python scripts/test_racket_drop_and_walk.py --racket table_tennis --steadicam --gui
 ```
 
 ---
 
 ### 6. Lemon & Tableware Spoon Balance
-Test precision balancing of a real 22g lemon in a tableware spoon:
+Test precision non-prehensile balancing of a real 22g citrus lemon in a shallow tableware spoon:
 ```bash
-mjpython scripts/test_spoon_lemon_balance.py --gui
+python scripts/test_spoon_lemon_balance.py --gui
 ```
 
 ---
@@ -339,9 +346,9 @@ microduck_manipulation/
 │   └── spoon_and_lemon.xml                  # Tableware spoon & citrus lemon
 ├── policies/                                # Pre-trained ONNX neural network policies
 │   └── onnx/
-│       ├── loadcarry_ppo_headup_v4.onnx     # Primary heavy load-carrying & balance policy
-│       ├── table_tennis_racket_carry_precision_level.onnx # Precision Steadicam racket carry
-│       └── table_tennis_ball_balance.onnx   # Closed-loop ping-pong ball balance
+│       ├── payload_clamping_locomotion.onnx # Primary heavy load-carrying & balance policy
+│       ├── racket_steadicam_carry.onnx      # Precision Steadicam racket carry policy
+│       └── racket_ball_balance.onnx         # Closed-loop ping-pong ball balance policy
 ├── scripts/                                 # Executable evaluation & rendering suite
 │   ├── infer_policy.py                      # Standalone ONNX policy inference engine
 │   ├── test_duck_racer_lemon_balance.py     # 5-Duck Olympic Race GUI & Benchmark

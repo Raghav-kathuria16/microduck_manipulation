@@ -43,7 +43,7 @@ Every barbell evaluation tests pure Coulomb friction clamping: the central shaft
 - **Geometry**: 50g central shaft + two 25g end plates (48 mm diameter, 15 mm thickness — 2x from previous edit)
 - **Clamping Torque**: 0.10 N·m
 - **Forward Velocity**: 0.25 m/s
-- **Demonstration Video**: Retained for full 2.50s clip (0.00 mm slip)
+- **Demonstration Video**: Retained for full 5.00s clip (0.00 mm slip)
 - **Extended Stress Horizon**: Drops at **8.74 seconds** due to footstep shockwave micro-slip
 
 ![100g Barbell Carry Demo](media/barbell_100g_carry.webp)
@@ -56,7 +56,7 @@ Every barbell evaluation tests pure Coulomb friction clamping: the central shaft
 - **Mass**: 200g (27.1% of robot bodyweight)
 - **Clamping Torque**: 0.10 N·m
 - **Forward Velocity**: 0.25 m/s
-- **Demonstration Video**: Retained for full 2.50s clip (1.20 mm slip)
+- **Demonstration Video**: Retained for full 5.00s clip (1.20 mm slip)
 - **Extended Stress Horizon**: Drops at **8.10 seconds** under cumulative contact slip
 
 ![200g Barbell Carry Demo](media/barbell_200g_carry.webp)
@@ -68,9 +68,9 @@ Every barbell evaluation tests pure Coulomb friction clamping: the central shaft
 ##### 🏋️ 300g Barbell Carry (41% Robot Bodyweight)
 - **Mass**: 300g (40.7% of robot bodyweight)
 - **Clamping Torque**: 0.10 N·m
-- **Policy**: `loadcarry_ppo_headup_v4.onnx`
+- **Policy**: `payload_clamping_locomotion.onnx`
 - **Forward Velocity**: 0.25 m/s
-- **Demonstration Video**: Retained for full 2.50s clip (8.10 mm displacement)
+- **Demonstration Video**: Retained for full 5.00s clip (8.10 mm displacement)
 - **Extended Stress Horizon**: Drops at **6.52 seconds** (high-inertia mouth separation)
 
 ![300g Barbell Carry Demo](media/barbell_300g_carry.webp)
@@ -201,7 +201,7 @@ Level 5: Multi-Agent Stadium Racing with Closed-Loop Steering
 
 #### 4. Heavy Load Residual Policies (Up to 300g)
 - Heavy loads shift the center of mass forward by up to 2.8 cm.
-- Residual policy (`loadcarry_ppo_headup_v4.onnx`) applies adaptive hip pitch and ankle pitch offsets to prevent forward tipping.
+- Residual policy (`payload_clamping_locomotion.onnx`, formerly `loadcarry_ppo_headup_v4.onnx`) applies adaptive hip pitch and ankle pitch offsets to prevent forward tipping.
 
 #### 5. Decentralized Closed-Loop Lane Steering (5-Duck Competition)
 - Proportional-integral-derivative (PID) steering on each robot heading:

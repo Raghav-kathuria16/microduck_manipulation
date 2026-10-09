@@ -26,7 +26,7 @@ from infer_policy import PolicyInference, DEFAULT_POSE
 PHYSICAL_CLAMP_XML = os.path.join(
     _MANIP_DIR, "models/scene_loadcarry_physical_clamp.xml"
 )
-DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/loadcarry_ppo_headup_v4.onnx")
+DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/payload_clamping_locomotion.onnx")
 
 
 def setup_physical_clamp_sim(
