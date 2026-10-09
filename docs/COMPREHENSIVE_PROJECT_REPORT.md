@@ -28,9 +28,9 @@ Five autonomous Microducks sprinting down parallel lanes on an authentic Mondo t
 - **4th Place**: Royal Amethyst Purple (Lane 5) — 4th pace (0.148 m/s), outer boundary lane.
 - **5th Place**: Riviera Sky Blue (Lane 2) — trailing pace (0.140 m/s), conservative gait.
 
-![5-Duck Olympic Competition Demo](media/duck_racer_competition_1x.webp)
+![5-Duck Olympic Competition Demo](media/duck_racer_competition_2x.webp)
 
-> [View Full 1x MP4 Video](media/duck_racer_competition_1x.mp4)
+> [View 2x MP4 Video](media/duck_racer_competition_2x.mp4) | [View Original 1x MP4 Video](media/duck_racer_competition_1x.mp4)
 
 ---
 

@@ -115,6 +115,7 @@ def render_duck_race_1x():
             frames.append(renderer.render())
 
     render_to_mp4_and_webp(frames, "duck_racer_competition_1x", fps=fps)
+    render_to_mp4_and_webp(frames, "duck_racer_competition_2x", fps=fps * 2)
 
 
 def render_barbell(mass_g, torque_nm, vel_x, output_name):

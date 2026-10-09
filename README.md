@@ -38,13 +38,13 @@ Microduck is a miniature 737g bipedal humanoid/avian robot standing 24.4 cm tall
 
 All demonstrations run under authentic rigid-body and frictional contact physics in MuJoCo.
 
-### 1. 5-Duck Olympic Stadium Race (1x Natural Physics Playback)
+### 1. 5-Duck Olympic Stadium Race (2x Video Playback, Zero-Drop Physics)
 
-Five autonomous Microducks competing down the Olympic Mondo red track, each balancing a lemon on a spoon with active Steadicam head stabilization. Physics runs in natural 1x time with zero artificial acceleration.
+Five autonomous Microducks competing down the Olympic Mondo red track, each balancing a lemon on a spoon with active Steadicam head stabilization. The simulation runs under natural physics (timestep dt = 0.002s, 50 Hz control decimation) with 100% lemon retention, recorded and presented at 2x video playback speed (4.9s duration at 60 fps) for a crisp broadcast experience.
 
-![5-Duck Olympic Race 1x](docs/media/duck_racer_competition_1x.webp)
+![5-Duck Olympic Race 2x](docs/media/duck_racer_competition_2x.webp)
 
-> 🎥 **[View Full MP4 Video (docs/media/duck_racer_competition_1x.mp4)](docs/media/duck_racer_competition_1x.mp4)**  
+> 🎥 **[View 2x MP4 Video (docs/media/duck_racer_competition_2x.mp4)](docs/media/duck_racer_competition_2x.mp4)** | **[View Original 1x MP4 Video](docs/media/duck_racer_competition_1x.mp4)**  
 > *Pacing: Emerald Green leads across the line (0.175 m/s), followed closely by Ruby Coral (0.165 m/s) and Duck Gold (0.155 m/s). 100% lemon retention across all 5 lanes.*
 
 ---
