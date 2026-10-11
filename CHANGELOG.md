@@ -14,6 +14,12 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### 2026-10-11 — Security and System Information Audit & Command Sanitization
+
+**What:** Conducted an end-to-end security audit across the codebase and git history confirming zero API keys, auth tokens, passwords, or cloud credentials. Sanitized terminal command examples in technical documentation by replacing hardcoded personal environment paths with portable commands.
+
+**Why:** To ensure zero sensitive credentials or local system paths are exposed in the repository.
+
 ### 2026-10-10 — Prioritization of Lemon & Spoon Training Policy and Video-Centric Streamlining
 
 **What:** Restructured the repository documentation to place the single-duck Dynamic Lemon & Tableware Spoon Balancing policy as headline showcase #1 (immediately preceding the multi-duck Olympic Stadium Race #2), streamlined racket and barbell sections into concise, video-focused showcases, highlighted empirical retention during demonstrations while documenting that continuous locomotion is not robust due to slippage, provided the higher torque actuator approach solution, and removed the quick-start subtitle phrase from git documentation.

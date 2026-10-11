@@ -310,7 +310,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 - **Payload**: 40.0 g
 - **Grip**: Silicone cradle physical clamp (0 welds)
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_racket_drop_and_walk.py --racket badminton --no-ball --gui
+mjpython scripts/test_racket_drop_and_walk.py --racket badminton --no-ball --gui
 ```
 
 ---
@@ -320,7 +320,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 - **Payload**: 75.0 g
 - **Grip**: Compliant jaw bed clamping (0 welds)
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_racket_drop_and_walk.py --racket pickleball --no-ball --gui
+mjpython scripts/test_racket_drop_and_walk.py --racket pickleball --no-ball --gui
 ```
 
 ---
@@ -330,7 +330,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 - **Payload**: 40.0 g
 - **Grip**: Sticky silicone cradle (0 welds)
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_racket_drop_and_walk.py --racket table_tennis --no-ball --steadicam --gui
+mjpython scripts/test_racket_drop_and_walk.py --racket table_tennis --no-ball --steadicam --gui
 ```
 
 ---
@@ -338,7 +338,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 ### Command 4: Table Tennis Dynamic Ball Balancing Test
 - **Description**: Dynamic test with ITTF 3-star ball balancing on the racket face while walking forward.
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_racket_drop_and_walk.py --racket table_tennis --steadicam --gui
+mjpython scripts/test_racket_drop_and_walk.py --racket table_tennis --steadicam --gui
 ```
 
 ---
@@ -347,7 +347,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 - **Description**: MicroDuck starts with barbell freely on the floor, crouches, clamps down, lifts the 300g barbell off the floor, and walks forward. Zero teleportation, zero welds.
 - **Payload**: 300.0 g (40.7% payload-to-bodyweight)
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/pick_and_carry_policy.py --mass 300 --gui
+mjpython scripts/pick_and_carry_policy.py --mass 300 --gui
 ```
 
 ---
@@ -356,7 +356,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 - **Description**: Baseline ground pick-and-carry test with 100g barbell payload.
 - **Payload**: 100.0 g
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/pick_and_carry_policy.py --mass 100 --gui
+mjpython scripts/pick_and_carry_policy.py --mass 100 --gui
 ```
 
 ---
@@ -364,7 +364,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 ### Command 7: 300g Pure Physical Clamping (Zero Welds, Constant Actuator Torque)
 - **Description**: Pure physical clamping evaluation with constant 0.96 N·m torque holding a 300g cylinder during forward walking. 100% hold duration.
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_physical_clamp_policy.py --mass 300 --torque 0.96 --gui
+mjpython scripts/test_physical_clamp_policy.py --mass 300 --torque 0.96 --gui
 ```
 
 ---
@@ -372,7 +372,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 ### Command 8: 100g Pure Physical Clamping Benchmark
 - **Description**: Pure physical clamping evaluation with nominal 0.10 N·m torque holding 100g cylinder.
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/test_physical_clamp_policy.py --mass 100 --torque 0.10 --gui
+mjpython scripts/test_physical_clamp_policy.py --mass 100 --torque 0.10 --gui
 ```
 
 ---
@@ -380,7 +380,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 ### Command 9: 300g Kraft Grocery Bag Autonomous Pick & Walk
 - **Description**: Master autonomous sequence: ground crouch, strap loop intercept, clamp, aloft hoist, and dynamic gait transfer.
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/grocery_bag_300g_pick_and_walk.py
+mjpython scripts/grocery_bag_300g_pick_and_walk.py
 ```
 
 ---
@@ -388,7 +388,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 ### Command 10: 300g Soft-Body Tote Bag Interactive Scene
 - **Description**: Interactive 3D scene viewer showing the grounded robot with active balance and 300g soft-body tote bag resting on the floor.
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/view_totebag_scene.py
+mjpython scripts/view_totebag_scene.py
 ```
 
 ---
@@ -397,7 +397,7 @@ Below is the verified registry of single terminal commands to run and inspect ev
 - **Description**: Full precision teleoperation studio with simultaneous GLFW 3D viewer and live Web Dashboard at `http://localhost:8080`.
 - **Hotkeys**: WASD (Walk/Turn), J/K (Crouch/Raise Head), C/O (Clamp/Open Beak), T (Throat Cradle), U (Upright Carry), R (Record dataset).
 ```bash
-/Users/raghav/.venvs/microduck_rl/bin/mjpython microduck_manipulation/scripts/teleop_barbell_studio.py
+mjpython scripts/teleop_barbell_studio.py
 ```
 
 ---
