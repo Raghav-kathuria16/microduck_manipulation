@@ -42,30 +42,36 @@ The core training achievement of this project: dynamic non-prehensile balancing 
 
 An active bio-mimetic Steadicam pantograph controller decouples trunk walking oscillations from the beak, maintaining spoon levelness and achieving 100% balance retention with zero drop across forward walking speeds from 0.08 to 0.30 m/s. Video is recorded continuously for 40 seconds of simulated locomotion (presented at 2x playback speed, 20.0s duration) with zero static starting pause.
 
-![Dynamic Lemon and Spoon Balance](docs/media/lemon_spoon_balance.webp)
+<p align="center">
+  <img src="docs/media/lemon_spoon_balance.webp" width="100%" alt="Dynamic Lemon and Spoon Balance">
+</p>
 
 > 🎥 **[View Lemon & Spoon MP4 Video](docs/media/lemon_spoon_balance.mp4)**  
 > *Dynamic non-prehensile stabilization: The bio-mimetic Steadicam compensator continuously counters torso pitch oscillations, keeping the lemon securely balanced in the spoon bowl during smooth forward locomotion.*
-
-#### Closed-Loop Steadicam Control Architecture & Empirical Telemetry
-
-Below is the verified control architecture and real-time telemetry from 40 seconds of continuous forward locomotion:
-
-![Champion Steadicam Control Architecture and Real-Time Closed-Loop Telemetry](docs/media/champion_steadicam_control_architecture_and_telemetry.png)
-
-- **Anti-Phase Pitch Compensation**: Trunk sway (oscillating +/- 2.8 deg per walking cycle) is dynamically cancelled by counter-phase differential head-neck actuation (`action[5] = +head_pos_steadicam`, `action[6] = -head_pos_steadicam`), locking spoon bowl pitch at 0.0 deg +/- 0.4 deg true horizontal relative to ground.
-- **Micro-Millimeter Lemon Retention**: Lemon position deviation inside the concave spoon bowl is constrained within 0.9 mm to 1.1 mm across the entire run with zero drops and zero static pause.
 
 ---
 
 ### 2. 5-Duck Olympic Stadium Race (Multi-Robot Sprint, 2x Video Playback)
 
-Five autonomous Microducks competing down the Olympic Mondo red track, each deploying the champion Steadicam lemon balancing policy. The simulation runs under natural physics (timestep dt = 0.002s, 50 Hz control decimation) with 100% lemon retention across all lanes, recorded and presented at 2x video playback speed (40 seconds continuous duration) with zero static pause at the start line.
+Five autonomous Microducks competing down the Olympic Mondo red track, each deploying the champion Steadicam lemon balancing policy. The simulation runs under natural physics (timestep dt = 0.002s, 50 Hz control decimation) with 100% lemon retention across all lanes, recorded and presented at 2x video playback speed (40 seconds continuous duration) with zero static pause at the start line. All five robots sprint actively across the track above their limit-cycle locomotion threshold with zero stalls.
 
-![5-Duck Olympic Stadium Race](docs/media/duck_racer_competition_2x.webp)
+<p align="center">
+  <img src="docs/media/duck_racer_competition_2x.webp" width="100%" alt="5-Duck Olympic Stadium Race">
+</p>
 
 > 🎥 **[View 5-Duck Olympic Race MP4 Video](docs/media/duck_racer_competition_2x.mp4)**  
-> *Pacing: Emerald Green leads across the line (0.175 m/s), followed closely by Ruby Coral (0.165 m/s) and Duck Gold (0.160 m/s). 100% lemon retention across all 5 lanes.*
+> *Pacing: Emerald Green leads across the line (0.260 m/s), followed by Ruby Coral (0.240 m/s), Duck Gold (0.220 m/s), Royal Amethyst (0.200 m/s), and Riviera Sky (0.185 m/s). 100% lemon retention across all 5 lanes.*
+
+#### Closed-Loop Steadicam Control Architecture & Empirical Telemetry
+
+Below is the verified control architecture and real-time telemetry from continuous forward locomotion:
+
+<p align="center">
+  <img src="docs/media/champion_steadicam_control_architecture_and_telemetry.png" width="100%" alt="Champion Steadicam Control Architecture and Real-Time Closed-Loop Telemetry">
+</p>
+
+- **Anti-Phase Pitch Compensation**: Trunk sway (oscillating +/- 2.8 deg per walking cycle) is dynamically cancelled by counter-phase differential head-neck actuation (`action[5] = +head_pos_steadicam`, `action[6] = -head_pos_steadicam`), locking spoon bowl pitch at 0.0 deg +/- 0.4 deg true horizontal relative to ground.
+- **Micro-Millimeter Lemon Retention**: Lemon position deviation inside the concave spoon bowl is constrained within 0.9 mm to 1.1 mm across the entire run with zero drops and zero static pause.
 
 ---
 
