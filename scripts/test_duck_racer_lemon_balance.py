@@ -601,7 +601,7 @@ def render_racer_visual_proofs():
     setup_racer_episode(ducks, model, data)
 
     # Simulate 1.5s (750 steps) so ducks are actively sprinting straight down the track lanes
-    pacing = [0.23, 0.26, 0.25, 0.27, 0.24]
+    pacing = [0.240, 0.185, 0.220, 0.260, 0.200]
     for i, d in enumerate(ducks):
         d.target_vx = pacing[i]
 
@@ -696,7 +696,7 @@ def render_racer_video(output_path=None, duration_sec=21.0, fps=50):
     # #3 Duck Gold Yellow (Lane 3): 0.155 m/s (3rd Place)
     # #4 Royal Amethyst Purple (Lane 5): 0.148 m/s (4th Place)
     # #5 Riviera Sky Blue (Lane 2): 0.140 m/s (5th Place Last)
-    pacing = [0.23, 0.26, 0.25, 0.27, 0.24]
+    pacing = [0.240, 0.185, 0.220, 0.260, 0.200]
     for i, d in enumerate(ducks):
         d.target_vx = pacing[i]
 
@@ -783,7 +783,7 @@ def run_benchmark(duration_sec=10.0):
     ducks = [DuckRacer(cfg["id"], cfg, model, data, session) for cfg in DUCK_CONFIGS]
     setup_racer_episode(ducks, model, data)
 
-    pacing = [0.23, 0.26, 0.25, 0.27, 0.24]
+    pacing = [0.240, 0.185, 0.220, 0.260, 0.200]
     for i, d in enumerate(ducks):
         d.target_vx = pacing[i]
 
@@ -864,7 +864,7 @@ def main():
     setup_racer_episode(ducks, model, data)
 
     # Pacing speeds
-    base_pacing = [0.23, 0.26, 0.25, 0.27, 0.24]
+    base_pacing = [0.240, 0.185, 0.220, 0.260, 0.200]
     for i, d in enumerate(ducks):
         d.target_vx = base_pacing[i]
 
