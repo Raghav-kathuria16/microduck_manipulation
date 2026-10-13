@@ -33,9 +33,10 @@ sys.path.insert(0, _SCRIPT_DIR)
 from infer_policy import DEFAULT_POSE
 
 _BASE_SCENE_XML = os.path.join(_MANIP_DIR, "models/scene_loadcarry_physical_clamp.xml")
-_DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/payload_clamping_locomotion.onnx")
+_DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/microduck_spoon_lemon_steadicam_production.onnx")
 _OUTPUT_DIR = os.path.join(_MANIP_DIR, "docs/media")
 os.makedirs(_OUTPUT_DIR, exist_ok=True)
+_ARTIFACT_DIR = "/Users/raghav/.gemini/antigravity-ide/brain/01375344-3ce7-4a6f-afec-3cecca1c8b8d"
 
 # 5 Official Pollen Robotics Inspired Colorways
 DUCK_CONFIGS = [
@@ -182,13 +183,11 @@ def create_racer_scene_xml():
       <geom name="rim_right_b" type="capsule" fromto=" 0.006 -0.0022 0.052  0.0135 -0.0020 0.070" size="0.0018" material="stainless_steel" friction="0.50 0.01 0.01" contype="0" conaffinity="0" group="3"/>
     </body>
 
-    <!-- Authentic Small Lemon (22g prolate ellipsoid) -->
+    <!-- Smooth Spherical Lemon Ball (22g pure sphere, 24mm dia, r=0.012m, no tips/nubs) -->
     <body name="lemon" pos="0.050 0.065 0.220">
       <freejoint name="lemon_free"/>
-      <inertial pos="0 0 0" mass="0.022" diaginertia="0.0000018 0.0000018 0.0000013"/>
-      <geom name="lemon_geom" type="ellipsoid" size="0.012 0.012 0.016" material="citrus_lemon" friction="0.50 0.01 0.01" condim="6"/>
-      <geom name="lemon_tip_front" type="sphere" pos="0 0  0.016" size="0.0030" material="lemon_tip" contype="0" conaffinity="0" group="2"/>
-      <geom name="lemon_tip_back"  type="sphere" pos="0 0 -0.016" size="0.0025" material="lemon_tip" contype="0" conaffinity="0" group="2"/>
+      <inertial pos="0 0 0" mass="0.022" diaginertia="0.00000127 0.00000127 0.00000127"/>
+      <geom name="lemon_geom" type="sphere" size="0.012" material="citrus_lemon" friction="0.50 0.01 0.01" condim="6"/>
     </body>"""
 
     actuator_start = base.find("<actuator>")
@@ -214,8 +213,8 @@ def create_racer_scene_xml():
     <geom name="lane_div_5" type="box" pos="2.0  0.75 0.001" size="6.0 0.012 0.001" rgba="0.95 0.95 0.95 0.9" contype="0" conaffinity="0" group="2"/>
 
     <!-- Track Outer Barriers (Left & Right Safety Walls extending from x=-4.0m to x=+8.0m) -->
-    <geom name="barrier_left"  type="box" pos="2.0  0.88 0.04" size="6.0 0.025 0.04" material="barrier_mat" friction="1.0" group="2"/>
-    <geom name="barrier_right" type="box" pos="2.0 -0.88 0.04" size="6.0 0.025 0.04" material="barrier_mat" friction="1.0" group="2"/>
+    <geom name="barrier_left"  type="box" pos="2.0  0.88 0.04" size="6.0 0.025 0.04" material="barrier_mat" contype="0" conaffinity="0" group="2"/>
+    <geom name="barrier_right" type="box" pos="2.0 -0.88 0.04" size="6.0 0.025 0.04" material="barrier_mat" contype="0" conaffinity="0" group="2"/>
 
     <!-- Starting Line at x=0.0m (Bright White Stripe across all 5 lanes) -->
     <geom name="start_line" type="box" pos="0.0 0.0 0.002" size="0.05 0.75 0.001" material="start_line_mat" contype="0" conaffinity="0" group="2"/>
@@ -357,6 +356,7 @@ class DuckRacer:
 
         self.input_name = session.get_inputs()[0].name
         self.output_name = session.get_outputs()[0].name
+        self.is_67d = (session.get_inputs()[0].shape[1] == 67)
 
         # Body IDs
         self.trunk_bid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, f"{self.prefix}trunk_base")
@@ -422,6 +422,9 @@ class DuckRacer:
             self.data.qpos[idx] = self.default_pose[i]
             self.data.qvel[self.joint_dof_indices[i]] = 0.0
 
+        for i, act_id in enumerate(self.act_ids):
+            self.data.ctrl[act_id] = self.default_pose[i]
+
         self.data.qpos[self.beak_qpos] = self.target_clamp_angle
         self.data.qvel[self.beak_dof] = 0.0
         self.data.qfrc_applied[self.beak_dof] = -self.clamp_torque
@@ -468,29 +471,50 @@ class DuckRacer:
         qvel = np.array([self.data.qvel[idx] for idx in self.joint_dof_indices], dtype=np.float32)
         last_act = self.last_action.copy()
 
-        # Closed-loop heading alignment & lane centering PID
+        # Closed-loop line-of-sight pure pursuit heading & lane centering
         yaw = math.atan2(R_trunk[1, 0], R_trunk[0, 0])
-        w_z = float(self.data.qvel[self.trunk_dof + 5])
         y_err = float(self.data.xpos[self.trunk_bid][1] - self.cfg["y"])
-        v_y = float(self.data.qvel[self.trunk_dof + 1])
-        self.y_int = float(np.clip(self.y_int + y_err * sim_dt_ctrl, -0.4, 0.4))
-
-        # Commanded angular velocity around Z to hold heading straight down the lane
-        cmd_wz = float(np.clip(-2.5 * yaw - 0.25 * w_z - 2.5 * y_err - 0.8 * self.y_int - 0.3 * v_y, -0.75, 0.75))
+        
+        # Line-of-sight target heading points smoothly toward lane centerline
+        target_yaw = math.atan2(-y_err, 0.60)
+        yaw_err = (yaw - target_yaw + math.pi) % (2 * math.pi) - math.pi
+        cmd_wz = float(np.clip(-2.5 * yaw_err, -0.45, 0.45))
 
         cmd = np.zeros(13, dtype=np.float32)
         cmd[0] = self.current_vx
         cmd[1] = 0.0
         cmd[2] = cmd_wz
 
-        obs = np.concatenate([base_ang_vel, proj_grav, qpos_rel, qvel, last_act, cmd]).astype(np.float32)
+        obs_base = np.concatenate([base_ang_vel, proj_grav, qpos_rel, qvel, last_act, cmd]).astype(np.float32)
+
+        if self.is_67d:
+            R_s = self.data.xmat[self.spoon_bid].reshape(3, 3)
+            p_diff = self.data.xpos[self.lemon_bid] - self.data.xpos[self.spoon_bid]
+            p_rel = R_s.T @ p_diff
+            dx = float(p_rel[0])
+            dz = float(p_rel[2] - 0.070)
+
+            v_diff = self.data.qvel[self.lemon_dof:self.lemon_dof+3] - self.data.qvel[self.spoon_dof:self.spoon_dof+3]
+            v_rel = R_s.T @ v_diff
+            vx_rel = float(v_rel[0])
+            vz_rel = float(v_rel[2])
+
+            z_local = R_s.T @ np.array([0.0, 0.0, 1.0])
+            pitch_err = float(np.arcsin(np.clip(z_local[2], -0.999, 0.999)))
+            roll_err = float(np.arcsin(np.clip(z_local[0], -0.999, 0.999)))
+
+            extra_obs = np.array([dx, dz, vx_rel, vz_rel, pitch_err, roll_err], dtype=np.float32)
+            obs = np.concatenate([obs_base, extra_obs]).astype(np.float32)
+        else:
+            obs = obs_base
+
         return obs[np.newaxis, :]
 
     def infer_and_apply(self, decimation, sim_dt):
         if self.current_vx < self.target_vx:
-            self.current_vx = min(self.target_vx, self.current_vx + 0.001)
+            self.current_vx = min(self.target_vx, self.current_vx + 0.005)
         elif self.current_vx > self.target_vx:
-            self.current_vx = max(self.target_vx, self.current_vx - 0.002)
+            self.current_vx = max(self.target_vx, self.current_vx - 0.005)
 
         dt_ctrl = decimation * sim_dt
         obs = self.get_obs(sim_dt_ctrl=dt_ctrl)
@@ -508,13 +532,15 @@ class DuckRacer:
         spoon_pitch = math.asin(np.clip(float(np.dot(b_norm, h_fwd)), -0.999, 0.999))
 
         rate_cmd = np.clip(1.20 * spoon_pitch, -0.30, 0.30)
-        self.head_pos_steadicam = np.clip(self.head_pos_steadicam + rate_cmd * dt_ctrl, -0.20, 0.20)
+        self.head_pos_steadicam = np.clip(self.head_pos_steadicam + rate_cmd * dt_ctrl, -0.40, 0.40)
 
-        # Apply additive pitch trim to keep the spoon level,
-        # while PRESERVING raw policy head yaw (action[7]) and head roll (action[8])
-        # so the robot's dynamic upper-body counterbalance maintains stable heading!
-        action[5] += self.head_pos_steadicam
-        action[6] -= self.head_pos_steadicam
+        # Counter-phase neck/head pitch compensation keeps the spoon bowl level,
+        # while locking head yaw (action[7]) and head roll (action[8]) to zero
+        # to eliminate lateral slosh and roll tipping during walking steps.
+        action[5] = 0.0 + self.head_pos_steadicam
+        action[6] = 0.0 - self.head_pos_steadicam
+        action[7] = 0.0
+        action[8] = 0.0
 
         targets = self.default_pose + action
         for i, act_id in enumerate(self.act_ids):
@@ -550,12 +576,14 @@ def setup_racer_episode(ducks, model, data):
         d.place_lemon()
     mujoco.mj_forward(model, data)
 
-    # 150-step (0.30s) standing equilibrium settling
+    # 150-step (0.30s) standing equilibrium settling with motor ctrl held at default standing pose
     for _ in range(150):
         for d in ducks:
             d.data.qpos[d.trunk_qadr:d.trunk_qadr+3] = [0.0, d.cfg["y"], 0.125]
             d.data.qpos[d.trunk_qadr+3:d.trunk_qadr+7] = [1.0, 0.0, 0.0, 0.0]
             d.data.qvel[d.trunk_dof:d.trunk_dof+6] = 0.0
+            for i, act_id in enumerate(d.act_ids):
+                d.data.ctrl[act_id] = d.default_pose[i]
             d.step_clamp()
             d.data.qvel[d.lemon_dof:d.lemon_dof+6] *= 0.98
         mujoco.mj_step(model, data)
@@ -573,7 +601,7 @@ def render_racer_visual_proofs():
     setup_racer_episode(ducks, model, data)
 
     # Simulate 1.5s (750 steps) so ducks are actively sprinting straight down the track lanes
-    pacing = [0.150, 0.165, 0.160, 0.170, 0.155]
+    pacing = [0.23, 0.26, 0.25, 0.27, 0.24]
     for i, d in enumerate(ducks):
         d.target_vx = pacing[i]
 
@@ -668,7 +696,7 @@ def render_racer_video(output_path=None, duration_sec=21.0, fps=50):
     # #3 Duck Gold Yellow (Lane 3): 0.155 m/s (3rd Place)
     # #4 Royal Amethyst Purple (Lane 5): 0.148 m/s (4th Place)
     # #5 Riviera Sky Blue (Lane 2): 0.140 m/s (5th Place Last)
-    pacing = [0.165, 0.140, 0.155, 0.175, 0.148]
+    pacing = [0.23, 0.26, 0.25, 0.27, 0.24]
     for i, d in enumerate(ducks):
         d.target_vx = pacing[i]
 
@@ -755,7 +783,7 @@ def run_benchmark(duration_sec=10.0):
     ducks = [DuckRacer(cfg["id"], cfg, model, data, session) for cfg in DUCK_CONFIGS]
     setup_racer_episode(ducks, model, data)
 
-    pacing = [0.150, 0.165, 0.160, 0.170, 0.155]
+    pacing = [0.23, 0.26, 0.25, 0.27, 0.24]
     for i, d in enumerate(ducks):
         d.target_vx = pacing[i]
 
@@ -793,7 +821,7 @@ def run_benchmark(duration_sec=10.0):
         print(f"#{r+1:<4} | {d.cfg['lane']:<4} | {d.cfg['name']:<10} | {d.distance:6.3f} m   | {lat_err_cm:5.2f} cm       | {lemon_stat:<14}")
     print("=" * 78)
     all_balanced = all(not d.lemon_dropped for d in ducks)
-    all_in_lane = all(max_lat_errors[d.duck_id] < 0.12 for d in ducks)
+    all_in_lane = all(max_lat_errors[d.duck_id] < 0.10 for d in ducks)
     print(f"Verification: All Lemons Balanced = {all_balanced} | All In-Lane = {all_in_lane}\n")
     return ranked
 
@@ -836,7 +864,7 @@ def main():
     setup_racer_episode(ducks, model, data)
 
     # Pacing speeds
-    base_pacing = [0.150, 0.165, 0.160, 0.170, 0.155]
+    base_pacing = [0.23, 0.26, 0.25, 0.27, 0.24]
     for i, d in enumerate(ducks):
         d.target_vx = base_pacing[i]
 
