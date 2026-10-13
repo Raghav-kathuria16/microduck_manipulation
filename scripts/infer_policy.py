@@ -228,8 +228,8 @@ class PolicyInference:
         self.switch_threshold = switch_threshold
         # When True: emit the unified 13D command vector and treat head_offset /
         # body_cmd as policy COMMANDS (no add to ctrl, no joint_pos correction).
-        # When False: legacy behaviour (3D command, head_offset added to ctrl[5:9]).
         self.new_cmd_obs = new_cmd_obs
+        self.extra_obs_fn = None
 
         # Load walking policy
         self.walking_session = None
@@ -682,6 +682,11 @@ class PolicyInference:
         obs.append(self.get_joint_vel())
         obs.append(self.last_action)
         obs.append(self.command)
+
+        if hasattr(self, "extra_obs_fn") and self.extra_obs_fn is not None:
+            extra = self.extra_obs_fn()
+            if extra is not None:
+                obs.append(extra)
 
         return np.concatenate(obs).astype(np.float32)
 

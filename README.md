@@ -42,20 +42,16 @@ The core training achievement of this project: dynamic non-prehensile balancing 
 
 An active bio-mimetic Steadicam pantograph controller decouples trunk walking oscillations from the beak, maintaining spoon levelness and achieving 100% balance retention with zero drop across forward walking speeds from 0.08 to 0.30 m/s. Video is recorded continuously for 40 seconds of simulated locomotion (presented at 2x playback speed, 20.0s duration) with zero static starting pause.
 
-<p align="center">
-  <img src="docs/media/lemon_spoon_balance.webp" width="100%" alt="Dynamic Lemon and Spoon Balance">
-</p>
+![Dynamic Lemon and Spoon Balance](docs/media/lemon_spoon_balance.webp)
 
-> **[View Lemon & Spoon MP4 Video (docs/media/lemon_spoon_balance.mp4)](docs/media/lemon_spoon_balance.mp4)**  
-> *Dynamic non-prehensile stabilization: The bio-mimetic Steadicam compensator continuously counters torso pitch oscillations, keeping the lemon securely balanced in the spoon bowl during forward locomotion.*
+> 🎥 **[View Lemon & Spoon MP4 Video](docs/media/lemon_spoon_balance.mp4)**  
+> *Dynamic non-prehensile stabilization: The bio-mimetic Steadicam compensator continuously counters torso pitch oscillations, keeping the lemon securely balanced in the spoon bowl during smooth forward locomotion.*
 
 #### Closed-Loop Steadicam Control Architecture & Empirical Telemetry
 
 Below is the verified control architecture and real-time telemetry from 40 seconds of continuous forward locomotion:
 
-<p align="center">
-  <img src="docs/media/champion_steadicam_control_architecture_and_telemetry.png" width="100%" alt="Champion Steadicam Control Architecture and Real-Time Closed-Loop Telemetry">
-</p>
+![Champion Steadicam Control Architecture and Real-Time Closed-Loop Telemetry](docs/media/champion_steadicam_control_architecture_and_telemetry.png)
 
 - **Anti-Phase Pitch Compensation**: Trunk sway (oscillating +/- 2.8 deg per walking cycle) is dynamically cancelled by counter-phase differential head-neck actuation (`action[5] = +head_pos_steadicam`, `action[6] = -head_pos_steadicam`), locking spoon bowl pitch at 0.0 deg +/- 0.4 deg true horizontal relative to ground.
 - **Micro-Millimeter Lemon Retention**: Lemon position deviation inside the concave spoon bowl is constrained within 0.9 mm to 1.1 mm across the entire run with zero drops and zero static pause.
@@ -66,11 +62,9 @@ Below is the verified control architecture and real-time telemetry from 40 secon
 
 Five autonomous Microducks competing down the Olympic Mondo red track, each deploying the champion Steadicam lemon balancing policy. The simulation runs under natural physics (timestep dt = 0.002s, 50 Hz control decimation) with 100% lemon retention across all lanes, recorded and presented at 2x video playback speed (40 seconds continuous duration) with zero static pause at the start line.
 
-<p align="center">
-  <img src="docs/media/duck_racer_competition_2x.webp" width="100%" alt="5-Duck Olympic Stadium Race">
-</p>
+![5-Duck Olympic Stadium Race](docs/media/duck_racer_competition_2x.webp)
 
-> **[View 2x MP4 Video (docs/media/duck_racer_competition_2x.mp4)](docs/media/duck_racer_competition_2x.mp4)**  
+> 🎥 **[View 5-Duck Olympic Race MP4 Video](docs/media/duck_racer_competition_2x.mp4)**  
 > *Pacing: Emerald Green leads across the line (0.175 m/s), followed closely by Ruby Coral (0.165 m/s) and Duck Gold (0.160 m/s). 100% lemon retention across all 5 lanes.*
 
 ---
@@ -81,20 +75,17 @@ Microduck successfully carries athletic rackets—including a table tennis paddl
 
 While each racket is successfully retained across its showcase video demonstration, the grip is not fully robust over extended continuous locomotion horizons due to cumulative slippage from head movement and actuator torque limits. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo, providing sufficient holding force to eliminate slip and maintain continuous grip across all gaits.
 
-<p align="center">
-  <img src="docs/media/badminton_carry.webp" width="80%" alt="Badminton Racket Carry"><br>
-  <b>Badminton Racket Carry</b> &mdash; <b><a href="docs/media/badminton_carry.mp4">View MP4 Video (docs/media/badminton_carry.mp4)</a></b>
-</p>
+![Badminton Racket Carry](docs/media/badminton_carry.webp)
 
-<p align="center">
-  <img src="docs/media/pickleball_carry.webp" width="80%" alt="Pickleball Paddle Carry"><br>
-  <b>Pickleball Paddle Carry</b> &mdash; <b><a href="docs/media/pickleball_carry.mp4">View MP4 Video (docs/media/pickleball_carry.mp4)</a></b>
-</p>
+> 🎥 **[View Badminton Racket MP4 Video](docs/media/badminton_carry.mp4)**
 
-<p align="center">
-  <img src="docs/media/table_tennis_carry.webp" width="80%" alt="Table Tennis Racket Carry"><br>
-  <b>Table Tennis Racket Carry</b> &mdash; <b><a href="docs/media/table_tennis_carry.mp4">View MP4 Video (docs/media/table_tennis_carry.mp4)</a></b>
-</p>
+![Pickleball Paddle Carry](docs/media/pickleball_carry.webp)
+
+> 🎥 **[View Pickleball Paddle MP4 Video](docs/media/pickleball_carry.mp4)**
+
+![Table Tennis Racket Carry](docs/media/table_tennis_carry.webp)
+
+> 🎥 **[View Table Tennis Racket MP4 Video](docs/media/table_tennis_carry.mp4)**
 
 ---
 
@@ -104,20 +95,17 @@ Microduck physically clamps cylindrical barbell payloads (100g, 200g, and 300g �
 
 All payloads are successfully retained across their showcase video demonstrations during forward walking. However, the clamping is not fully robust over extended continuous locomotion horizons due to micro-slippage caused by footstep impact shocks and actuator torque limits, causing the payload to drop after some time. If an actuator of higher torque is used, the problem would be fixed; one approach would be to upgrade the beak actuator to a higher torque servo, supplying sufficient clamping force against footstep shocks to eliminate slippage and prevent drops altogether.
 
-<p align="center">
-  <img src="docs/media/barbell_100g_carry.webp" width="80%" alt="100g Barbell Clamping Carry"><br>
-  <b>100g Barbell Carry</b> &mdash; <b><a href="docs/media/barbell_100g_carry.mp4">View MP4 Video (docs/media/barbell_100g_carry.mp4)</a></b>
-</p>
+![100g Barbell Clamping Carry](docs/media/barbell_100g_carry.webp)
 
-<p align="center">
-  <img src="docs/media/barbell_200g_carry.webp" width="80%" alt="200g Barbell Clamping Carry"><br>
-  <b>200g Barbell Carry</b> &mdash; <b><a href="docs/media/barbell_200g_carry.mp4">View MP4 Video (docs/media/barbell_200g_carry.mp4)</a></b>
-</p>
+> 🎥 **[View 100g Barbell MP4 Video](docs/media/barbell_100g_carry.mp4)**
 
-<p align="center">
-  <img src="docs/media/barbell_300g_carry.webp" width="80%" alt="300g Barbell Clamping Carry"><br>
-  <b>300g Barbell Carry (41% Bodyweight)</b> &mdash; <b><a href="docs/media/barbell_300g_carry.mp4">View MP4 Video (docs/media/barbell_300g_carry.mp4)</a></b>
-</p>
+![200g Barbell Clamping Carry](docs/media/barbell_200g_carry.webp)
+
+> 🎥 **[View 200g Barbell MP4 Video](docs/media/barbell_200g_carry.mp4)**
+
+![300g Barbell Clamping Carry](docs/media/barbell_300g_carry.webp)
+
+> 🎥 **[View 300g Barbell MP4 Video](docs/media/barbell_300g_carry.mp4)**
 
 ---
 

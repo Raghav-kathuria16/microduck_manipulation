@@ -204,18 +204,35 @@ All machine learning models, physics simulations, multi-agent rollouts, and vide
 
 All policies, demonstrations, benchmarks, and interactive viewers can be run with single terminal commands.
 
-> **macOS Requirement**: Use `mjpython` for GUI commands to bind correctly to macOS GLFW event loops.
+> [!IMPORTANT]
+> **Working Directory & Environment Activation**:
+> All scripts reside inside the `microduck_manipulation/` project directory. To avoid `command not found: mjpython` or `No such file or directory` errors, make sure to enter the directory and activate the virtual environment:
+> ```bash
+> cd microduck_manipulation
+> source .venv/bin/activate
+> ```
+> *(Alternatively, if running directly from the root workspace directory without activating the environment, use `./microduck_manipulation/.venv/bin/mjpython microduck_manipulation/scripts/<script_name>.py`)*
+>
+> **macOS GLFW Requirement**: Use `mjpython` (bundled in `.venv/bin/mjpython`) rather than standard `python` for all `--gui` interactive viewer commands to bind to the macOS Cocoa UI main thread and prevent GLFW crashes. For headless `--benchmark` commands, standard `python` can be used.
 
 #### 1. 5-Duck Olympic Stadium Race (Interactive GUI)
 Launch the 5-duck race with interactive controls (press `C` to switch cameras, `W`/`S` to accelerate/decelerate, `1`..`5` for turbo boosts):
 ```bash
+# From microduck_manipulation/ (with .venv active):
 mjpython scripts/test_duck_racer_lemon_balance.py --gui
+
+# Or as a direct one-liner from the root workspace:
+./microduck_manipulation/.venv/bin/mjpython microduck_manipulation/scripts/test_duck_racer_lemon_balance.py --gui
 ```
 
 #### 2. 5-Duck Headless Competition Benchmark
 Run the quantitative evaluation and print full telemetry metrics:
 ```bash
+# From microduck_manipulation/ (with .venv active):
 python scripts/test_duck_racer_lemon_balance.py --benchmark --duration 21.0
+
+# Or as a direct one-liner from the root workspace:
+./microduck_manipulation/.venv/bin/python microduck_manipulation/scripts/test_duck_racer_lemon_balance.py --benchmark --duration 21.0
 ```
 
 #### 3. Barbell Pure Physical Clamping Tests (100g, 200g, 300g)
@@ -256,9 +273,9 @@ mjpython scripts/test_racket_drop_and_walk.py --racket table_tennis --steadicam 
 ```
 
 #### 8. Lemon & Tableware Spoon Balance (GUI Viewer)
-Watch Microduck carry the tableware spoon and balance the real-world citrus lemon:
+Watch Microduck carry the tableware spoon and balance the real-world citrus lemon with Steadicam Residual RL:
 ```bash
-mjpython scripts/test_spoon_lemon_balance.py --gui
+mjpython scripts/test_spoon_lemon_balance.py --gui --steadicam
 ```
 
 #### 9. Render All Manipulation Showcase Videos
@@ -266,6 +283,51 @@ Batch renders MP4 and WebP animations for all tasks into `docs/media/`:
 ```bash
 python scripts/render_all_readme_media.py
 ```
+
+#### 10. Interactive Standing Actuator Lemon Drop (Native GUI Viewer)
+Directly control the standing Microduck robot's neck, head, and beak actuators in real-time GLFW simulation to observe Coulomb friction slippage and lemon drops:
+```bash
+# From workspace root:
+./microduck_manipulation/.venv/bin/mjpython microduck_manipulation/scripts/test_interactive_actuator_lemon_drop.py
+
+# Or within microduck_manipulation folder:
+mjpython scripts/test_interactive_actuator_lemon_drop.py
+```
+
+**All 15 Actuators Real-Time Controllable (GUI Sliders & Keyboard)**:
+- **Native MuJoCo GUI Sliders**: In the left sidebar of the MuJoCo window (under the "Control" tab), every single one of the 15 actuators has an interactive real-time slider calibrated to its physical joint limits:
+  - `neck_pitch` (-90 deg to +60 deg) & `head_pitch` (-90 deg to +90 deg)
+  - `head_yaw` (-170 deg to +170 deg) & `head_roll` (-25 deg to +25 deg)
+  - `beak` (1.47 rad clamp to 2.05 rad open)
+  - `left_knee` & `right_knee` (-90 deg to +90 deg, for squats/knees flexing)
+  - `left_hip_pitch` & `right_hip_pitch` (-90 deg to +90 deg, pelvis lean)
+  - `left_ankle` & `right_ankle`, `left_hip_roll` & `right_hip_roll`, `left_hip_yaw` & `right_hip_yaw`
+  - Drag ANY slider left or right with your mouse to move that joint in real-time.
+- **Universal Actuator Selector via Keyboard**:
+  - `[` / `]`: Select ANY of the 15 actuators across the entire robot.
+  - `Up` / `Down` (or `+` / `-`): Adjust selected actuator angle (+/- 2.3 deg per keypress).
+  - The HUD displays the selected actuator name, index, current angle, and joint limits in real-time.
+- **Direct Group Hotkeys**:
+  - `W` / `S`: Quick Neck & Head Pitch down (forward) / up (backward).
+  - `A` / `D`: Quick Head Roll left / right.
+  - `Q` / `E`: Quick Head Yaw turn left / right.
+  - `O` / `C`: Quick Beak Open / Close aperture.
+  - `K` / `I`: Quick Knees Flex (crouch) / Extend (stand upright).
+  - `H` / `Y`: Quick Hips Pitch forward / backward.
+  - `1`: Level neutral standing reset (resets all 15 actuators to upright standing pose).
+  - `2`: Preset Auto Pitch Drop test (tilts past 26.6 deg Coulomb friction limit).
+  - `3`: Preset Auto Roll Drop test (rolls lemon past side rim).
+  - `4`: Preset Auto Beak Release test (loosens jaw until spoon and lemon drop).
+  - `Space`: Pause / resume physics.
+  - `R`: Full state reset (robot, spoon, lemon, and actuators).
+  - `V` or `Tab`: Cycle camera views (Close-Up, Side Profile, Isometric, Front, Top-Down).
+  - `5` / `6` / `7` / `8` / `9`: Direct camera presets.
+  - **Full Mouse Navigation**: Left-click drag to rotate 360 deg, right-click drag to pan, scroll wheel to zoom.
+
+**Physics & Contact Dynamics (Zero LaTeX Math)**:
+- **Standing Stance Stiffening**: Default XML leg actuators use low proportional gain kp = 0.55 N*m/rad suited for dynamic walking residual policies, which deflects 31 degrees under static 0.8 kg robot gravity, sagging the body down to z = 0.033 m. Actuator gains are stiffened to kp = 25.0 N*m/rad in standing mode, firmly holding the pelvis upright at z = 0.116 m without knee buckle.
+- **Coulomb Friction Limit**: Contact pair between lemon (`lemon_geom`) and spoon bowl base (`spoon_bowl_base`) has static friction coefficient mu = 0.50 (tangential friction dimension condim = 6).
+- **Critical Slip Angle**: Critical tilt angle theta_crit = arctan(mu) = arctan(0.50) = 26.56 degrees. When spoon pitch or roll exceeds 26.6 degrees, tangential gravitational pull m * g * sin(theta) exceeds maximum static friction mu * m * g * cos(theta), causing the citrus lemon to accelerate and drop to the floor.
 
 ---
 

@@ -402,6 +402,17 @@ mjpython scripts/teleop_barbell_studio.py
 
 ---
 
+### Command 12: Official Baseline Walking Policy with Tableware Spoon & Smooth Lemon Ball
+- **Description**: Official Pollen Robotics release walking policy (`BEST_alpha_walking.onnx`) walking forward while carrying a 25g tableware spoon and 22g smooth spherical lemon ball clamped in the beak. Features live toggle between raw uncompensated policy output and active steadicam stabilization.
+- **Payload**: 47.0 g (25g spoon + 22g smooth lemon ball)
+- **Grip**: Silicone clamping bed (mu = 0.55, 0.45 N*m applied torque, aperture 1.550 rad)
+- **Hotkeys**: W/S (Speed), T (Toggle Steadicam vs Raw Policy), [ / ] (Friction mu: 0.01 to 1.50), O/C (Beak Aperture), +/- (Clamping Torque), Space (Pause), R (Reset).
+```bash
+./microduck_manipulation/.venv/bin/mjpython microduck_manipulation/scripts/test_spoon_lemon_balance.py --gui --official --vx 0.25
+```
+
+---
+
 ## Conclusion & Project Archive
 
 This complete pipeline demonstrates that dynamic bipedal manipulation up to **40.7% payload-to-bodyweight** and high-precision tool stabilization can be achieved on miniature legged robots through principled combination of:
