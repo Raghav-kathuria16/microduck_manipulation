@@ -12,7 +12,7 @@ Microduck is a miniature bipedal humanoid/avian robot. This repository provides 
 
 1. **Dynamic Lemon & Tableware Spoon Balance (Core Policy)**:
    - Non-prehensile balancing of a citrus lemon in the shallow bowl of a tableware spoon during forward walking at speeds up to 0.30 m/s with zero drop, stabilized by an active bio-mimetic Steadicam pantograph.
-   - Ground parallelism maintained at 0.0 deg +/- 0.4 deg true horizontal relative to ground, with lemon center-of-mass deviation strictly below 1.2 mm across the entire 40-second walking horizon (20 seconds at 2x video duration).
+   - Ground parallelism maintained at 0.0 deg +/- 0.4 deg true horizontal relative to ground, with lemon center-of-mass deviation strictly below 1.2 mm across the entire continuous walking horizon (25.0 seconds at authentic 1x natural physics speed).
 
 2. **5-Duck Olympic Stadium Race (Multi-Robot Sprint)**:
    - 5 autonomous Microducks in vibrant Pollen Robotics liveries sprint side-by-side in parallel lanes down an authentic Olympic Mondo red track in full natural physics time (dt = 0.002s, 50 Hz control, zero time-warping).
@@ -36,18 +36,18 @@ Microduck is a miniature bipedal humanoid/avian robot. This repository provides 
 
 All demonstrations run under authentic rigid-body contact physics in MuJoCo.
 
-### 1. Dynamic Lemon & Tableware Spoon Balance (Core Policy)
+### 1. Dynamic Lemon & Tableware Spoon Balance (Core Policy, 1x Natural Physics Speed)
 
 The core training achievement of this project: dynamic non-prehensile balancing of an unconstrained citrus lemon in the shallow bowl of a tableware spoon during continuous bipedal walking. 
 
-An active bio-mimetic Steadicam pantograph controller decouples trunk walking oscillations from the beak, maintaining spoon levelness and achieving 100% balance retention with zero drop across forward walking speeds from 0.08 to 0.30 m/s. Video is recorded continuously for 40 seconds of simulated locomotion (presented at 2x playback speed, 20.0s duration) with zero static starting pause.
+An active bio-mimetic Steadicam pantograph controller decouples trunk walking oscillations from the beak, maintaining spoon levelness and achieving 100% balance retention with zero drop across forward walking speeds from 0.08 to 0.30 m/s. Video is recorded continuously in authentic 1x natural physics time (real-time speed, dt = 0.002s, 50 Hz control decimation, 25.0s continuous duration) with zero static starting pause.
 
 <p align="center">
-  <img src="docs/media/lemon_spoon_balance.webp" width="100%" alt="Dynamic Lemon and Spoon Balance">
+  <img src="docs/media/lemon_spoon_balance.webp" width="100%" alt="Dynamic Lemon and Spoon Balance (1x Natural Speed)">
 </p>
 
-> 🎥 **[View Lemon & Spoon MP4 Video](docs/media/lemon_spoon_balance.mp4)**  
-> *Dynamic non-prehensile stabilization: The bio-mimetic Steadicam compensator continuously counters torso pitch oscillations, keeping the lemon securely balanced in the spoon bowl during smooth forward locomotion.*
+> 🎥 **[View Lemon & Spoon 1x MP4 Video](docs/media/lemon_spoon_balance.mp4)**  
+> *Dynamic non-prehensile stabilization: The bio-mimetic Steadicam compensator continuously counters torso pitch oscillations, keeping the lemon securely balanced in the spoon bowl during smooth forward locomotion in authentic 1x natural physics time.*
 
 ---
 
