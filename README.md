@@ -1,3 +1,17 @@
+---
+license: apache-2.0
+tags:
+- robotics
+- reinforcement-learning
+- mujoco
+- biomimetic-control
+- bipedal-locomotion
+- onnx
+- simulation
+pipeline_tag: robotics
+library_name: mujoco
+---
+
 # MicroDuck Dynamic Manipulation Suite
 
 Autonomous bipedal manipulation, non-prehensile lemon & spoon balancing, multi-robot Olympic stadium racing, athletic racket carries (Table Tennis, Badminton, Pickleball), and dynamic heavy load-carrying for the 14-DoF miniature bipedal robot **Microduck** (Pollen Robotics).

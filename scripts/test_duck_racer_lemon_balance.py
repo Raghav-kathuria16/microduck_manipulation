@@ -36,7 +36,7 @@ _BASE_SCENE_XML = os.path.join(_MANIP_DIR, "models/scene_loadcarry_physical_clam
 _DEFAULT_POLICY = os.path.join(_MANIP_DIR, "policies/onnx/payload_clamping_locomotion.onnx")
 _OUTPUT_DIR = os.path.join(_MANIP_DIR, "docs/media")
 os.makedirs(_OUTPUT_DIR, exist_ok=True)
-_ARTIFACT_DIR = "/Users/raghav/.gemini/antigravity-ide/brain/01375344-3ce7-4a6f-afec-3cecca1c8b8d"
+_ARTIFACT_DIR = os.environ.get("ARTIFACT_DIR", str(Path(__file__).resolve().parent.parent / "docs" / "media"))
 
 # 5 Official Pollen Robotics Inspired Colorways
 DUCK_CONFIGS = [

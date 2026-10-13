@@ -57,6 +57,12 @@ Thumbs.db
 *.mjlog
 *.mjtrace
 
-# ----- Local Archive (Internal & Scratch Files) -----
+# ----- Local Archive & Scratch Media -----
 local_archive/
 .external_repo/
+docs/media/*_proof.png
+docs/media/*_step_*.png
+docs/media/*_before_vs_after.png
+docs/media/spoon_lemon_walking_*.mp4
+docs/media/duck_racer_competition.mp4
+docs/media/duck_racer_competition.webp

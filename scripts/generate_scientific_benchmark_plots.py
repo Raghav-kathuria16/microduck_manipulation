@@ -27,8 +27,8 @@ import matplotlib.pyplot as plt
 from scipy.signal import welch
 
 # Add paths
-ws = Path("/Users/raghav/Desktop/microduck_manipulation")
-sys.path.insert(0, str(ws / "microduck_manipulation" / "scripts"))
+ws = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ws / "scripts"))
 from test_spoon_lemon_balance import create_spoon_lemon_scene_xml, create_policy_with_steadicam
 import mujoco
 
@@ -151,7 +151,7 @@ def run_policy_benchmark(policy_path, sim_duration=4.0, target_vx=0.18, friction
     }
 
 def main():
-    policies_dir = ws / "microduck_manipulation" / "policies" / "onnx"
+    policies_dir = ws / "policies" / "onnx"
     
     configs = [
         ("Baseline (Unstabilized)", policies_dir / "microduck_locomotion_baseline.onnx", "#C0392B", "--", 1.8),
@@ -276,8 +276,8 @@ def main():
     
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     
-    out_media = ws / "microduck_manipulation" / "docs" / "media" / "scientific_multi_strategy_steadicam_benchmark.png"
-    out_art = Path("/Users/raghav/.gemini/antigravity-ide/brain/01375344-3ce7-4a6f-afec-3cecca1c8b8d/scientific_multi_strategy_steadicam_benchmark.png")
+    out_media = ws / "docs" / "media" / "scientific_multi_strategy_steadicam_benchmark.png"
+    out_art = Path(os.environ.get("ARTIFACT_DIR", str(ws / "docs" / "media"))) / ""
     
     out_media.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_media, bbox_inches="tight")

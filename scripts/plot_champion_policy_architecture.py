@@ -18,8 +18,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-ws = Path("/Users/raghav/Desktop/microduck_manipulation")
-sys.path.insert(0, str(ws / "microduck_manipulation" / "scripts"))
+ws = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ws / "scripts"))
 from test_spoon_lemon_balance import create_spoon_lemon_scene_xml, create_policy_with_steadicam
 import mujoco
 
@@ -29,7 +29,7 @@ def collect_champion_telemetry(sim_duration=4.0, vx=0.16):
     model.opt.timestep = 0.002
     data = mujoco.MjData(model)
     
-    p_path = ws / "microduck_manipulation" / "policies" / "onnx" / "microduck_spoon_lemon_steadicam_production.onnx"
+    p_path = ws / "policies" / "onnx" / "microduck_spoon_lemon_steadicam_production.onnx"
     policy, is_rl = create_policy_with_steadicam(model, data, str(p_path))
     policy.set_vel_cmd(vx, 0.0, 0.0)
     
@@ -221,8 +221,8 @@ def main():
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 
-    out_media = ws / "microduck_manipulation" / "docs" / "media" / "champion_steadicam_control_architecture_and_telemetry.png"
-    out_art = Path("/Users/raghav/.gemini/antigravity-ide/brain/01375344-3ce7-4a6f-afec-3cecca1c8b8d/champion_steadicam_control_architecture_and_telemetry.png")
+    out_media = ws / "docs" / "media" / "champion_steadicam_control_architecture_and_telemetry.png"
+    out_art = Path(os.environ.get("ARTIFACT_DIR", str(ws / "docs" / "media"))) / ""
 
     fig.savefig(out_media, bbox_inches="tight")
     fig.savefig(out_art, bbox_inches="tight")

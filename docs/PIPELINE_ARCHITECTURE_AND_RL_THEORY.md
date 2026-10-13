@@ -1,8 +1,8 @@
 # MicroDuck Manipulation & LoadCarry: Pipeline Architecture, Reward Functions & RL Theory Guide
 
 Author: DeepMind Advanced Agentic Coding Pair Program  
-Repository 1: [microduck_rl](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl) (Parallel Vectorized RL Training)  
-Repository 2: [microduck_manipulation](file:///Users/raghav/Desktop/microduck_manipulation/microduck_manipulation) (Standalone Inference & Control)  
+Repository 1: [microduck_rl](microduck_rl) (Parallel Vectorized RL Training)  
+Repository 2: [microduck_manipulation](microduck_manipulation) (Standalone Inference & Control)  
 
 ---
 
@@ -74,12 +74,12 @@ The MicroDuck project is structured into two cleanly separated engineering layer
 
 All reward functions are located in the training repository:
 
-- Core reward library: [mdp.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/mdp.py)
-- Pure physical clamping load-carry task: [microduck_ppo_headup_v4_env_cfg.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/microduck_ppo_headup_v4_env_cfg.py)
-- Base load-carry environment configuration: [microduck_loadcarry_env_cfg.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/microduck_loadcarry_env_cfg.py)
-- Table tennis ball balancing configuration: [microduck_table_tennis_ball_balance_env_cfg.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/microduck_table_tennis_ball_balance_env_cfg.py)
-- Table tennis racket carry configuration: [microduck_table_tennis_racket_carry_env_cfg.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/microduck_table_tennis_racket_carry_env_cfg.py)
-- Base bipedal velocity configuration: [microduck_velocity_env_cfg.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/microduck_velocity_env_cfg.py)
+- Core reward library: [mdp.py](src/mjlab_microduck/tasks/mdp.py)
+- Pure physical clamping load-carry task: [microduck_ppo_headup_v4_env_cfg.py](src/mjlab_microduck/tasks/microduck_ppo_headup_v4_env_cfg.py)
+- Base load-carry environment configuration: [microduck_loadcarry_env_cfg.py](src/mjlab_microduck/tasks/microduck_loadcarry_env_cfg.py)
+- Table tennis ball balancing configuration: [microduck_table_tennis_ball_balance_env_cfg.py](src/mjlab_microduck/tasks/microduck_table_tennis_ball_balance_env_cfg.py)
+- Table tennis racket carry configuration: [microduck_table_tennis_racket_carry_env_cfg.py](src/mjlab_microduck/tasks/microduck_table_tennis_racket_carry_env_cfg.py)
+- Base bipedal velocity configuration: [microduck_velocity_env_cfg.py](src/mjlab_microduck/tasks/microduck_velocity_env_cfg.py)
 
 ### Detailed Breakdown of Every Reward Function
 
@@ -89,7 +89,7 @@ Total Reward = Sum over all terms of ( weight_k * reward_k )
 Each term is explained below in clear, accessible language without LaTeX notation:
 
 #### 1. Forward Linear Velocity Tracking (`track_linear_velocity`)
-- **Location**: Defined in `mjlab.tasks.velocity.mdp` and customized in [microduck_velocity_env_cfg.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/microduck_velocity_env_cfg.py#L599-L601).
+- **Location**: Defined in `mjlab.tasks.velocity.mdp` and customized in [microduck_velocity_env_cfg.py](src/mjlab_microduck/tasks/microduck_velocity_env_cfg.py#L599-L601).
 - **Physical Purpose**: Incentivizes the robot to match the commanded forward and lateral velocity targets.
 - **Mathematical Formula**:
   `linear_velocity_error = (robot_velocity_x - commanded_velocity_x)^2 + (robot_velocity_y - commanded_velocity_y)^2`  
@@ -104,7 +104,7 @@ Each term is explained below in clear, accessible language without LaTeX notatio
   `reward = exp( - yaw_error / (std_dev^2) )`
 
 #### 3. Upright Base Orientation (`upright` / `body_upright_gaussian`)
-- **Location**: [mdp.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/mdp.py#L710-L732).
+- **Location**: [mdp.py](src/mjlab_microduck/tasks/mdp.py#L710-L732).
 - **Physical Purpose**: Keeps the robot's main torso upright relative to the gravity vector.
 - **Mathematical Formula**:
   `projected_gravity_z = dot_product(robot_up_vector, world_gravity_vector)`  
@@ -113,7 +113,7 @@ Each term is explained below in clear, accessible language without LaTeX notatio
 - **How It Works**: When the torso is upright, projected gravity points straight down along the body negative z-axis, making projected_gravity_z equal to -1.0. The upright_error is zero, yielding maximum reward 1.0. If the robot tilts or tips over, error grows rapidly and reward drops to zero.
 
 #### 4. Head Cradle Posture Reward (`head_cradle_reward`)
-- **Location**: [microduck_ppo_headup_v4_env_cfg.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/microduck_ppo_headup_v4_env_cfg.py#L135-L154).
+- **Location**: [microduck_ppo_headup_v4_env_cfg.py](src/mjlab_microduck/tasks/microduck_ppo_headup_v4_env_cfg.py#L135-L154).
 - **Physical Purpose**: In physical clamping, front-heavy loads naturally tilt downward and slip out. This reward trains the robot to pitch its neck upward and head slightly back, creating an upward cradle that uses gravity to settle the payload deep into the mouth pads.
 - **Mathematical Formula**:
   `neck_error = absolute_value(neck_pitch_angle - target_neck_pitch)`  
@@ -123,7 +123,7 @@ Each term is explained below in clear, accessible language without LaTeX notatio
 - **Tuned Targets**: Target neck pitch is +0.35 radians (elevated), target head pitch is -0.08 radians (tilted backward), with a standard deviation of 0.12 radians and a heavy positive weight of +8.0.
 
 #### 5. Payload Retention Reward (`cylinder_retained_reward`)
-- **Location**: [microduck_ppo_headup_v4_env_cfg.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/microduck_ppo_headup_v4_env_cfg.py#L116-L133).
+- **Location**: [microduck_ppo_headup_v4_env_cfg.py](src/mjlab_microduck/tasks/microduck_ppo_headup_v4_env_cfg.py#L116-L133).
 - **Physical Purpose**: Actively rewards keeping the clamped payload dead-center in the mouth cavity.
 - **Mathematical Formula**:
   `relative_position = rotate_by_inverse_quaternion(head_orientation, payload_position - head_position)`  
@@ -132,7 +132,7 @@ Each term is explained below in clear, accessible language without LaTeX notatio
 - **How It Works**: The payload position is transformed into the robot head local coordinate frame. If the payload slips or slides forward or backward, drift increases. At zero drift, the policy earns the maximum reward of +10.0.
 
 #### 6. Torso Pitch Counterbalance Lean (`torso_pitch_counterbalance`)
-- **Location**: [mdp.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/mdp.py#L7454-L7467).
+- **Location**: [mdp.py](src/mjlab_microduck/tasks/mdp.py#L7454-L7467).
 - **Physical Purpose**: Carrying a front-loaded cantilevered mass pulls the robot's center of mass forward over its toes. This reward encourages a slight backward torso lean (-5.0 degrees) to physically counterbalance the front mass.
 - **Mathematical Formula**:
   `torso_pitch = arctan2(gravity_x, - gravity_z)`  
@@ -140,7 +140,7 @@ Each term is explained below in clear, accessible language without LaTeX notatio
   `reward = exp( - (lean_error / tolerance)^2 )`
 
 #### 7. Beak Upright Orientation (`beak_up_orientation`)
-- **Location**: [mdp.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/mdp.py#L7322-L7349).
+- **Location**: [mdp.py](src/mjlab_microduck/tasks/mdp.py#L7322-L7349).
 - **Physical Purpose**: Prevents the beak and jaw from pitching downward toward the floor.
 - **Mathematical Formula**:
   `beak_direction_world = rotate_vector(beak_orientation, local_x_axis)`  
@@ -149,7 +149,7 @@ Each term is explained below in clear, accessible language without LaTeX notatio
   `reward = exp( - (error / tolerance)^2 )`
 
 #### 8. Walking-Coupled Head Up Reward (`walking_coupled_head_up`)
-- **Location**: [mdp.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/mdp.py#L7416-L7438).
+- **Location**: [mdp.py](src/mjlab_microduck/tasks/mdp.py#L7416-L7438).
 - **Physical Purpose**: Solves the "statue duck" failure mode where a robot achieves high head-up rewards by standing completely still.
 - **Mathematical Formula**:
   `head_up_factor = exp( - (neck_pitch - target_neck_pitch)^2 / (tolerance^2) )`  
@@ -158,7 +158,7 @@ Each term is explained below in clear, accessible language without LaTeX notatio
 - **How It Works**: If forward velocity is below the minimum threshold, speed_factor is 0.0, so the robot earns zero reward regardless of how high its head is held. It only gets rewarded when simultaneously elevating the head and walking forward.
 
 #### 9. Dynamic Foot Swing Air Time (`feet_air_time_upright`)
-- **Location**: [mdp.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/mdp.py#L527-L544).
+- **Location**: [mdp.py](src/mjlab_microduck/tasks/mdp.py#L527-L544).
 - **Physical Purpose**: Incentivizes a dynamic alternating bipedal stepping gait rather than shuffling feet along the ground.
 - **Mathematical Formula**:
   When a foot makes contact with the ground:  
@@ -200,7 +200,7 @@ During the reinforcement learning phase, the neural network is created, paramete
    - Class: `GaussianDistribution` in `rsl_rl.modules.distribution`
    - Subclasses `rsl_rl.modules.distribution.Distribution`. Implements continuous Gaussian policy sampling with learned standard deviation.
 5. **Warm-Starting & Layer Migration**:
-   - Methods: `_warmstart_from_onnx` in [MicroduckLoadCarryOnPolicyRunner](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/__init__.py#L35-L102) and [MicroduckTableTennisBallBalanceRunner](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/__init__.py#L104-L180).
+   - Methods: `_warmstart_from_onnx` in [MicroduckLoadCarryOnPolicyRunner](src/mjlab_microduck/tasks/__init__.py#L35-L102) and [MicroduckTableTennisBallBalanceRunner](src/mjlab_microduck/tasks/__init__.py#L104-L180).
    - Directly loads layer weights, biases, and normalization tensors into the active PyTorch model.
 
 ### Actor Network Architecture (The Policy)
@@ -431,7 +431,7 @@ In pure physical clamping:
 
 ## 6. Standalone Inference & Steadicam Pantograph Execution
 
-In [infer_policy.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_manipulation/scripts/infer_policy.py), the deployed system executes the following control loop:
+In [infer_policy.py](scripts/infer_policy.py), the deployed system executes the following control loop:
 
 1. **Sensor Acquisition**: Reads joint encoders, IMU angular velocity, and projected gravity from MuJoCo data structures.
 2. **Observation Assembly**: Subtracts default standing joint angles (`DEFAULT_POSE`) to form relative coordinates and concatenates command vectors to form the 61-element array.
@@ -448,13 +448,13 @@ In [infer_policy.py](file:///Users/raghav/Desktop/microduck_manipulation/microdu
 
 | Component | Code Location |
 | :--- | :--- |
-| **All Core Reward Terms** | [mdp.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/mdp.py) |
-| **Physical Clamping Reward & Terminations** | [microduck_ppo_headup_v4_env_cfg.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/microduck_ppo_headup_v4_env_cfg.py) |
-| **Base LoadCarry Config & Observations** | [microduck_loadcarry_env_cfg.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/microduck_loadcarry_env_cfg.py) |
-| **Table Tennis Ball Balance Rewards** | [microduck_table_tennis_ball_balance_env_cfg.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/microduck_table_tennis_ball_balance_env_cfg.py) |
-| **PyTorch Runner & Warm-Starter** | [__init__.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_rl/src/mjlab_microduck/tasks/__init__.py) |
+| **All Core Reward Terms** | [mdp.py](src/mjlab_microduck/tasks/mdp.py) |
+| **Physical Clamping Reward & Terminations** | [microduck_ppo_headup_v4_env_cfg.py](src/mjlab_microduck/tasks/microduck_ppo_headup_v4_env_cfg.py) |
+| **Base LoadCarry Config & Observations** | [microduck_loadcarry_env_cfg.py](src/mjlab_microduck/tasks/microduck_loadcarry_env_cfg.py) |
+| **Table Tennis Ball Balance Rewards** | [microduck_table_tennis_ball_balance_env_cfg.py](src/mjlab_microduck/tasks/microduck_table_tennis_ball_balance_env_cfg.py) |
+| **PyTorch Runner & Warm-Starter** | [__init__.py](src/mjlab_microduck/tasks/__init__.py) |
 | **PyTorch MLP Architecture** | `rsl_rl.modules.mlp.MLP` in Python virtual environment |
 | **PyTorch PPO Algorithm** | `rsl_rl.algorithms.ppo.PPO` in Python virtual environment |
-| **Runtime ONNX Inference Engine** | [infer_policy.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_manipulation/scripts/infer_policy.py) |
-| **Steadicam Pantograph Test Script** | [test_spoon_lemon_balance.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_manipulation/scripts/test_spoon_lemon_balance.py) |
-| **Physical Clamp Policy Test Script** | [test_physical_clamp_policy.py](file:///Users/raghav/Desktop/microduck_manipulation/microduck_manipulation/scripts/test_physical_clamp_policy.py) |
+| **Runtime ONNX Inference Engine** | [infer_policy.py](scripts/infer_policy.py) |
+| **Steadicam Pantograph Test Script** | [test_spoon_lemon_balance.py](scripts/test_spoon_lemon_balance.py) |
+| **Physical Clamp Policy Test Script** | [test_physical_clamp_policy.py](scripts/test_physical_clamp_policy.py) |
