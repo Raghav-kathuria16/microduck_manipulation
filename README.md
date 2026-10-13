@@ -17,7 +17,7 @@ Microduck is a miniature bipedal humanoid/avian robot. This repository provides 
 2. **5-Duck Olympic Stadium Race (Multi-Robot Sprint)**:
    - 5 autonomous Microducks in vibrant Pollen Robotics liveries sprint side-by-side in parallel lanes down an authentic Olympic Mondo red track in full natural physics time (dt = 0.002s, 50 Hz control, zero time-warping).
    - Each duck balances a real lemon on a tableware spoon with active bio-mimetic Steadicam pantographs and zero drop.
-   - Sprinted continuously for 80 seconds of physics time (40 seconds at 2x video duration) with zero static pause at the starting line.
+   - Sprinted continuously in authentic 1x natural physics time (35.0 seconds duration) with zero static pause at the starting line.
    - Finish hierarchy: **1st Place: Emerald Green (Winner)**, **2nd Place: Ruby Coral Pink**, **3rd Place: Sunflower Duck Gold**, **4th Place: Royal Amethyst Purple**, **5th Place: Riviera Sky Blue**.
 
 3. **Athletic Racket Carrying Suite (Table Tennis, Badminton, Pickleball)**:
@@ -51,15 +51,15 @@ An active bio-mimetic Steadicam pantograph controller decouples trunk walking os
 
 ---
 
-### 2. 5-Duck Olympic Stadium Race (Multi-Robot Sprint, 2x Video Playback)
+### 2. 5-Duck Olympic Stadium Race (Multi-Robot Sprint, 1x Natural Physics Speed)
 
-Five autonomous Microducks competing down the Olympic Mondo red track, each deploying the champion Steadicam lemon balancing policy. The simulation runs under natural physics (timestep dt = 0.002s, 50 Hz control decimation) with 100% lemon retention across all lanes, recorded and presented at 2x video playback speed (40 seconds continuous duration) with zero static pause at the start line. All five robots sprint actively across the track above their limit-cycle locomotion threshold with zero stalls.
+Five autonomous Microducks competing down the Olympic Mondo red track, each deploying the champion Steadicam lemon balancing policy. The simulation runs under natural physics (timestep dt = 0.002s, 50 Hz control decimation) with 100% lemon retention across all lanes, recorded and presented in authentic 1x natural physics time (35.0 seconds continuous real-time duration) with zero static pause at the start line. All five robots sprint actively across the track above their limit-cycle locomotion threshold with zero stalls.
 
 <p align="center">
-  <img src="docs/media/duck_racer_competition_2x.webp" width="100%" alt="5-Duck Olympic Stadium Race">
+  <img src="docs/media/duck_racer_competition_1x.webp" width="100%" alt="5-Duck Olympic Stadium Race (1x Natural Speed)">
 </p>
 
-> 🎥 **[View 5-Duck Olympic Race MP4 Video](docs/media/duck_racer_competition_2x.mp4)**  
+> 🎥 **[View 5-Duck Olympic Race 1x MP4 Video](docs/media/duck_racer_competition_1x.mp4)**  
 > *Pacing: Emerald Green leads across the line (0.260 m/s), followed by Ruby Coral (0.240 m/s), Duck Gold (0.220 m/s), Royal Amethyst (0.200 m/s), and Riviera Sky (0.185 m/s). 100% lemon retention across all 5 lanes.*
 
 #### Closed-Loop Steadicam Control Architecture & Empirical Telemetry
